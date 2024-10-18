@@ -1,84 +1,3 @@
-// 'use client';
-
-// import { useForm } from 'react-hook-form';
-// import { Button } from './ui/button';
-// import {
-// 	Dialog,
-// 	DialogContent,
-// 	DialogHeader,
-// 	DialogTrigger,
-// } from './ui/dialog';
-// import { Input } from './ui/input';
-// import { z } from 'zod';
-// import { zodResolver } from '@hookform/resolvers/zod';
-// import { studentApproveFormScheam } from '@/lib/validation';
-// import {
-// 	Form,
-// 	FormControl,
-// 	FormField,
-// 	FormItem,
-// 	FormLabel,
-// 	FormMessage,
-// } from './ui/form';
-
-// const ApproveDialog = () => {
-// 	const form = useForm<z.infer<typeof studentApproveFormScheam>>({
-// 		resolver: zodResolver(studentApproveFormScheam),
-// 	});
-
-// 	const onSubmit = (data: z.infer<typeof studentApproveFormScheam>) => {
-// 		console.log(data);
-// 	};
-
-// 	return (
-// 		<Dialog>
-// 			<DialogHeader>
-// 				<DialogTrigger asChild>
-// 					<Button className="bg-green-500">Approve</Button>
-// 				</DialogTrigger>
-// 			</DialogHeader>
-// 			<DialogContent>
-// 				<Form {...form}>
-// 					<form onSubmit={form.handleSubmit(onSubmit)}>
-// 						<FormField
-// 							control={form.control}
-// 							name="date"
-// 							render={({ field }) => (
-// 								<FormItem>
-// 									<FormLabel>Date</FormLabel>
-// 									<FormControl>
-// 										<Input type="date" {...field} />
-// 									</FormControl>
-// 									<FormMessage />
-// 								</FormItem>
-// 							)}
-// 						/>
-// 						<FormField
-// 							control={form.control}
-// 							name="time"
-// 							render={({ field }) => (
-// 								<FormItem>
-// 									<FormLabel>Time</FormLabel>
-// 									<FormControl>
-// 										<Input type="time" {...field} />
-// 									</FormControl>
-// 									<FormMessage />
-// 								</FormItem>
-// 							)}
-// 						/>
-
-// 						<div className="flex justify-center pt-4">
-// 							<Button>Submit</Button>
-// 						</div>
-// 					</form>
-// 				</Form>
-// 			</DialogContent>
-// 		</Dialog>
-// 	);
-// };
-
-// export default ApproveDialog;
-
 "use client";
 
 import { useForm } from "react-hook-form";
@@ -103,33 +22,66 @@ import {
   FormMessage,
 } from "./ui/form";
 import { ApproveApplicationForCounselling } from "@/lib/actions/student.action";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
-const ApproveDialog = ({ studentId }: { studentId: string }) => {
+// Helper function to check if a date is in the past
+const isDateInThePast = (dateString: any) => {
+  const selectedDate = new Date(dateString);
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  return selectedDate < today;
+};
+
+const ApproveDialog = ({ docId }: { docId: string }) => {
   const form = useForm<z.infer<typeof studentApproveFormScheam>>({
     resolver: zodResolver(studentApproveFormScheam),
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [countdown, setCountdown] = useState(5);
 
-  console.log("studentId: ", studentId);
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+
+    // Start the timer when success state is true
+    if (success && countdown > 0) {
+      timer = setInterval(() => {
+        setCountdown((prev) => prev - 1);
+      }, 1000);
+    }
+
+    return () => {
+      clearInterval(timer);
+    };
+  }, [success, countdown]);
 
   const onSubmit = async (data: z.infer<typeof studentApproveFormScheam>) => {
-    console.log("Approve Clicked", data);
     setLoading(true);
-    setError(""); // Reset any previous errors
+    setError("");
+    setSuccess(false);
+    setCountdown(5);
+
+    const submitData = {
+      ...data,
+      docId, // Add docId to the data object
+    };
+
+    console.log("submitData: ", submitData);
+
     try {
-      // Include studentId in the API call
-      const response = await ApproveApplicationForCounselling({
-        ...data,
-        studentId,
-      });
-      console.log("response: ", response);
+      const response = await ApproveApplicationForCounselling(submitData);
       if (response.error) {
-        setError(response.error); // Set error message
+        setError(response.error);
       } else {
-        // Handle success (e.g., close dialog or show success message)
         console.log("Application approved:", response);
+        setSuccess(true);
+
+        setTimeout(() => {
+          setOpen(false); // Close the dialog
+          window.history.back(); // Navigate back to the previous page
+        }, 5000);
       }
     } catch (err) {
       setError("An error occurred while approving the application.");
@@ -139,14 +91,14 @@ const ApproveDialog = ({ studentId }: { studentId: string }) => {
   };
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogHeader>
         <DialogTrigger asChild>
-          <Button className="bg-green-500">Approve</Button>
+          <Button className="bg-green-500 cursor-pointer">Approve</Button>
         </DialogTrigger>
       </DialogHeader>
       <DialogContent>
-        <DialogTitle></DialogTitle>
+        <DialogTitle>Approve Counseling Application</DialogTitle>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
             <FormField
@@ -154,9 +106,9 @@ const ApproveDialog = ({ studentId }: { studentId: string }) => {
               name="date"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Date</FormLabel>
+                  <FormLabel htmlFor="date">Date</FormLabel>
                   <FormControl>
-                    <Input type="date" {...field} />
+                    <Input type="date" id="date" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -167,9 +119,9 @@ const ApproveDialog = ({ studentId }: { studentId: string }) => {
               name="time"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Time</FormLabel>
+                  <FormLabel htmlFor="time">Time</FormLabel>
                   <FormControl>
-                    <Input type="time" {...field} />
+                    <Input type="time" id="time" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -181,6 +133,13 @@ const ApproveDialog = ({ studentId }: { studentId: string }) => {
               </Button>
             </div>
             {error && <p className="text-red-500">{error}</p>}
+            {success && (
+              <div className="mt-4 p-2 bg-green-700 text-white rounded-">
+                Student was successfully invited for counseling.
+                <br />
+                Redirecting in {countdown} seconds...
+              </div>
+            )}
           </form>
         </Form>
       </DialogContent>

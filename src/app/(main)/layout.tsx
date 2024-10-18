@@ -9,12 +9,12 @@ export default function Layout({
   return (
     <div className="flex flex-col min-h-screen">
       {/* Menu at the Top */}
-      <div className="sticky top-0">
+      <div className="sticky top-0 z-[99]">
         <Navbar />
       </div>
 
       {/* Main Content Area */}
-      <div className="flex-1 px-8 py-20 md:py-12">{children}</div>
+      <div className="flex-1 px-8 py-20 md:py-5">{children}</div>
     </div>
   );
 }

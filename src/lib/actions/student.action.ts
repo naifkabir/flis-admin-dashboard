@@ -53,22 +53,18 @@ export async function ApproveApplicationForCounselling(data: any) {
   const accessToken = cookieStore.get("accessToken")?.value;
 
   if (!accessToken) {
-    return null; // You might consider logging a message for debugging
+    return null;
   }
 
   try {
-    const response = await apiClient.delete(
-      `/admission/archive-application`, // Correct URL with quotes
-      {
-        data, // Send data as an object, this is where you send necessary parameters
-        headers: {
-          Authorization: `Bearer ${accessToken}`, // Corrected string interpolation
-        },
-      }
-    );
+    const response = await apiClient.post(`/communication/counselling`, data, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
     return response.data;
   } catch (error: any) {
-    console.error("Error approving application:", error); // Log error for debugging
-    return { error: error.message }; // Return error message
+    console.error("Error approving application:", error);
+    return { error: error.message };
   }
 }

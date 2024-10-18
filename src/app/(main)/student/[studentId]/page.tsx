@@ -17,20 +17,17 @@ export default async function StudentInfoPage({
     <div className="w-full h-full container">
       <div className="h-full border shadow-md rounded-lg">
         <h1 className="font-bold text-xl p-4 underline">Student Information</h1>
-        <div className="flex gap-2 items-center p-4">
+        <div className="flex gap-5 items-center p-4">
           <Image
             src={student?.student_photo}
             alt="student_photo"
-            width={50}
-            height={50}
-            className="rounded-full w-12 h-12 object-cover object-center aspect-square"
+            width={500}
+            height={500}
+            className="w-[1.5in] h-[2in] object-cover object-center border-2"
           />
-          <h1 className="font-semibold text-lg">
-            {student?.first_name + " " + student?.last_name}
-          </h1>
+          <div className="font-semibold text-lg">{basicSection(data)}</div>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 p-4 h-full gap-4">
-          {basicSection(data)}
           {additionalSection(data)}
           {guardianInfo(data)}
           {academyInfo(data)}
@@ -39,8 +36,7 @@ export default async function StudentInfoPage({
           {otherInfo(data)}
         </div>
         <div className="w-full flex justify-end gap-4 p-4">
-          {/* Pass the studentId to ApproveDialog */}
-          <ApproveDialog studentId={studentId} />
+          <ApproveDialog docId={studentId} />
           <Button variant="destructive">Delete</Button>
         </div>
       </div>
@@ -56,27 +52,35 @@ const basicSection = (data: any) => {
   const address = `${addressData?.village}, ${addressData?.post_office}, ${addressData?.police_station}, ${addressData?.district}, ${addressData?.state}, ${addressData?.postal_code}`;
 
   return (
-    <div className="p-6 border-2 rounded-lg border-gray-300 text-xs md:text-[14px]">
-      <h3 className="font-semibold text-gray-600 text-[17px] md:text-lg mb-5">
+    <div className="text-xs md:text-[14px]">
+      {/* <h3 className="font-semibold text-gray-600 text-[17px] md:text-lg mb-5">
         Basic Information
-      </h3>
-      <table className="min-w-full bg-white">
+      </h3> */}
+      <table className="min-w-full">
         <tbody>
-          <tr className="border-b">
+          <tr>
+            <td className="pr-4 py-2 font-semibold">Student Name:</td>
+            <td className="text-xl px-4 py-2">
+              {student?.first_name + " " + student?.last_name}
+            </td>
+          </tr>
+        </tbody>
+        <tbody>
+          <tr className="">
             <td className="pr-4 py-2 font-semibold">Date of Birth:</td>
             <td className="px-4 py-2">{student?.date_of_birth}</td>
           </tr>
-          <tr className="border-b">
+          <tr className="">
             <td className="pr-4 py-2 font-semibold">Class:</td>
             <td className="px-4 py-2">{student?.class}</td>
           </tr>
-          <tr className="border-b">
+          <tr className="">
             <td className="pr-4 py-2 font-semibold">Guardian:</td>
             <td className="px-4 py-2">
               {data?.parent_guardian_details?.guardian_information.name}
             </td>
           </tr>
-          <tr className="border-b">
+          <tr className="">
             <td className="pr-4 py-2 font-semibold">Phone:</td>
             <td className="px-4 py-2">
               {data?.parent_guardian_details?.guardian_information?.contact_no}
@@ -101,7 +105,7 @@ const additionalSection = (data: any) => {
       <h3 className="font-semibold text-gray-600 text-[17px] md:text-lg mb-5">
         Additional Information
       </h3>
-      <table className="min-w-full bg-white">
+      <table className="min-w-full">
         <tbody>
           <tr className="border-b">
             <td className="pr-4 py-2 font-semibold">Blood Group:</td>
@@ -136,7 +140,7 @@ const guardianInfo = (data: any) => {
       <h3 className="font-semibold text-gray-600 text-[17px] md:text-lg mb-5">
         Guardian Information
       </h3>
-      <table className="min-w-full bg-white">
+      <table className="min-w-full">
         <tbody>
           <tr className="border-b">
             <td className="pr-4 py-2 font-semibold">Name:</td>
@@ -180,7 +184,7 @@ const academyInfo = (data: any) => {
       <h3 className="font-semibold text-gray-600 text-[17px] md:text-lg mb-5">
         Academic Information
       </h3>
-      <table className="min-w-full bg-white">
+      <table className="min-w-full">
         <tbody>
           <tr className="border-b">
             <td className="pr-4 py-2 font-semibold">Previous Class:</td>
@@ -212,7 +216,7 @@ const medInfo = (data: any) => {
       <h3 className="font-semibold text-gray-600 text-[17px] md:text-lg mb-5">
         Medical Information
       </h3>
-      <table className="min-w-full bg-white">
+      <table className="min-w-full">
         <tbody>
           <tr className="border-b">
             <td className="pr-4 py-2 font-semibold">Any Allergies:</td>
@@ -269,7 +273,7 @@ const bankInfo = (data: any) => {
       <h3 className="font-semibold text-gray-600 text-[17px] md:text-lg mb-5">
         Bank Information
       </h3>
-      <table className="min-w-full bg-white">
+      <table className="min-w-full">
         <tbody>
           <tr className="border-b">
             <td className="pr-4 py-2 font-semibold">Bank Name:</td>
@@ -301,7 +305,7 @@ const otherInfo = (data: any) => {
       <h3 className="font-semibold text-gray-600 text-[17px] md:text-lg mb-5">
         Other Information
       </h3>
-      <table className="min-w-full bg-white">
+      <table className="min-w-full">
         <tbody>
           <tr className="border-b">
             <td className="pr-4 py-2 font-semibold">Special Assistance:</td>
