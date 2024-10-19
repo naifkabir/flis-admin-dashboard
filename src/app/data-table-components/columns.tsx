@@ -5,6 +5,7 @@ import { DataTableColumnHeader } from "./data-table-column-header";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { FinanceHeader } from "@/types/types";
 
 type Student = {
   [x: string]: any;
@@ -148,7 +149,7 @@ export const columns = (
 // --------------------------------------------------------------------------------------------------
 // --------------------------------------------------------------------------------------------------
 
-export const FinanceColumn = (
+export const FinanceColumnFeeHeaders = (
   handleEdit?: (termId: number) => void,
   handleDeleteHeader?: (termId: string) => Promise<void>
 ): ColumnDef<any>[] => [
@@ -226,13 +227,185 @@ export const FinanceColumn = (
 
       return (
         <div className="flex justify-center gap-4">
-          <Link href={`/finance/${data._id}`}>
+          <Link href={`/finance/editFeeHeader/${data._id}`}>
             <Button>Edit</Button>
           </Link>
           <Button
             onClick={() => handleDeleteHeader?.(data._id)}
             variant="destructive">
             Delete
+          </Button>
+        </div>
+      );
+    },
+  },
+];
+
+// --------------------------------------------------------------------------------------------------
+// --------------------------------------------------------------------------------------------------
+
+export const FinanceColumnFeeGroups = (
+  handleEdit?: (termId: number) => void,
+  handleDeleteHeader?: (termId: string) => Promise<void>
+): ColumnDef<any>[] => [
+  {
+    id: "serial_number",
+    header: () => <span>Sl. No.</span>,
+    cell: ({ row }) => (
+      <div className="flex justify-center items-center">
+        <span>{row.index + 1}</span>
+      </div>
+    ),
+    enableSorting: false,
+    enableHiding: false,
+  },
+  {
+    accessorKey: "name",
+    header: ({ column }) => (
+      <div className="flex justify-center items-center">
+        <DataTableColumnHeader column={column} title="Name" />
+      </div>
+    ),
+    cell: ({ row }) => <p>{row.getValue("name")}</p>,
+    enableHiding: true,
+    enableSorting: true,
+  },
+  {
+    accessorKey: "groupCode",
+    header: ({ column }) => (
+      <div className="flex justify-center items-center">
+        <DataTableColumnHeader column={column} title="Group Code" />
+      </div>
+    ),
+    cell: ({ row }) => <p>{row.getValue("groupCode")}</p>,
+    enableHiding: true,
+    enableSorting: true,
+  },
+  {
+    accessorKey: "description",
+    header: ({ column }) => (
+      <div className="flex justify-center items-center">
+        <DataTableColumnHeader column={column} title="Description" />
+      </div>
+    ),
+    cell: ({ row }) => <p>{row.getValue("description")}</p>,
+    enableHiding: true,
+    enableSorting: true,
+  },
+  {
+    accessorKey: "action",
+    header: "Action",
+    cell: ({ row }) => {
+      const data = row.original;
+
+      return (
+        <div className="flex justify-center gap-4">
+          <Link href={`/finance/editFeeHeader/${data._id}`}>
+            <Button>Edit</Button>
+          </Link>
+          <Button
+            onClick={() => handleDeleteHeader?.(data._id)}
+            variant="destructive">
+            Delete
+          </Button>
+        </div>
+      );
+    },
+  },
+];
+
+// --------------------------------------------------------------------------------------------------
+// --------------------------------------------------------------------------------------------------
+
+import { FaRegTrashCan } from "react-icons/fa6";
+import { FaEdit } from "react-icons/fa";
+
+export const FinanceColumnFeeMasters = (
+  handleEdit?: (termId: number) => void,
+  handleDeleteHeader?: (termId: string) => Promise<void>,
+  handleAddHeader?: () => void,
+  handleDeleteMaster?: (masterId: string) => Promise<void>
+): ColumnDef<any>[] => [
+  {
+    id: "serial_number",
+    header: () => <span>Sl. No.</span>,
+    cell: ({ row }) => (
+      <div className="flex justify-center items-center">
+        <span>{row.index + 1}</span>
+      </div>
+    ),
+    enableSorting: false,
+    enableHiding: false,
+  },
+  {
+    accessorKey: "group",
+    header: ({ column }) => (
+      <div className="flex justify-center items-center">
+        <DataTableColumnHeader column={column} title="Group" />
+      </div>
+    ),
+    cell: ({ row }) => <p>{row.getValue("group") as string}</p>,
+    enableHiding: true,
+    enableSorting: true,
+  },
+  {
+    accessorKey: "headers",
+    header: ({ column }) => (
+      <div className="flex justify-center items-center">
+        <DataTableColumnHeader column={column} title="Assigned Fee Heads" />
+      </div>
+    ),
+    cell: ({ row }) => {
+      const headers = (row.getValue("headers") as FinanceHeader[]) || [];
+
+      console.log("Headers: ", headers);
+
+      return (
+        <div>
+          {headers.length > 0 ? (
+            headers.map((header) => (
+              <div key={header.id} className="flex justify-between">
+                <span>{header.name}</span>
+                <span>{header.feesCode}</span>
+                <div className="flex gap-2">
+                  <Link href={`/finance/editFeeHeader/${header.id}`}>
+                    <Button
+                      variant="outline"
+                      className="m-1 font-extrabold bg-gray-950 text-[#fff] hover:bg-gray-800 hover:text-[#fff]">
+                      <FaEdit />
+                    </Button>
+                  </Link>
+                  <Button
+                    onClick={() => handleDeleteHeader?.(header.id)}
+                    variant="destructive"
+                    className="text-[16px] m-1 font-extrabold">
+                    <FaRegTrashCan />
+                  </Button>
+                </div>
+              </div>
+            ))
+          ) : (
+            <span>No headers available</span> // Fallback message
+          )}
+        </div>
+      );
+    },
+    enableHiding: true,
+    enableSorting: true,
+  },
+  {
+    accessorKey: "action",
+    header: "Actions",
+    cell: ({ row }) => {
+      const data = row.original;
+
+      return (
+        <div className="flex justify-center gap-4">
+          <Button onClick={() => handleAddHeader?.()}>Add Header</Button>
+          <Button
+            onClick={() => handleDeleteMaster?.(data.id)}
+            variant="destructive">
+            Delete Master
           </Button>
         </div>
       );

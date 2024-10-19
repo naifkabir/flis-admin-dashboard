@@ -1,12 +1,12 @@
 "use client";
 
-import { FinanceColumnFeeHeaders } from "@/app/data-table-components/columns";
+import { FinanceColumnFeeGroups } from "@/app/data-table-components/columns";
 import { FinanceDataTable } from "@/app/data-table-components/finance-table-components/data-table";
 import PageLoader from "@/components/ui-components/PageLoading";
 import {
-  GetAllFinanceHeaders,
-  CreateNewFinanceHeader,
+  CreateNewFinanceGroup,
   DeleteHeader,
+  GetAllFinanceGroups,
 } from "@/lib/actions/finance.action";
 import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -22,31 +22,27 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
-interface FinanceHeader {
+interface FinanceGroup {
   id: string;
   name: string;
-  feesCode: string;
-  occurrence: string;
-  dueDate: string;
+  groupCode: string;
   description?: string;
 }
 
-const FinancePage = () => {
-  const [data, setData] = useState<FinanceHeader[]>([]);
+const FinancePageGroups = () => {
+  const [data, setData] = useState<FinanceGroup[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [isModalOpen, setModalOpen] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
-    feesCode: "",
-    occurrence: "",
-    dueDate: "",
+    groupCode: "",
     description: "",
   });
 
   useEffect(() => {
     const fetchData = async () => {
-      const result = await GetAllFinanceHeaders();
+      const result = await GetAllFinanceGroups();
       if (result.error) {
         setError(result.error);
       } else {
@@ -66,46 +62,41 @@ const FinancePage = () => {
     }));
   };
 
-  const handleOccurrenceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData((prevData) => ({
-      ...prevData,
-      occurrence: e.target.value,
-    }));
-  };
-
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     // Validate required fields
-    const { name, feesCode, occurrence, dueDate } = formData;
-    if (!name || !feesCode || !occurrence || !dueDate) {
+    const { name, groupCode } = formData;
+    if (!name || !groupCode) {
       alert("Please fill in all required fields.");
       return;
     }
 
-    // Call API to create new header
-    const result = await CreateNewFinanceHeader(formData);
+    console.log(formData);
+
+    // Call API to create new finance group
+    const result = await CreateNewFinanceGroup(formData);
     if (result.error) {
       setError(result.error);
-      alert("Error creating new header: " + result.error);
+      alert("Error creating new group: " + result.error);
+      window.location.reload();
     } else {
-      setData((prevData) => [...prevData, result]);
+      setData(result);
       setModalOpen(false);
+      window.location.reload();
     }
 
     // Reset form data
     setFormData({
       name: "",
-      feesCode: "",
-      occurrence: "",
-      dueDate: "",
+      groupCode: "",
       description: "",
     });
   };
 
   // Handle edit Header
   const handleEdit = async (id: number) => {
-    // Handle edit logic
+    // Implement edit functionality here if needed
   };
 
   // Handle Delete Header
@@ -146,20 +137,20 @@ const FinancePage = () => {
       <div className="sub-container px-4">
         <div>
           <div className="grid grid-cols-2">
-            <h1 className="font-bold underline text-lg mb-8">Fee Headers</h1>
+            <h1 className="font-bold underline text-lg mb-8">Fee Groups</h1>
             <div className="flex gap-4 mb-4 justify-self-end">
               <Button variant="outline" onClick={() => window.history.back()}>
                 Go Back
               </Button>
               <Dialog open={isModalOpen} onOpenChange={setModalOpen}>
                 <DialogTrigger asChild>
-                  <Button>Create New Fee Header</Button>
+                  <Button>Create New Fee Group</Button>
                 </DialogTrigger>
                 <DialogContent className="max-w-[650px]">
                   <DialogHeader>
-                    <DialogTitle>Create New Header</DialogTitle>
+                    <DialogTitle>Create New Group</DialogTitle>
                     <DialogDescription>
-                      Fill in the details for the new finance header.
+                      Fill in the details for the new finance group.
                     </DialogDescription>
                   </DialogHeader>
                   <form onSubmit={handleSubmit} className="grid gap-4 py-4">
@@ -177,50 +168,13 @@ const FinancePage = () => {
                       />
                     </div>
                     <div className="grid grid-cols-4 items-center gap-4">
-                      <Label htmlFor="feesCode" className="text-right">
-                        Fees Code
+                      <Label htmlFor="groupCode" className="text-right">
+                        Group Code
                       </Label>
                       <Input
-                        id="feesCode"
-                        name="feesCode"
-                        value={formData.feesCode}
-                        onChange={handleInputChange}
-                        className="col-span-3 border-2"
-                        required
-                      />
-                    </div>
-                    <div className="grid grid-cols-4 items-center gap-4">
-                      <Label className="text-right">Occurrence</Label>
-                      <div className="col-span-3 flex gap-4">
-                        {["Monthly", "Quarterly", "Half Yearly", "Annual"].map(
-                          (option) => (
-                            <label
-                              key={option}
-                              className="flex items-center text-sm">
-                              <Input
-                                type="radio"
-                                name="occurrence"
-                                value={option}
-                                checked={formData.occurrence === option}
-                                onChange={handleOccurrenceChange}
-                                className="mr-2 radio-small"
-                                required // Ensure radio selection is validated
-                              />
-                              {option}
-                            </label>
-                          )
-                        )}
-                      </div>
-                    </div>
-                    <div className="grid grid-cols-4 items-center gap-4">
-                      <Label htmlFor="dueDate" className="text-right">
-                        Due Date
-                      </Label>
-                      <Input
-                        id="dueDate"
-                        name="dueDate"
-                        type="date"
-                        value={formData.dueDate}
+                        id="groupCode"
+                        name="groupCode"
+                        value={formData.groupCode}
                         onChange={handleInputChange}
                         className="col-span-3 border-2"
                         required
@@ -239,7 +193,7 @@ const FinancePage = () => {
                       />
                     </div>
                     <DialogFooter>
-                      <Button type="submit">Create Header</Button>
+                      <Button type="submit">Create Group</Button>
                     </DialogFooter>
                   </form>
                 </DialogContent>
@@ -247,8 +201,8 @@ const FinancePage = () => {
             </div>
           </div>
           <FinanceDataTable
-            columns={FinanceColumnFeeHeaders(handleEdit, handleDeleteHeader)}
-            data={data ? data : []}
+            columns={FinanceColumnFeeGroups(handleEdit, handleDeleteHeader)}
+            data={data}
           />
         </div>
       </div>
@@ -256,4 +210,4 @@ const FinancePage = () => {
   );
 };
 
-export default FinancePage;
+export default FinancePageGroups;

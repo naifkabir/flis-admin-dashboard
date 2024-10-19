@@ -188,7 +188,8 @@ body::-webkit-scrollbar,
 
 /* ------------------------------------------- */
 body {
-  font-family: "Comic Sans MS", cursive, sans-serif;
+  /* font-family: "Comic Sans MS", cursive, sans-serif; */
+  font-weight: 600;
 }
 
 h1,

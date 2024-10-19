@@ -73,6 +73,8 @@ export const menuItems = [
     name: "Fees",
     subItems: [
       { label: "Fee Headers", href: "/finance/feesHeader" },
+      { label: "Fee Groups", href: "/finance/feesGroup" },
+      { label: "Fee Masters", href: "/finance/feesMaster" },
       { label: "Collect Fee", href: "/fees/collect" },
       { label: "Search Payment", href: "/fees/search-payment" },
       { label: "Fee Carry Forward", href: "/fees/carry-forward" },

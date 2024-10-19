@@ -76,7 +76,7 @@ export async function GetHeaderById(financeId: string) {
   const cookieStore = cookies();
   const accessToken = cookieStore.get("accessToken")?.value;
 
-  console.log(financeId);
+  console.log("Fetching headers for financeId:", financeId);
 
   if (!accessToken) {
     return { error: "No access token found." };
@@ -96,7 +96,7 @@ export async function GetHeaderById(financeId: string) {
   }
 }
 
-export async function UpdateHeader(data: any) {
+export async function UpdateFeeHeader(data: any) {
   const cookieStore = cookies();
   const accessToken = cookieStore.get("accessToken")?.value;
 
@@ -105,7 +105,7 @@ export async function UpdateHeader(data: any) {
   }
 
   try {
-    const response = await apiClient.post(`/fees/header/create`, data, {
+    const response = await apiClient.put(`/fees/header/update`, data, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
@@ -113,6 +113,73 @@ export async function UpdateHeader(data: any) {
     return response.data.data;
   } catch (error: any) {
     console.error("Error approving application:", error);
+    return { error: error.message };
+  }
+}
+
+// -------------------------------------------------------------------
+
+export async function GetAllFinanceGroups() {
+  const cookieStore = cookies();
+  const accessToken = cookieStore.get("accessToken")?.value;
+
+  if (!accessToken) {
+    return null;
+  }
+
+  try {
+    const response = await apiClient.get(`/fees/group/get-all`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    return response.data.data;
+  } catch (error: any) {
+    return { error: error.message };
+  }
+}
+
+export async function CreateNewFinanceGroup(data: any) {
+  const cookieStore = cookies();
+  const accessToken = cookieStore.get("accessToken")?.value;
+
+  console.log("Data: ", data);
+
+  if (!accessToken) {
+    return null;
+  }
+
+  try {
+    const response = await apiClient.post(`/fees/group/create`, data, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    return response.data;
+  } catch (error: any) {
+    console.error("Error approving application:", error);
+    return { error: error.message };
+  }
+}
+
+// -------------------------------------------------------------------
+
+export async function GetAllFinanceMaster() {
+  const cookieStore = cookies();
+  const accessToken = cookieStore.get("accessToken")?.value;
+
+  if (!accessToken) {
+    return null;
+  }
+
+  try {
+    const response = await apiClient.get(`/fees/master/get-all`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    return response.data.data;
+  } catch (error: any) {
     return { error: error.message };
   }
 }
