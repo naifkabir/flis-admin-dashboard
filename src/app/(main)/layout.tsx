@@ -1,4 +1,4 @@
-import Navbar from "@/components/Menu";
+import Navbar from "@/components/Navbar-menu";
 import React from "react";
 
 export default function Layout({

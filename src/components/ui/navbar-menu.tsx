@@ -56,6 +56,23 @@ export const MenuItem = ({
   );
 };
 
+// export const Menu = ({
+//   setActive,
+//   children,
+// }: {
+//   setActive: (item: string | null) => void;
+//   children: React.ReactNode;
+// }) => {
+//   return (
+//     <nav
+//       onMouseLeave={() => setActive(null)} // resets the state
+//       className="relative rounded-full border border-transparent dark:bg-black dark:border-white/[0.2] bg-white shadow-input flex justify-center space-x-4">
+//       {children}
+//     </nav>
+//   );
+// };
+
+// Menu Component
 export const Menu = ({
   setActive,
   children,
@@ -65,7 +82,7 @@ export const Menu = ({
 }) => {
   return (
     <nav
-      onMouseLeave={() => setActive(null)} // resets the state
+      onMouseLeave={() => setActive(null)} // Resets the state
       className="relative rounded-full border border-transparent dark:bg-black dark:border-white/[0.2] bg-white shadow-input flex justify-center space-x-4">
       {children}
     </nav>

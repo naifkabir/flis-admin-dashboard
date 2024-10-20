@@ -52,7 +52,7 @@ const FinancePage = () => {
   useEffect(() => {
     const fetchData = async () => {
       const result = await GetAllFinanceHeaders();
-      if (result.error) {
+      if (result?.error) {
         setError(result.error);
       } else {
         setData(result);
@@ -270,13 +270,15 @@ const FinancePage = () => {
       </div>
 
       {/* Alert Dialog for Deleting Header */}
-      <AlertDialogComponent
-        open={isDeleteDialogOpen}
-        onOpenChange={setDeleteDialogOpen}
-        onConfirm={confirmDeleteHeader}
-        title="Are you sure?"
-        description="This action cannot be undone. This will permanently delete this header."
-      />
+      <div className="hidden">
+        <AlertDialogComponent
+          open={isDeleteDialogOpen}
+          onOpenChange={setDeleteDialogOpen}
+          onConfirm={confirmDeleteHeader}
+          title="Are you sure?"
+          description="This action cannot be undone. This will permanently delete this header."
+        />
+      </div>
 
       {/* Toast Notifications */}
       <Toaster richColors />

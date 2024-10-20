@@ -211,13 +211,15 @@ const FinancePageGroups = () => {
       </div>
 
       {/* Alert Dialog for Deleting Header */}
-      <AlertDialogComponent
-        open={isDeleteDialogOpen}
-        onOpenChange={setDeleteDialogOpen}
-        onConfirm={confirmDeleteHeader}
-        title="Are you sure?"
-        description="This action cannot be undone. This will permanently delete this group."
-      />
+      <div className="hidden">
+        <AlertDialogComponent
+          open={isDeleteDialogOpen}
+          onOpenChange={setDeleteDialogOpen}
+          onConfirm={confirmDeleteHeader}
+          title="Are you sure?"
+          description="This action cannot be undone. This will permanently delete this group."
+        />
+      </div>
 
       {/* Toast Notifications */}
       <Toaster richColors />
