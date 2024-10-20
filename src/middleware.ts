@@ -5,6 +5,17 @@ const protectedRoutes = [
   "/student/counseling",
   "/student/pending",
   "/student/reject",
+  "/admin/profilePage",
+  "/dashboard",
+  "/finance/editFeeGroup",
+  "/finance/editFeeHeader",
+  "/finance/feesGroup",
+  "/feesHeader",
+  "/feesMaster",
+  "/student/approve",
+  "/student/counseling",
+  "/student/pending",
+  "/student/reject",
 ];
 
 export async function middleware(request: any) {

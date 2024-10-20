@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import LoginAnimation from "@/components/ui-components/LoginAnimation";
 import Link from "next/link";
 import { LoginUser } from "@/lib/actions/adminAuth.action";
+import { Toaster, toast } from "sonner";
 
 interface LoginResponse {
   message?: string;
@@ -34,11 +35,16 @@ export default function Login() {
     // Email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (pass === "" || email === "") {
-      alert("Email or Password required!");
+      toast.warning("Email or Password required!", {
+        position: "top-center",
+      });
       return;
     }
+
     if (!emailRegex.test(email)) {
-      alert("Provide a valid email");
+      toast.warning("Provide a valid email", {
+        position: "top-center",
+      });
       return;
     }
 
@@ -50,10 +56,15 @@ export default function Login() {
     setLoading(false);
 
     if (result.message) {
-      alert("Login Successfully");
-      router.push(result.redirect?.destination || "/");
+      toast.success("Login Successfully, Welcome to FLIS", {
+        position: "top-center",
+      });
+      const redirectDestination = result.redirect?.destination || "/";
+      router.push(redirectDestination);
     } else if (result.error) {
-      alert(result.error);
+      toast.error(`Failed to login!! ${result.error}`, {
+        position: "top-center",
+      });
     }
   };
 
@@ -62,7 +73,7 @@ export default function Login() {
       <div className="flex w-full max-w-6xl p-8 bg-white rounded-lg shadow-lg">
         {/* Left Column */}
         <div className="w-full md:w-1/2 flex flex-col justify-center p-6">
-          <h1 className="text-4xl font-bold text-gray-800 mb-4">
+          <h1 className="login-main-text text-4xl font-bold text-gray-800 mb-4">
             Welcome back!
           </h1>
           <p className="text-gray-500 mb-8">
@@ -164,7 +175,7 @@ export default function Login() {
           {/* Register Link */}
           <p className="text-center text-sm text-gray-700 mt-6">
             Not a member?{" "}
-            <Link href="/signup" className="text-green-600 hover:underline">
+            <Link href="/sign-up" className="text-green-600 hover:underline">
               Register now
             </Link>
           </p>
@@ -203,6 +214,7 @@ export default function Login() {
           Created and Developed by <strong>Apparium</strong>, 2024
         </span>
       </div>
+      <Toaster richColors />
     </div>
   );
 }

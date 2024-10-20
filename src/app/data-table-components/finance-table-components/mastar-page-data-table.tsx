@@ -28,14 +28,14 @@ import { cn } from "@/lib/utils";
 
 import { IoSearchOutline } from "react-icons/io5";
 import { DataTableViewOptions } from "../data-table-view-options";
-import { DataTablePagination } from "../data-table-pagination";
+import { MasterDataTablePagination } from "../master-table-pagination";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
 }
 
-export function FinanceDataTable<TData, TValue>({
+export function MasterPageDataTable<TData, TValue>({
   columns,
   data,
 }: DataTableProps<TData, TValue>) {
@@ -146,7 +146,7 @@ export function FinanceDataTable<TData, TValue>({
           </TableBody>
         </Table>
       </div>
-      <DataTablePagination table={table} />
+      <MasterDataTablePagination table={table} />
     </div>
   );
 }

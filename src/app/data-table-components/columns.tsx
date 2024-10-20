@@ -245,8 +245,7 @@ export const FinanceColumnFeeHeaders = (
 // --------------------------------------------------------------------------------------------------
 
 export const FinanceColumnFeeGroups = (
-  handleEdit?: (termId: number) => void,
-  handleDeleteHeader?: (termId: string) => Promise<void>
+  handleDeleteGroup?: (termId: string) => Promise<void>
 ): ColumnDef<any>[] => [
   {
     id: "serial_number",
@@ -300,11 +299,11 @@ export const FinanceColumnFeeGroups = (
 
       return (
         <div className="flex justify-center gap-4">
-          <Link href={`/finance/editFeeHeader/${data._id}`}>
+          <Link href={`/finance/editFeeGroup/${data._id}`}>
             <Button>Edit</Button>
           </Link>
           <Button
-            onClick={() => handleDeleteHeader?.(data._id)}
+            onClick={() => handleDeleteGroup?.(data._id)}
             variant="destructive">
             Delete
           </Button>
@@ -321,10 +320,10 @@ import { FaRegTrashCan } from "react-icons/fa6";
 import { FaEdit } from "react-icons/fa";
 
 export const FinanceColumnFeeMasters = (
-  handleEdit?: (termId: number) => void,
-  handleDeleteHeader?: (termId: string) => Promise<void>,
-  handleAddHeader?: () => void,
-  handleDeleteMaster?: (masterId: string) => Promise<void>
+  handleEditAmount?: (amountData: any) => void,
+  handleDeleteHeader?: (deleteHeaderInMasterData: any) => Promise<void>,
+  handleAddHeader?: (master_id: string) => void,
+  handleDeleteMaster?: (master_id: string) => Promise<void>
 ): ColumnDef<any>[] => [
   {
     id: "serial_number",
@@ -334,8 +333,8 @@ export const FinanceColumnFeeMasters = (
         <span>{row.index + 1}</span>
       </div>
     ),
-    enableSorting: false,
     enableHiding: false,
+    enableSorting: true,
   },
   {
     accessorKey: "group",
@@ -345,53 +344,81 @@ export const FinanceColumnFeeMasters = (
       </div>
     ),
     cell: ({ row }) => <p>{row.getValue("group") as string}</p>,
-    enableHiding: true,
-    enableSorting: true,
+    enableHiding: false,
+    enableSorting: false,
   },
   {
     accessorKey: "headers",
     header: ({ column }) => (
       <div className="flex justify-center items-center">
-        <DataTableColumnHeader column={column} title="Assigned Fee Heads" />
+        <DataTableColumnHeader column={column} title="Assigned Fee Headers" />
       </div>
     ),
     cell: ({ row }) => {
+      const master_id = row.original?._id;
       const headers = (row.getValue("headers") as FinanceHeader[]) || [];
-
-      console.log("Headers: ", headers);
 
       return (
         <div>
           {headers.length > 0 ? (
-            headers.map((header) => (
-              <div key={header.id} className="flex justify-between">
-                <span>{header.name}</span>
-                <span>{header.feesCode}</span>
-                <div className="flex gap-2">
-                  <Link href={`/finance/editFeeHeader/${header.id}`}>
+            headers.map((header) => {
+              const amountBgClass =
+                header.amount == "0" ? "text-red-600" : "text-green-600";
+
+              const obj_id = header._id;
+              const amount = header.amount;
+
+              return (
+                <div
+                  key={header._id}
+                  className="grid grid-cols-3 gap-3 place-items-center p-2">
+                  <span className="text-[11px] justify-self-start">
+                    Header Name :{" "}
+                    <strong className="text-[13px] font-bold tracking-wider">
+                      {header.name}
+                    </strong>
+                  </span>
+                  <span
+                    className={`p-1 font-bold tracking-wide justify-self-start" ${amountBgClass}`}>
+                    {header.amount}
+                  </span>
+                  <div className="flex">
+                    <section
+                      // href={`/finance/editFeeHeader/${header._id}`}
+                      className="m-1">
+                      <Button
+                        variant="outline"
+                        onClick={() =>
+                          handleEditAmount?.({
+                            obj_id,
+                            master_id,
+                            amount,
+                          })
+                        }
+                        className="font-extrabold bg-gray-950 text-[#fff] hover:bg-gray-800 hover:text-[#fff]">
+                        <FaEdit />
+                      </Button>
+                    </section>
                     <Button
-                      variant="outline"
-                      className="m-1 font-extrabold bg-gray-950 text-[#fff] hover:bg-gray-800 hover:text-[#fff]">
-                      <FaEdit />
+                      onClick={() =>
+                        handleDeleteHeader?.({ obj_id, master_id })
+                      }
+                      variant="destructive"
+                      className="text-[16px] font-extrabold m-1">
+                      <FaRegTrashCan />
                     </Button>
-                  </Link>
-                  <Button
-                    onClick={() => handleDeleteHeader?.(header.id)}
-                    variant="destructive"
-                    className="text-[16px] m-1 font-extrabold">
-                    <FaRegTrashCan />
-                  </Button>
+                  </div>
                 </div>
-              </div>
-            ))
+              );
+            })
           ) : (
-            <span>No headers available</span> // Fallback message
+            <span>No headers available</span>
           )}
         </div>
       );
     },
-    enableHiding: true,
-    enableSorting: true,
+    enableHiding: false,
+    enableSorting: false,
   },
   {
     accessorKey: "action",
@@ -401,9 +428,11 @@ export const FinanceColumnFeeMasters = (
 
       return (
         <div className="flex justify-center gap-4">
-          <Button onClick={() => handleAddHeader?.()}>Add Header</Button>
+          <Button onClick={() => handleAddHeader?.(data._id)}>
+            Add Header
+          </Button>
           <Button
-            onClick={() => handleDeleteMaster?.(data.id)}
+            onClick={() => handleDeleteMaster?.(data._id)}
             variant="destructive">
             Delete Master
           </Button>

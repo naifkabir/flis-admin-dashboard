@@ -33,10 +33,10 @@ const Navbar = () => {
 
   // Logout function
   const handleLogout = async () => {
-    console.log("Before Call");
+    // console.log("Before Call");
     const response = await Logout(); // Call Logout API
-    console.log("After Call");
-    console.log("Response: ", response);
+    // console.log("After Call");
+    // console.log("Response: ", response);
 
     // Check the status code and success state
     if (response.statusCode === 200 && response.success) {

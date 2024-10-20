@@ -5,7 +5,7 @@ import { FinanceDataTable } from "@/app/data-table-components/finance-table-comp
 import PageLoader from "@/components/ui-components/PageLoading";
 import {
   CreateNewFinanceGroup,
-  DeleteHeader,
+  DeleteGroup,
   GetAllFinanceGroups,
 } from "@/lib/actions/finance.action";
 import React, { useEffect, useState } from "react";
@@ -21,6 +21,8 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Toaster, toast } from "sonner";
+import AlertDialogComponent from "@/components/Alart";
 
 interface FinanceGroup {
   id: string;
@@ -39,6 +41,8 @@ const FinancePageGroups = () => {
     groupCode: "",
     description: "",
   });
+  const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [headerIdToDelete, setHeaderIdToDelete] = useState<string>("");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -72,7 +76,7 @@ const FinancePageGroups = () => {
       return;
     }
 
-    console.log(formData);
+    // console.log(formData);
 
     // Call API to create new finance group
     const result = await CreateNewFinanceGroup(formData);
@@ -94,22 +98,21 @@ const FinancePageGroups = () => {
     });
   };
 
-  // Handle edit Header
-  const handleEdit = async (id: number) => {
-    // Implement edit functionality here if needed
+  const handleDeleteGroup = async (feeGroupId: string) => {
+    setHeaderIdToDelete(feeGroupId);
+    setDeleteDialogOpen(true); // Open the delete confirmation dialog
   };
 
-  // Handle Delete Header
-  const handleDeleteHeader = async (headerId: string) => {
-    console.log(headerId);
-    const result = await DeleteHeader(headerId);
+  const confirmDeleteHeader = async () => {
+    const result = await DeleteGroup(headerIdToDelete);
 
     if (result.error) {
       setError(result.error);
-      alert("Error deleting header: " + result.error);
-      window.location.reload();
+      alert("Error deleting group: " + result.error);
+      setDeleteDialogOpen(false);
     } else {
-      alert("Header was deleted successfully");
+      toast.success("Header deleted successfully!"); // Show success toast
+      setDeleteDialogOpen(false);
       window.location.reload();
     }
   };
@@ -201,11 +204,23 @@ const FinancePageGroups = () => {
             </div>
           </div>
           <FinanceDataTable
-            columns={FinanceColumnFeeGroups(handleEdit, handleDeleteHeader)}
+            columns={FinanceColumnFeeGroups(handleDeleteGroup)}
             data={data}
           />
         </div>
       </div>
+
+      {/* Alert Dialog for Deleting Header */}
+      <AlertDialogComponent
+        open={isDeleteDialogOpen}
+        onOpenChange={setDeleteDialogOpen}
+        onConfirm={confirmDeleteHeader}
+        title="Are you sure?"
+        description="This action cannot be undone. This will permanently delete this group."
+      />
+
+      {/* Toast Notifications */}
+      <Toaster richColors />
     </div>
   );
 };

@@ -16,14 +16,14 @@ interface SignUpData {
   confirmPassword: string;
 }
 
-interface ChangePasswordData {
-  oldPassword: string;
-  newPassword: string;
-}
-
 interface ApiResponse<T> {
   message: string;
   data?: T;
+}
+
+export interface ChangePasswordResponse {
+  success: boolean;
+  message: string;
 }
 
 // ----------------------------------------------------------------------
@@ -114,7 +114,7 @@ export const GetCurrentAdminApi = async (): Promise<any | null> => {
 export const ChangePasswordApi = async (
   oldPassword: string,
   newPassword: string
-): Promise<{ success: boolean; message: string }> => {
+): Promise<ChangePasswordResponse> => {
   const cookieStore = cookies();
   const accessToken = cookieStore.get("accessToken")?.value;
 
@@ -123,7 +123,7 @@ export const ChangePasswordApi = async (
   }
 
   try {
-    await apiClient.post<ApiResponse<{}>>(
+    const response = await apiClient.post(
       "/user/change-password",
       {
         oldPassword,
@@ -135,7 +135,11 @@ export const ChangePasswordApi = async (
         },
       }
     );
-    return { success: true, message: "Password changed successfully." };
+
+    return {
+      success: true,
+      message: response.data.message || "Password changed successfully.",
+    };
   } catch (error: any) {
     console.error("Change password failed:", error);
     return {

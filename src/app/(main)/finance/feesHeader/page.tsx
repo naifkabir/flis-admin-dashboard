@@ -19,8 +19,11 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Toaster, toast } from "sonner";
+import AlertDialogComponent from "@/components/Alart";
 
 interface FinanceHeader {
   id: string;
@@ -43,6 +46,8 @@ const FinancePage = () => {
     dueDate: "",
     description: "",
   });
+  const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [headerIdToDelete, setHeaderIdToDelete] = useState<string>("");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -91,6 +96,7 @@ const FinancePage = () => {
     } else {
       setData((prevData) => [...prevData, result]);
       setModalOpen(false);
+      toast.success("Header created successfully!"); // Show success toast
     }
 
     // Reset form data
@@ -105,20 +111,29 @@ const FinancePage = () => {
 
   // Handle edit Header
   const handleEdit = async (id: number) => {
-    // Handle edit logic
+    // Placeholder for edit logic
+    console.log(`Editing header with ID: ${id}`);
   };
 
   // Handle Delete Header
   const handleDeleteHeader = async (headerId: string) => {
-    console.log(headerId);
-    const result = await DeleteHeader(headerId);
+    setHeaderIdToDelete(headerId);
+    setDeleteDialogOpen(true); // Open the delete confirmation dialog
+  };
+
+  const confirmDeleteHeader = async () => {
+    const result = await DeleteHeader(headerIdToDelete);
 
     if (result.error) {
       setError(result.error);
       alert("Error deleting header: " + result.error);
-      window.location.reload();
+      setDeleteDialogOpen(false);
     } else {
-      alert("Header was deleted successfully");
+      setData((prevData) =>
+        prevData.filter((header) => header.id !== headerIdToDelete)
+      );
+      toast.success("Header deleted successfully!"); // Show success toast
+      setDeleteDialogOpen(false);
       window.location.reload();
     }
   };
@@ -204,7 +219,7 @@ const FinancePage = () => {
                                 checked={formData.occurrence === option}
                                 onChange={handleOccurrenceChange}
                                 className="mr-2 radio-small"
-                                required // Ensure radio selection is validated
+                                required
                               />
                               {option}
                             </label>
@@ -226,6 +241,7 @@ const FinancePage = () => {
                         required
                       />
                     </div>
+
                     <div className="grid grid-cols-4 items-center gap-4">
                       <Label htmlFor="description" className="text-right">
                         Description
@@ -252,6 +268,18 @@ const FinancePage = () => {
           />
         </div>
       </div>
+
+      {/* Alert Dialog for Deleting Header */}
+      <AlertDialogComponent
+        open={isDeleteDialogOpen}
+        onOpenChange={setDeleteDialogOpen}
+        onConfirm={confirmDeleteHeader}
+        title="Are you sure?"
+        description="This action cannot be undone. This will permanently delete this header."
+      />
+
+      {/* Toast Notifications */}
+      <Toaster richColors />
     </div>
   );
 };

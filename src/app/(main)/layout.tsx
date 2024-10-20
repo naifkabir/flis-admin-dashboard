@@ -9,7 +9,7 @@ export default function Layout({
   return (
     <div className="flex flex-col min-h-screen">
       {/* Menu at the Top */}
-      <div className="sticky top-0 z-[99]">
+      <div className="sticky top-0 z-[3]">
         <Navbar />
       </div>
 
