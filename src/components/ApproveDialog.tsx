@@ -32,7 +32,13 @@ const isDateInThePast = (dateString: any) => {
   return selectedDate < today;
 };
 
-const ApproveDialog = ({ docId }: { docId: string }) => {
+const ApproveDialog = ({
+  docId,
+  applicationStatus,
+}: {
+  docId: string;
+  applicationStatus: any;
+}) => {
   const form = useForm<z.infer<typeof studentApproveFormScheam>>({
     resolver: zodResolver(studentApproveFormScheam),
   });
@@ -68,14 +74,14 @@ const ApproveDialog = ({ docId }: { docId: string }) => {
       docId, // Add docId to the data object
     };
 
-    console.log("submitData: ", submitData);
+    // console.log("submitData: ", submitData);
 
     try {
       const response = await ApproveApplicationForCounselling(submitData);
       if (response.error) {
+        console.log("Application approved:", response);
         setError(response.error);
       } else {
-        console.log("Application approved:", response);
         setSuccess(true);
 
         setTimeout(() => {
@@ -94,13 +100,21 @@ const ApproveDialog = ({ docId }: { docId: string }) => {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogHeader>
         <DialogTrigger asChild>
-          <Button className="bg-green-500 cursor-pointer">Approve</Button>
+          <Button className="bg-[#228B22] cursor-pointer">
+            {applicationStatus === "UNDER-COUNSELLING"
+              ? "Assign New Counselling Date"
+              : "Approve Application"}
+          </Button>
         </DialogTrigger>
       </DialogHeader>
       <DialogContent>
-        <DialogTitle>Approve Counseling Application</DialogTitle>
+        <DialogTitle>
+          {applicationStatus === "UNDER-COUNSELLING"
+            ? "Assign New Counselling Date"
+            : " Invite Student for Counseling"}
+        </DialogTitle>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-3">
             <FormField
               control={form.control}
               name="date"
@@ -128,8 +142,8 @@ const ApproveDialog = ({ docId }: { docId: string }) => {
               )}
             />
             <div className="flex justify-end pt-4">
-              <Button type="submit" disabled={loading}>
-                {loading ? "Submitting..." : "Submit"}
+              <Button type="submit" disabled={loading} className="bg-[#228B22]">
+                {loading ? "Sending..." : "Send SMS & Email"}
               </Button>
             </div>
             {error && <p className="text-red-500">{error}</p>}

@@ -3,6 +3,7 @@
 import PageLoader from "@/components/ui-components/PageLoading";
 import { GetHeaderById, UpdateFeeHeader } from "@/lib/actions/finance.action";
 import { useEffect, useState } from "react";
+import { Toaster, toast } from "sonner";
 
 export default function EditFinance({
   params,
@@ -55,10 +56,10 @@ export default function EditFinance({
     const response = await UpdateFeeHeader(data);
     setSubmitting(false);
 
-    if (response.error) {
-      alert("Failed to update finance data: " + response.error);
+    if (response?.error) {
+      toast.error("Failed to update finance data: " + response.error);
     } else {
-      alert("Finance data updated successfully!");
+      toast.success("Finance data updated successfully!");
       window.history.back();
     }
   };
@@ -235,6 +236,7 @@ export default function EditFinance({
           </button>
         </div>
       </form>
+      <Toaster richColors />
     </div>
   );
 }

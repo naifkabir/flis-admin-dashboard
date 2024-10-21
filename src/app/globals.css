@@ -2,6 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
+@import url("https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap");
+
 html,
 body,
 * {
@@ -188,18 +190,12 @@ body::-webkit-scrollbar,
 
 /* ------------------------------------------- */
 body {
-  font-weight: 600;
+  font-weight: 500;
+  font-family: "Open Sans", sans-serif;
 }
 
 .login-main-text {
   font-family: "Comic Sans MS", cursive, sans-serif;
-}
-
-h1,
-h2,
-h3,
-h4 {
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
 }
 
 /* Button hover animations */
@@ -207,9 +203,9 @@ button {
   transition: transform 0.2s;
 }
 
-button:hover {
+/* button:hover {
   transform: scale(1.05);
-}
+} */
 
 /* ----------------------------------------- */
 .radio-small {

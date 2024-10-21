@@ -119,7 +119,15 @@ export default function Login() {
             </div>
 
             {/* Forgot Password Link */}
-            <div className="text-right text-sm">
+            <div className="text-right text-sm text-gray-700">
+              {/* <label className="flex items-center">
+                <input
+                  type="checkbox"
+                  className="mr-2 rounded-lg h-[14px] w-[14px]" // Space between checkbox and label
+                  // You can add state management here if necessary
+                />
+                Remember Me
+              </label> */}
               <Link href="#" className="text-gray-700 hover:underline">
                 Forgot Password?
               </Link>

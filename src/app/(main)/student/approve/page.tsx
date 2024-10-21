@@ -33,8 +33,9 @@ export default async function ApproveStudentPage() {
 
   // New function to handle rejection
   const handleReject = async (studentId: string) => {
+    console.log("studentId: ", studentId);
     const response = await RejectApplication(studentId);
-    if (response && !response.error) {
+    if (response && !response?.error) {
       // Reload the data after rejection
       const result = await GetAllApplication("APPROVED");
       const filteredData = studentTableFilter(result);

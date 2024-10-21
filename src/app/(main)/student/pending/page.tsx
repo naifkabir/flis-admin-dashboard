@@ -20,11 +20,11 @@ export default function PendingStudentPage() {
       setError(false);
       try {
         const result = await GetAllApplication("PENDING");
-        console.log("Fetched data:", result);
+        // console.log("Fetched data:", result);
         const filteredData = studentTableFilter(result);
         setData(filteredData);
       } catch (err) {
-        console.error("Error fetching data:", err);
+        // console.error("Error fetching data:", err);
         setError(true);
       } finally {
         setLoading(false);
@@ -36,7 +36,9 @@ export default function PendingStudentPage() {
 
   // New function to handle rejection
   const handleReject = async (studentId: string) => {
+    // console.log("studentId: ", studentId);
     const response = await RejectApplication(studentId);
+    // console.log("After Call");
     if (response && !response.error) {
       // Reload the data after rejection
       const result = await GetAllApplication("PENDING");

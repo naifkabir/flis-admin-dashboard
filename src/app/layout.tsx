@@ -28,11 +28,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-full w-full bg-[#f8f7f4]`}>
-        <ThemeProvider attribute="class" defaultTheme="light">
-          {children}
-        </ThemeProvider>
+      <body className={`min-h-full w-full bg-[#f8f7f4]`}>
+        <ThemeProvider defaultTheme="light">{children}</ThemeProvider>
         <Toaster richColors />
       </body>
     </html>
