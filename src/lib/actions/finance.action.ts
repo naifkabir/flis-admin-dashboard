@@ -375,6 +375,8 @@ export async function AddHeaderInMaster(data: any) {
   const cookieStore = cookies();
   const accessToken = cookieStore.get("accessToken")?.value;
 
+  console.log("Data: ", data);
+
   if (!accessToken) {
     return { error: "No access token found." };
   }

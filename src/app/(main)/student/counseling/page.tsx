@@ -67,9 +67,7 @@ export default async function CounselingStudentPage() {
   return (
     <div className="w-full h-screen my-auto">
       <div className="sub-container px-4">
-        <h1 className="font-bold underline text-lg mb-8">
-          Counselling Student List
-        </h1>
+        <h1 className="font-bold text-lg mb-8">Counselling Student List</h1>
         <StudentListDataTable columns={columns(handleReject)} data={data} />
       </div>
     </div>

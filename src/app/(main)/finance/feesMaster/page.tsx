@@ -10,6 +10,7 @@ import {
   GetAllFinanceGroups,
   GetAllFinanceHeaders,
   GetAllFinanceMaster,
+  GetGroupById,
   GetHeaderById,
 } from "@/lib/actions/finance.action";
 import React, { useEffect, useState } from "react";
@@ -95,10 +96,54 @@ const FinancePageMaster = () => {
   // # Create Table
   // --------------------------------------------------------------
 
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     const result = await GetAllFinanceMaster();
+  //     // console.log("GetAllFinanceMaster Result:", result);
+
+  //     if (result.error) {
+  //       setError(result.error);
+  //       setLoading(false);
+  //       return;
+  //     }
+
+  //     const headerPromises: Promise<any>[] = [];
+  //     result.forEach((master: any) => {
+  //       master.headers.forEach((header: any) => {
+  //         headerPromises.push(
+  //           GetHeaderById(header.header).then((data) => ({
+  //             ...data,
+  //             amount: header.amount, // Add amount to the header data
+  //             _id: header._id, // Include ID for deletion
+  //           }))
+  //         );
+  //       });
+  //     });
+
+  //     // Wait for all header data to be fetched
+  //     const headersData = await Promise.all(headerPromises);
+
+  //     // Build updated masters with valid headers including amount
+  //     const updatedMasters = result.map((item: any, index: any) => ({
+  //       ...item,
+  //       headers: headersData.slice(
+  //         index * item.headers.length,
+  //         (index + 1) * item.headers.length
+  //       ),
+  //     }));
+
+  //     console.log("updatedMasters: ", updatedMasters);
+
+  //     setAllMaster(updatedMasters);
+  //     setLoading(false);
+  //   };
+
+  //   fetchData();
+  // }, []);
+
   useEffect(() => {
     const fetchData = async () => {
       const result = await GetAllFinanceMaster();
-      // console.log("GetAllFinanceMaster Result:", result);
 
       if (result.error) {
         setError(result.error);
@@ -107,6 +152,8 @@ const FinancePageMaster = () => {
       }
 
       const headerPromises: Promise<any>[] = [];
+      const groupPromises: Promise<any>[] = [];
+
       result.forEach((master: any) => {
         master.headers.forEach((header: any) => {
           headerPromises.push(
@@ -117,18 +164,28 @@ const FinancePageMaster = () => {
             }))
           );
         });
+
+        // Fetch group data for each master
+        groupPromises.push(
+          GetGroupById(master.group).then((groupData) => ({
+            groupId: master.group,
+            groupData,
+          }))
+        );
       });
 
       // Wait for all header data to be fetched
       const headersData = await Promise.all(headerPromises);
+      const groupDataArray = await Promise.all(groupPromises);
 
-      // Build updated masters with valid headers including amount
+      // Build updated masters with valid headers including amount and group data
       const updatedMasters = result.map((item: any, index: any) => ({
         ...item,
         headers: headersData.slice(
           index * item.headers.length,
           (index + 1) * item.headers.length
         ),
+        groupData: groupDataArray[index].groupData, // Add group data to the master
       }));
 
       setAllMaster(updatedMasters);
@@ -137,6 +194,8 @@ const FinancePageMaster = () => {
 
     fetchData();
   }, []);
+
+  console.log("Master: ", master);
 
   // --------------------------------------------------------------
   // --------------------------------------------------------------
@@ -310,13 +369,15 @@ const FinancePageMaster = () => {
       header: headerId,
     }));
 
-    console.log("handleAddSelectedHeaders: ", handleAddSelectedHeaders);
+    console.log("handleAddSelectedHeaders: ", headersArrayToAddHeaders);
 
     // Assuming you have an API function to add headers to the master
+    console.log("Before Call");
     const result = await AddHeaderInMaster({
       master_id: masterId,
       headers: headersArrayToAddHeaders,
     });
+    console.log("After Call");
 
     if (result.success) {
       toast.success("Headers added successfully");
@@ -384,7 +445,7 @@ const FinancePageMaster = () => {
       <div className="sub-container px-4">
         <div>
           <div className="grid grid-cols-2">
-            <h1 className="font-bold underline text-lg mb-8">Fee Masters</h1>
+            <h1 className="font-bold text-lg mb-8">Fee Masters</h1>
             <div className="flex gap-4 mb-4 justify-self-end">
               <Button variant="outline" onClick={() => window.history.back()}>
                 Go Back

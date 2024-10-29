@@ -74,9 +74,7 @@ export default function PendingStudentPage() {
           <DynamicBreadcrumb currentPage="Pending Applications" />
         </div>
 
-        <h1 className="font-bold underline text-lg mb-8">
-          Pending Student List
-        </h1>
+        <h1 className="font-bold text-lg mb-8">Pending Student List</h1>
         <StudentListDataTable
           columns={columns(handleReject)}
           data={data ? data : []}

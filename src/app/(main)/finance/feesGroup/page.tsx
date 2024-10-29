@@ -140,7 +140,7 @@ const FinancePageGroups = () => {
       <div className="sub-container px-4">
         <div>
           <div className="grid grid-cols-2">
-            <h1 className="font-bold underline text-lg mb-8">Fee Groups</h1>
+            <h1 className="font-bold text-lg mb-8">Fee Groups</h1>
             <div className="flex gap-4 mb-4 justify-self-end">
               <Button variant="outline" onClick={() => window.history.back()}>
                 Go Back

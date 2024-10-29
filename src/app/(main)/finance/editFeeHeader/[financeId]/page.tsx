@@ -84,7 +84,7 @@ export default function EditFinance({
 
   return (
     <div>
-      <h1 className="font-bold underline text-lg mb-8">Finance Data</h1>
+      <h1 className="font-bold text-lg mb-8">Finance Data</h1>
       <form
         onSubmit={handleSubmit}
         className="max-w-7xl mx-auto lg:mt-20 border-2 px-10 py-8 rounded border-gray-800">

@@ -68,3 +68,25 @@ export async function ApproveApplicationForCounselling(data: any) {
     return { error: error.message };
   }
 }
+
+// Submit Documents -------------- REMOVE IT
+export async function SubmitApplicationFormWithValidDocs(data: any) {
+  const cookieStore = cookies();
+  const accessToken = cookieStore.get("accessToken")?.value;
+
+  if (!accessToken) {
+    return null;
+  }
+
+  try {
+    const response = await apiClient.post(`/`, data, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    return response.data.data;
+  } catch (error: any) {
+    console.error("Error approving application:", error);
+    return { error: error.message };
+  }
+}

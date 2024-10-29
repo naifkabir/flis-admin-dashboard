@@ -51,9 +51,7 @@ export default async function RejectStudentPage() {
   return (
     <div className="w-full h-screen my-auto">
       <div className="sub-container px-4">
-        <h1 className="font-bold underline text-lg mb-8">
-          Archived Student List
-        </h1>
+        <h1 className="font-bold text-lg mb-8">Archived Student List</h1>
         <StudentListDataTable columns={columns()} data={data ? data : []} />
       </div>
     </div>

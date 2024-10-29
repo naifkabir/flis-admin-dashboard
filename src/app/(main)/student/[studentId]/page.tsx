@@ -160,7 +160,7 @@ const additionalSection = (data: any) => {
       <h3 className="font-semibold text-lg text-gray-600 mb-5">
         Additional Information of Student
       </h3>
-      <div className="flex flex-col">
+      <div className="flex flex-col gap-5">
         <div className="grid grid-cols-2 gap-x-5">
           <InputField label="Blood Group" value={med?.blood_group || "n/a"} />
           <InputField label="Caste" value={student?.caste || "n/a"} />
@@ -189,15 +189,13 @@ const fatherInfo = (data: any) => {
       <h3 className="font-semibold text-lg text-gray-600 mb-5">
         Father Information
       </h3>
-      <div className="flex flex-col">
+      <div className="flex flex-col gap-5">
         {/* Father Information */}
-        <div>
-          <div className="grid grid-cols-2 gap-x-5">
-            <InputField label="Father Name" value={student?.name} />
-            <InputField label="Father Occupation" value={student?.occupation} />
-          </div>
-          <InputField label="Father Phone No." value={student?.contact_no} />
+        <div className="grid grid-cols-2 gap-x-5">
+          <InputField label="Father Name" value={student?.name} />
+          <InputField label="Father Occupation" value={student?.occupation} />
         </div>
+        <InputField label="Father Phone No." value={student?.contact_no} />
       </div>
     </div>
   );
@@ -210,15 +208,13 @@ const motherInfo = (data: any) => {
       <h3 className="font-semibold text-lg text-gray-600 mb-5">
         Mother Information
       </h3>
-      <div className="flex flex-col">
+      <div className="flex flex-col gap-5">
         {/* Mother Information */}
-        <div>
-          <div className="grid grid-cols-2 gap-x-5">
-            <InputField label="Mother Name" value={student?.name} />
-            <InputField label="Mother Occupation" value={student?.occupation} />
-          </div>
-          <InputField label="Mother Phone No." value={student?.contact_no} />
+        <div className="grid grid-cols-2 gap-5">
+          <InputField label="Mother Name" value={student?.name} />
+          <InputField label="Mother Occupation" value={student?.occupation} />
         </div>
+        <InputField label="Mother Phone No." value={student?.contact_no} />
       </div>
     </div>
   );
@@ -231,7 +227,7 @@ const guardianInfo = (data: any) => {
       <h3 className="font-semibold text-lg text-gray-600 mb-5">
         Guardian Information
       </h3>
-      <div className="flex flex-col">
+      <div className="flex flex-col gap-5">
         <div className="grid grid-cols-2 gap-x-5">
           <InputField label="Name" value={student?.name} />
           <InputField label="Relation" value={student?.relationship} />
@@ -257,7 +253,7 @@ const currentAddressInfo = (data: any) => {
       <h3 className="font-semibold text-lg text-gray-600 mb-5">
         Current Address Details
       </h3>
-      <div className="flex flex-col">
+      <div className="flex flex-col gap-5">
         <div className="grid grid-cols-3 gap-x-5">
           <InputField label="Village" value={address?.village || "n/a"} />
           <InputField
@@ -290,7 +286,7 @@ const permanentAddressInfo = (data: any) => {
       <h3 className="font-semibold text-lg text-gray-600 mb-5">
         Permanent Address Details
       </h3>
-      <div className="flex flex-col">
+      <div className="flex flex-col gap-5">
         <div className="grid grid-cols-3 gap-x-5">
           <InputField label="Village" value={address?.village || "n/a"} />
           <InputField
@@ -323,7 +319,7 @@ const academyInfo = (data: any) => {
       <h3 className="font-semibold text-gray-600 mb-5 text-lg">
         Previous Institute Details
       </h3>
-      <div className="flex flex-col">
+      <div className="flex flex-col gap-5">
         <InputField label="Previous Class" value={student?.previous_class} />
         <div className="grid grid-cols-3 gap-x-5">
           <InputField
@@ -355,7 +351,7 @@ const medInfo = (data: any) => {
       <h3 className="font-semibold text-lg text-gray-600 mb-5">
         Medical Information
       </h3>
-      <div className="flex flex-col">
+      <div className="flex flex-col gap-5">
         <div className="grid grid-cols-2 gap-x-5">
           <InputField
             label="Allergic Details"
@@ -388,7 +384,7 @@ const otherInfo = (data: any) => {
       <h3 className="font-semibold text-lg text-gray-600 mb-5">
         Application Information (Status)
       </h3>
-      <div className="flex flex-col">
+      <div className="flex flex-col gap-5">
         <InputField
           label="Payment Status"
           value={applicationData?.payment_status}
@@ -409,7 +405,7 @@ const bankInfo = (data: any) => {
       <h3 className="font-semibold text-lg text-gray-600 mb-5">
         Bank Information
       </h3>
-      <div className="flex flex-col">
+      <div className="flex flex-col gap-5">
         <div className="grid grid-cols-3 gap-x-5">
           <InputField
             label="Account No"
@@ -435,15 +431,17 @@ const bankInfo = (data: any) => {
 
 // Input Field Component
 const InputField = ({ label, value }: { label: string; value: string }) => (
-  <div className="input flex flex-col w-full static mb-4">
-    <label className="text-red-600 text-xs font-semibold relative top-2 ml-[7px] px-[6px] rounded bg-[#fff] w-fit">
+  <div className="input flex flex-col w-full text-[13.5px]">
+    <label className="text-gray-500 font-semibold w-fit mb-2">
       {label}
+      <span className="text-red-500">*</span> :
     </label>
     <input
-      type="text"
       value={value}
       readOnly
-      className="border-gray-300 input px-[10px] py-[16px] bg-[#fff] border-2 rounded-[5px] w-full focus:outline-none placeholder:text-black/25 font-bold font-sans text-[13px] tracking-widest overflow-scroll cursor-not-allowed"
+      className={`${
+        value == "" ? "border-2 border-red-500" : "border-2"
+      } px-[10px] text-gray-700 py-[10px] bg-[#fff] rounded-[5px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll cursor-not-allowed`}
     />
   </div>
 );

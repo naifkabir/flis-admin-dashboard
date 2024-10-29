@@ -343,7 +343,27 @@ export const FinanceColumnFeeMasters = (
         <DataTableColumnHeader column={column} title="Group" />
       </div>
     ),
-    cell: ({ row }) => <p>{row.getValue("group") as string}</p>,
+    cell: ({ row }) => {
+      const data = row.original;
+      // console.log("Col Data: ", data);
+      return (
+        <div>
+          <p className="mb-1">
+            <span className="text-[11px] justify-self-start">
+              Group Name :{" "}
+              <strong className="text-[13px] font-bold tracking-wider">
+                {data?.groupData?.name}
+              </strong>
+            </span>
+          </p>
+          <p>
+            <span className="text-[11px] justify-self-start">
+              Group Code : {data?.groupData?.groupCode}
+            </span>
+          </p>
+        </div>
+      );
+    },
     enableHiding: false,
     enableSorting: false,
   },

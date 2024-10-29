@@ -66,9 +66,7 @@ export default async function ApproveStudentPage() {
   return (
     <div className="w-full h-screen my-auto">
       <div className="sub-container px-4">
-        <h1 className="font-bold underline text-lg mb-8">
-          Approved Student List
-        </h1>
+        <h1 className="font-bold text-lg mb-8">Approved Student List</h1>
         <StudentListDataTable
           columns={columns(handleReject)}
           data={data ? data : []}
