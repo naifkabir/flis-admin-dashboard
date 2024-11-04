@@ -4,14 +4,17 @@ import { Button } from "@/components/ui/button";
 import {
   GetCurrentAdminApi,
   ChangePasswordApi,
-} from "@/lib/actions/adminAuth.action"; // Import your ChangePasswordApi
+} from "@/lib/actions/adminAuth.action";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { Toaster, toast } from "sonner";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
 
-// Define the response type for the change password API
+// Type
 interface ChangePasswordResponse {
   success: boolean;
   message: string;
@@ -38,6 +41,32 @@ const ProfilePage = () => {
   const [showNewPassword, setShowNewPassword] = useState<boolean>(false);
   const [showConfirmPassword, setShowConfirmPassword] =
     useState<boolean>(false);
+
+  const passwordSchema = z
+    .object({
+      oldPassword: z
+        .string()
+        .min(8, "Old password must be at least 8 characters long."),
+      newPassword: z
+        .string()
+        .min(8, "New password must be at least 8 characters long."),
+      confirmPassword: z
+        .string()
+        .min(8, "Confirm password must be at least 8 characters long."),
+    })
+    .refine((data) => data.newPassword === data.confirmPassword, {
+      message: "New password and confirm password do not match.",
+      path: ["confirmPassword"], // This will set the error on the confirmPassword field
+    });
+
+  // Use React Hook Form with Zod
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(passwordSchema),
+  });
 
   const toggleOldPasswordVisibility = () => {
     setShowOldPassword((prev) => !prev);
@@ -82,13 +111,12 @@ const ProfilePage = () => {
     if (response.success) {
       toast.success(response.message);
 
-      // Optionally reset fields
       setOldPassword("");
       setNewPassword("");
       setConfirmPassword("");
       setPasswordError("");
     } else {
-      toast.error(response.message); // Show error message
+      toast.error(response.message); // Error
     }
   };
 
@@ -192,7 +220,7 @@ const ProfilePage = () => {
                     type="text"
                     value={user.name} // Set user name
                     readOnly
-                    className="border-gray-800 input px-[10px] py-[16px] text-xs bg-[#f8f7f4] border-2 rounded-[5px] w-full focus:outline-none placeholder:text-black/25 font-bold tracking-widest overflow-scroll font-sans cursor-not-allowed"
+                    className="px-[10px] py-[16px] text-xs bg-[#f8f7f4] border-2 rounded-[5px] w-full focus:outline-none placeholder:text-black/25 font-semibold tracking-widest overflow-scroll cursor-not-allowed"
                   />
                 </div>
               </div>
@@ -208,7 +236,7 @@ const ProfilePage = () => {
                     type="text"
                     value={user.email} // Set user email
                     readOnly
-                    className="border-gray-800 input px-[10px] py-[16px] text-xs bg-[#f8f7f4] border-2 rounded-[5px] w-full focus:outline-none placeholder:text-black/25 font-bold tracking-widest overflow-scroll font-sans cursor-not-allowed"
+                    className="px-[10px] py-[16px] text-xs bg-[#f8f7f4] border-2 rounded-[5px] w-full focus:outline-none placeholder:text-black/25 font-semibold tracking-widest overflow-scroll cursor-not-allowed"
                   />
                 </div>
               </div>
@@ -226,7 +254,7 @@ const ProfilePage = () => {
                     type="text"
                     value={user.role} // Set user role
                     readOnly
-                    className="border-gray-800 input px-[10px] py-[16px] text-xs bg-[#f8f7f4] border-2 rounded-[5px] w-full focus:outline-none placeholder:text-black/25 font-bold tracking-widest overflow-scroll font-sans cursor-not-allowed"
+                    className="px-[10px] py-[16px] text-xs bg-[#f8f7f4] border-2 rounded-[5px] w-full focus:outline-none placeholder:text-black/25 font-semibold tracking-widest overflow-scroll cursor-not-allowed"
                   />
                 </div>
               </div>
@@ -244,7 +272,7 @@ const ProfilePage = () => {
                     type="text"
                     value={new Date(user.createdAt).toLocaleDateString()}
                     readOnly
-                    className="border-gray-800 input px-[10px] py-[16px] text-xs bg-[#f8f7f4] border-2 rounded-[5px] w-full focus:outline-none placeholder:text-black/25 font-bold tracking-widest overflow-scroll font-sans cursor-not-allowed"
+                    className="px-[10px] py-[16px] text-xs bg-[#f8f7f4] border-2 rounded-[5px] w-full focus:outline-none placeholder:text-black/25 font-semibold tracking-widest overflow-scroll cursor-not-allowed"
                   />
                 </div>
               </div>
@@ -256,7 +284,7 @@ const ProfilePage = () => {
       {/* Change Password */}
       {active === 1 && (
         <div className="flex flex-col justify-center w-[60%] m-auto p-6">
-          <h1 className="text-2xl font-bold underline underline-offset-4 text-center text-gray-800">
+          <h1 className="text-2xl font-semibold underline underline-offset-4 text-center text-gray-800">
             Change Password
           </h1>
           <div className="flex flex-col gap-4 border mt-6 w-full p-6 rounded-lg">
@@ -266,26 +294,27 @@ const ProfilePage = () => {
                 Old Password <span className="text-red-700">*</span> :
               </h3>
               <div className="input flex flex-col w-full mb-4 col-span-2 relative">
-                <label
-                  htmlFor="old-password"
-                  className="text-red-600 text-xs font-semibold relative top-2 ml-[7px] px-[6px] rounded bg-[#f8f7f4] w-fit">
-                  Old Password
-                </label>
                 <input
                   placeholder="Write your old password here..."
                   type={showOldPassword ? "text" : "password"}
                   id="old-password"
+                  {...register("oldPassword")}
                   value={oldPassword}
                   onChange={(e) => setOldPassword(e.target.value)}
                   required
-                  className="border-gray-800 input px-[16px] py-[16px] text-xs bg-[#f8f7f4] border-2 rounded-[5px] w-full focus:outline-none placeholder:text-black/25 font-bold tracking-widest overflow-scroll font-sans"
+                  className={`border-2 px-[10px] text-black py-[10px] rounded-[5px] w-full focus:outline-none placeholder:text-black/50 font-semibold font-sans text-[14px] overflow-scroll bg-transparent`}
                 />
                 <button
                   type="button"
                   onClick={toggleOldPasswordVisibility}
-                  className="absolute right-3 top-8 text-lg text-gray-500">
-                  {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
+                  className="absolute right-3 top-[14px] text-lg text-gray-500">
+                  {showOldPassword ? <FaEyeSlash /> : <FaEye />}
                 </button>
+                {errors.oldPassword && (
+                  <span className="text-red-600 text-sm">
+                    {errors.oldPassword?.message as string}
+                  </span>
+                )}
               </div>
             </div>
 
@@ -295,26 +324,27 @@ const ProfilePage = () => {
                 New Password <span className="text-red-700">*</span> :
               </h3>
               <div className="input flex flex-col w-full mb-4 col-span-2 relative">
-                <label
-                  htmlFor="new-password"
-                  className="text-red-600 text-xs font-semibold relative top-2 ml-[7px] px-[6px] rounded bg-[#f8f7f4] w-fit">
-                  New Password
-                </label>
                 <input
                   placeholder="Write your new password here..."
                   type={showNewPassword ? "text" : "password"}
                   id="new-password"
+                  {...register("newPassword")}
                   value={newPassword}
                   onChange={(e) => setNewPassword(e.target.value)}
                   required
-                  className="border-gray-800 input px-[16px] py-[16px] text-xs bg-[#f8f7f4] border-2 rounded-[5px] w-full focus:outline-none placeholder:text-black/25 font-bold tracking-widest overflow-scroll font-sans"
+                  className={`border-2 px-[10px] text-black py-[10px] rounded-[5px] w-full focus:outline-none placeholder:text-black/50 font-semibold font-sans text-[14px] overflow-scroll bg-transparent`}
                 />
                 <button
                   type="button"
                   onClick={toggleNewPasswordVisibility}
-                  className="absolute right-3 top-8 text-lg text-gray-500">
-                  {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
+                  className="absolute right-3 top-[14px] text-lg text-gray-500">
+                  {showNewPassword ? <FaEyeSlash /> : <FaEye />}
                 </button>
+                {errors.newPassword && (
+                  <span className="text-red-600 text-sm">
+                    {errors.newPassword?.message as string}
+                  </span>
+                )}
               </div>
             </div>
 
@@ -324,26 +354,27 @@ const ProfilePage = () => {
                 Confirm New Password <span className="text-red-700">*</span> :
               </h3>
               <div className="input flex flex-col w-full mb-4 col-span-2 relative">
-                <label
-                  htmlFor="confirm-password"
-                  className="text-red-600 text-xs font-semibold relative top-2 ml-[7px] px-[6px] rounded bg-[#f8f7f4] w-fit">
-                  Confirm New Password
-                </label>
                 <input
                   placeholder="Confirm your new password..."
                   type={showConfirmPassword ? "text" : "password"}
                   id="confirm-password"
+                  {...register("confirmPassword")}
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   required
-                  className="border-gray-800 input px-[16px] py-[16px] text-xs bg-[#f8f7f4] border-2 rounded-[5px] w-full focus:outline-none placeholder:text-black/25 font-bold tracking-widest overflow-scroll font-sans"
+                  className={`border-2 px-[10px] text-black py-[10px] rounded-[5px] w-full focus:outline-none placeholder:text-black/50 font-semibold font-sans text-[14px] overflow-scroll bg-transparent`}
                 />
                 <button
                   type="button"
                   onClick={toggleConfirmPasswordVisibility}
-                  className="absolute right-3 top-8 text-lg text-gray-500">
+                  className="absolute right-3 top-[14px] text-lg text-gray-500">
                   {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
                 </button>
+                {errors.confirmPassword && (
+                  <span className="text-red-600 text-sm">
+                    {errors.confirmPassword?.message as string}
+                  </span>
+                )}
               </div>
             </div>
 

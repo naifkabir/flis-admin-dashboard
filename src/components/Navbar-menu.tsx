@@ -128,7 +128,7 @@ const Navbar = () => {
 
                   {/* Sub-items section */}
                   <NavigationMenuContent className="text-sm">
-                    <div className="grid grid-cols-2 gap-1 w-[43.5rem] px-5 h-full py-5 bg-gray-800 text-white">
+                    <div className="grid grid-cols-2 gap-1 w-[48.5rem] px-5 h-full py-5 bg-gray-800 text-white">
                       {item.subItems.map((subItem, i) => (
                         <NavigationMenuLink
                           key={i || subItem.label}

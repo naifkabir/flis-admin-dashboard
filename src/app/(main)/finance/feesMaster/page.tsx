@@ -3,7 +3,6 @@
 import { FinanceColumnFeeMasters } from "@/app/data-table-components/columns";
 import PageLoader from "@/components/ui-components/PageLoading";
 import {
-  AddHeaderInMaster,
   CreateNewFinanceMaster,
   DeleteHeaderInMaster,
   DeleteMaster,
@@ -28,6 +27,12 @@ import {
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { MasterPageDataTable } from "@/app/data-table-components/finance-table-components/mastar-page-data-table";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import AddHeaderInMasterComponent from "@/components/AddHeaderInMaster";
+import { Input } from "@/components/ui/input";
+import { MdOutlineArrowOutward } from "react-icons/md";
+import AlertDialogComponent from "@/components/Alart";
+import AlertDialogComponentHeaderInMaster from "@/components/DeleteHeaderInMasterAlart";
 
 interface FinanceHeader {
   header: string;
@@ -44,27 +49,23 @@ interface FinanceMaster {
   headers: FinanceHeader[];
 }
 
-// --------------------------------------------------------------
-// --------------------------------------------------------------
-// Define interface for FinanceHeader
+// FinanceHeader
 interface FinanceHeader {
-  _id: string; // Adding id to FinanceHeader
+  _id: string;
   header: string;
 }
 
-// Define interface for FinanceGroup
+// FinanceGroup
 interface FinanceGroup {
   _id: string;
   name: string;
 }
 
-// Define interface for form data
+// form data
 interface FormData {
   selectedGroup: string; // Selected group ID
   selectedHeaders: string[]; // Array to hold selected headers (string array)
 }
-// --------------------------------------------------------------
-// --------------------------------------------------------------
 
 const FinancePageMaster = () => {
   const [master, setAllMaster] = useState<FinanceMaster[]>([]);
@@ -72,74 +73,23 @@ const FinancePageMaster = () => {
   const [error, setError] = useState("");
   const [isModalOpen, setModalOpen] = useState(false);
   const [isModalOpenHeader, setModalOpenHeader] = useState(false);
-  const [amountData, setAmountData] = useState<any>(null); // State to hold the data for amount
-
-  const [masterId, setMasterId] = useState<string | null>(null); // State to hold the master ID
-
-  // --------------------------------------------------------------
-  // --------------------------------------------------------------
+  const [amountData, setAmountData] = useState<any>(null);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [masterId, setMasterId] = useState<string | null>(null);
+  const [deleteHeaderInMasterData, setDeleteHeaderInMasterData] = useState<
+    string | null
+  >(null);
+  const [deleteMasterId, setDeleteMasterId] = useState<string>("");
   const [formData, setFormData] = useState<FormData>({
     selectedGroup: "",
     selectedHeaders: [], // Make sure this is initialized as an empty array
   });
-
   const [groups, setGroups] = useState<FinanceGroup[]>([]); // State to hold groups
   const [headers, setHeaders] = useState<FinanceHeader[]>([]); // State to hold headers
 
-  const [selectedHeadersToAdd, setSelectedHeadersToAdd] = useState<string[]>(
-    []
-  );
-  // --------------------------------------------------------------
-  // --------------------------------------------------------------
-
   // --------------------------------------------------------------
   // # Create Table
-  // --------------------------------------------------------------
-
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     const result = await GetAllFinanceMaster();
-  //     // console.log("GetAllFinanceMaster Result:", result);
-
-  //     if (result.error) {
-  //       setError(result.error);
-  //       setLoading(false);
-  //       return;
-  //     }
-
-  //     const headerPromises: Promise<any>[] = [];
-  //     result.forEach((master: any) => {
-  //       master.headers.forEach((header: any) => {
-  //         headerPromises.push(
-  //           GetHeaderById(header.header).then((data) => ({
-  //             ...data,
-  //             amount: header.amount, // Add amount to the header data
-  //             _id: header._id, // Include ID for deletion
-  //           }))
-  //         );
-  //       });
-  //     });
-
-  //     // Wait for all header data to be fetched
-  //     const headersData = await Promise.all(headerPromises);
-
-  //     // Build updated masters with valid headers including amount
-  //     const updatedMasters = result.map((item: any, index: any) => ({
-  //       ...item,
-  //       headers: headersData.slice(
-  //         index * item.headers.length,
-  //         (index + 1) * item.headers.length
-  //       ),
-  //     }));
-
-  //     console.log("updatedMasters: ", updatedMasters);
-
-  //     setAllMaster(updatedMasters);
-  //     setLoading(false);
-  //   };
-
-  //   fetchData();
-  // }, []);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -160,7 +110,7 @@ const FinancePageMaster = () => {
             GetHeaderById(header.header).then((data) => ({
               ...data,
               amount: header.amount, // Add amount to the header data
-              _id: header._id, // Include ID for deletion
+              _id: header._id, // Add ID
             }))
           );
         });
@@ -174,7 +124,7 @@ const FinancePageMaster = () => {
         );
       });
 
-      // Wait for all header data to be fetched
+      // All header data to be fetched
       const headersData = await Promise.all(headerPromises);
       const groupDataArray = await Promise.all(groupPromises);
 
@@ -195,22 +145,16 @@ const FinancePageMaster = () => {
     fetchData();
   }, []);
 
-  console.log("Master: ", master);
-
-  // --------------------------------------------------------------
-  // --------------------------------------------------------------
-
   const handleEditAmount = (amountData: any) => {
     // console.log("Edit header with id:", amountData);
     setAmountData(amountData); // Set the amount data to be edited
   };
 
-  const handleDeleteHeaderInMaster = async (
-    handleDeleteHeaderInMasterData: any
-  ) => {
-    const result = await DeleteHeaderInMaster(handleDeleteHeaderInMasterData);
+  const confirmDeleteHeaderInMaster = async () => {
+    const result = await DeleteHeaderInMaster(deleteHeaderInMasterData);
+    // console.log("result: ", result);
 
-    if (result.success) {
+    if (result.statusCode === 200) {
       toast.success("Header was successfully deleted");
       setTimeout(() => {
         window.location.reload();
@@ -220,23 +164,36 @@ const FinancePageMaster = () => {
     }
   };
 
-  const handleDeleteMaster = async (master_id: string) => {
-    // console.log("Master Delete: ", master_id);
-    const result = await DeleteMaster(master_id);
+  const handleDeleteHeaderInMaster = async (
+    handleDeleteHeaderInMasterData: any
+  ) => {
+    setDeleteHeaderInMasterData(handleDeleteHeaderInMasterData);
+    setDeleteDialogOpen(true);
+  };
+
+  const confirmDeleteMaster = async () => {
+    const result = await DeleteMaster(deleteMasterId);
 
     if (result.success) {
+      setDeleteDialogOpen(false);
       toast.success("Master was successfully deleted");
       setTimeout(() => {
         window.location.reload();
       }, 1000);
     } else {
       toast.error("Failed to delete the Master!");
+      setDeleteDialogOpen(false);
     }
+  };
+
+  const handleDeleteMaster = async (master_id: string) => {
+    // console.log("Master Delete: ", master_id);
+    setDeleteMasterId(master_id);
+    setDeleteDialogOpen(true);
   };
 
   // ------------------------------------------------------------------------------
   // # Create New Master
-  // ------------------------------------------------------------------------------
 
   // Fetch all finance groups
   useEffect(() => {
@@ -305,14 +262,14 @@ const FinancePageMaster = () => {
 
     if (result.error) {
       setError(result.error);
-      alert("Error creating new master: " + result.error);
+      toast.error("Error creating new master: " + result.error);
       setTimeout(() => {
         window.location.reload();
       }, 2000);
     } else {
       setAllMaster((prev) => [...prev, result]); // Update state with the new master
       setModalOpen(false);
-      alert("Master created successfully");
+      toast.success("Master created successfully");
       window.location.reload();
     }
 
@@ -323,105 +280,15 @@ const FinancePageMaster = () => {
     });
   };
 
-  // ------------------------------------------------------------------------------
-  // ------------------------------------------------------------------------------
-
-  // const handleAddHeader = (master_id: string) => {
-  //   console.log("clicked: ", master_id);
-  // };
-
-  // // Updated handleAddHeader function
-  // const handleAddHeader = (: string) => {
-  //   setModalOpen(true); // Open the dialog
-  // };
-
-  // Function to handle adding headers
   const handleAddHeader = (master_id: string) => {
-    console.log("master_id: ", master_id);
-    setMasterId(master_id);
+    setMasterId(master_id); // Set the master ID for which headers are being added
     setModalOpenHeader(true); // Open the dialog to add headers
   };
 
-  const handleHeaderSelectionForAdd = (headerId: string) => {
-    setSelectedHeadersToAdd((prev) => {
-      const isSelected = prev.includes(headerId);
-      if (isSelected) {
-        // If the header is already selected, remove it from the selection
-        return prev.filter((id) => id !== headerId);
-      } else {
-        // Otherwise, add it to the selection
-        return [...prev, headerId];
-      }
-    });
-  };
-
-  const handleAddSelectedHeaders = async () => {
-    // Logic to add the selected headers to the finance master
-    if (selectedHeadersToAdd.length === 0) {
-      toast.error("Please select at least one header to add.");
-      return;
-    }
-
-    console.log("handleAddSelectedHeaders: ", handleAddSelectedHeaders);
-
-    // Create the headers array with each header as an object
-    const headersArrayToAddHeaders = selectedHeadersToAdd.map((headerId) => ({
-      header: headerId,
-    }));
-
-    console.log("handleAddSelectedHeaders: ", headersArrayToAddHeaders);
-
-    // Assuming you have an API function to add headers to the master
-    console.log("Before Call");
-    const result = await AddHeaderInMaster({
-      master_id: masterId,
-      headers: headersArrayToAddHeaders,
-    });
-    console.log("After Call");
-
-    if (result.success) {
-      toast.success("Headers added successfully");
-      setModalOpen(false); // Close the dialog
-      setSelectedHeadersToAdd([]); // Reset selection
-      // Optionally refresh the data to reflect changes
-      window.location.reload();
-    } else {
-      toast.error("Failed to add headers");
-    }
-  };
-
-  const AddHeaderDialog = () => (
-    <Dialog open={isModalOpenHeader} onOpenChange={setModalOpenHeader}>
-      <DialogContent className="max-w-[650px]">
-        <DialogHeader>
-          <DialogTitle>Add Headers</DialogTitle>
-          <DialogDescription>
-            Select headers to add to the finance master.
-          </DialogDescription>
-        </DialogHeader>
-        <div className="col-span-3 flex flex-col gap-2 max-h-40 overflow-y-auto border-2 rounded-lg px-3">
-          {headers.map((header) => (
-            <label key={header._id} className="flex items-center">
-              <input
-                type="checkbox"
-                checked={selectedHeadersToAdd.includes(header._id)} // Check if header is selected
-                onChange={() => handleHeaderSelectionForAdd(header._id)} // Handle selection
-              />
-              <span className="ml-2">{header.name}</span>
-            </label>
-          ))}
-        </div>
-        <DialogFooter>
-          <Button type="button" onClick={handleAddSelectedHeaders}>
-            Add Selected Headers
-          </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+  const filteredHeaders = headers.filter((header) =>
+    header.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  // ------------------------------------------------------------------------------
-  // ------------------------------------------------------------------------------
   if (loading) {
     return (
       <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
@@ -467,54 +334,67 @@ const FinancePageMaster = () => {
                     <form onSubmit={handleSubmit} className="grid gap-4 py-4">
                       {/* Group Selection */}
                       <div className="grid grid-cols-4 items-center gap-4">
-                        <Label
-                          htmlFor="selectedGroup"
-                          className="text-gray-800 text-md font-semibold text-right">
+                        <Label className="text-right" htmlFor="selectedGroup">
                           Group
                         </Label>
-                        <select
-                          id="selectedGroup"
-                          name="selectedGroup"
-                          value={formData.selectedGroup}
-                          onChange={handleGroupChange}
-                          className="col-span-3 border-gray-800 px-[10px] py-[16px] text-xs bg-[#f8f7f4] border-2 rounded-[5px] w-full focus:outline-none placeholder:text-black/25 font-bold tracking-widest overflow-scroll font-sans cursor-pointer"
-                          required>
-                          <option value="">Select a group</option>
-                          {groups.map((group) => (
-                            <option key={group._id} value={group._id}>
-                              {group.name}
-                            </option>
-                          ))}
-                        </select>
-                      </div>
-
-                      {/* Header Selection */}
-                      <div className="grid grid-cols-4 items-center gap-4">
-                        <Label htmlFor="headers" className="text-right">
-                          Headers
-                        </Label>
-                        <div className="col-span-3 flex flex-col gap-2 max-h-40 overflow-y-auto border-2 rounded-lg py-[16px] text-xs bg-[#f8f7f4]  w-full focus:outline-none placeholder:text-black/25 font-bold tracking-widest overflow-scroll font-sans cursor-pointer">
-                          {headers.map((header) => (
-                            <label
-                              key={header._id}
-                              className="flex items-center">
-                              <input
-                                type="checkbox"
-                                checked={formData.selectedHeaders.includes(
-                                  header._id
-                                )}
-                                onChange={() =>
-                                  handleHeaderSelection(header._id)
-                                }
-                              />
-                              <span className="ml-2">{header.name}</span>
-                            </label>
-                          ))}
+                        <div className="col-span-3">
+                          <select
+                            id="selectedGroup"
+                            name="selectedGroup"
+                            value={formData.selectedGroup}
+                            onChange={handleGroupChange}
+                            className="w-full py-2 bg-transparent border-2 rounded-lg px-3 text-sm"
+                            required>
+                            <option value="">Select a group</option>
+                            {groups.map((group) => (
+                              <option key={group._id} value={group._id}>
+                                {group.name}
+                              </option>
+                            ))}
+                          </select>
                         </div>
                       </div>
 
+                      {/* Header Selection */}
+                      <div className="grid grid-cols-4 items-center gap-x-4">
+                        <Label htmlFor="headers" className="text-right">
+                          Headers
+                        </Label>
+                        <Input
+                          placeholder="Search Headers"
+                          value={searchTerm}
+                          onChange={(e) => setSearchTerm(e.target.value)}
+                          className="col-span-3 border rounded-none mb-0.5"
+                        />
+                        <div></div>
+                        <ScrollArea className="col-span-3 max-h-[163px] border text-[13.5px] overflow-scroll">
+                          <div className="space-y-1">
+                            {filteredHeaders.map((header) => (
+                              <div
+                                key={header._id}
+                                className="flex items-center p-2 cursor-default hover:bg-gray-200 ">
+                                <input
+                                  type="checkbox"
+                                  className="cursor-pointer"
+                                  checked={formData.selectedHeaders.includes(
+                                    header._id
+                                  )}
+                                  onChange={() =>
+                                    handleHeaderSelection(header._id)
+                                  }
+                                />
+                                <span className="ml-2">{header.name}</span>
+                              </div>
+                            ))}
+                          </div>
+                        </ScrollArea>
+                      </div>
+
                       <DialogFooter>
-                        <Button type="submit">Create</Button>
+                        <Button className="group py-7 w-48 flex justify-center items-center">
+                          <span>Create Master</span>
+                          <MdOutlineArrowOutward className="ml-2 duration-300 group-hover:rotate-45 group-hover:translate-x-3" />
+                        </Button>
                       </DialogFooter>
                     </form>
                   </DialogContent>
@@ -533,7 +413,14 @@ const FinancePageMaster = () => {
           />
         </div>
       </div>
-      <AddHeaderDialog />
+      {isModalOpenHeader && masterId && (
+        <div className="hidden">
+          <AddHeaderInMasterComponent
+            masterId={masterId}
+            onClose={() => setModalOpenHeader(false)}
+          />
+        </div>
+      )}
       <Toaster richColors />
       <EditAmountInMasterDialog
         amountData={amountData} // Pass the current amountData state
@@ -541,6 +428,25 @@ const FinancePageMaster = () => {
           setAmountData(null);
         }}
       />
+      <div className="hidden">
+        <AlertDialogComponent
+          open={isDeleteDialogOpen}
+          onOpenChange={setDeleteDialogOpen}
+          onConfirm={confirmDeleteMaster}
+          title="Are you sure?"
+          description="This action cannot be undone. This will permanently delete this master."
+        />
+      </div>
+
+      <div className="hidden">
+        <AlertDialogComponentHeaderInMaster
+          open={isDeleteDialogOpen}
+          onOpenChange={setDeleteDialogOpen}
+          onConfirm={confirmDeleteHeaderInMaster}
+          title="Are you sure?"
+          description="This action cannot be undone. This will delete this header from the header."
+        />
+      </div>
     </div>
   );
 };

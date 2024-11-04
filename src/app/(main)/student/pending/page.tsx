@@ -8,6 +8,8 @@ import { studentTableFilter } from "@/constant";
 import PageLoader from "@/components/ui-components/PageLoading";
 import { RejectApplication } from "@/lib/actions/student.action";
 import { DynamicBreadcrumb } from "@/components/StudentBreadcrumb";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 export default function PendingStudentPage() {
   const [data, setData] = useState([]);
@@ -70,11 +72,14 @@ export default function PendingStudentPage() {
   return (
     <div className="w-full h-screen my-auto">
       <div className="sub-container px-4">
-        <div className="mb-10 flex justify-end">
-          <DynamicBreadcrumb currentPage="Pending Applications" />
+        <div className="flex justify-between items-center my-10">
+          <div>
+            <h1 className="font-bold text-lg mb-1.5">Pending Student List</h1>
+            <DynamicBreadcrumb currentPage="Pending Applications" />
+          </div>
+          <Link href="/student/create-student"></Link>
         </div>
 
-        <h1 className="font-bold text-lg mb-8">Pending Student List</h1>
         <StudentListDataTable
           columns={columns(handleReject)}
           data={data ? data : []}

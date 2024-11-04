@@ -16,6 +16,7 @@ import { menuItems } from "@/constant";
 import { cn } from "@/lib/utils";
 import { Logout } from "@/lib/actions/logout.action";
 import { GetCurrentAdminApi } from "@/lib/actions/adminAuth.action";
+import { Toaster, toast } from "sonner";
 
 const Navbar = () => {
   const [active, setActive] = useState<string | null>(null);
@@ -40,11 +41,11 @@ const Navbar = () => {
 
     // Check the status code and success state
     if (response.statusCode === 200 && response.success) {
-      alert("Logged out successfully!");
+      toast.success("Logged out successfully!");
       window.location.href = "/";
     } else {
-      alert("Logout failed. Please try again.");
-      console.error("Logout Error:", response.statusCode);
+      toast.error("Logout failed. Please try again.");
+      // console.error("Logout Error:", response.statusCode);
     }
   };
 
@@ -137,6 +138,7 @@ const Navbar = () => {
           </DropdownMenu>
         </div>
       </div>
+      <Toaster richColors />
     </div>
   );
 };

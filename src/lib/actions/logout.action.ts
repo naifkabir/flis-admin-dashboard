@@ -17,7 +17,7 @@ export const Logout = async (): Promise<LogoutResponse> => {
   const cookieStore = cookies();
   const accessToken = cookieStore.get("accessToken")?.value;
 
-  console.log("Access Token actions: ", accessToken);
+  // console.log("Access Token actions: ", accessToken);
 
   // Check if the access token exists
   if (!accessToken) {

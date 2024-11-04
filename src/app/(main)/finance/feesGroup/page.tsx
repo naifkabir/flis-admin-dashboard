@@ -111,7 +111,7 @@ const FinancePageGroups = () => {
       alert("Error deleting group: " + result.error);
       setDeleteDialogOpen(false);
     } else {
-      toast.success("Header deleted successfully!"); // Show success toast
+      toast.success("Header deleted successfully!");
       setDeleteDialogOpen(false);
       window.location.reload();
     }

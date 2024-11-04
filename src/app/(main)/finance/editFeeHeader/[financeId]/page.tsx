@@ -24,6 +24,8 @@ export default function EditFinance({
 
   const { financeId } = params;
 
+  console.log("Finance Id: ", financeId);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -41,6 +43,8 @@ export default function EditFinance({
     fetchData();
   }, [financeId]);
 
+  console.log("Data: ", data);
+
   // Handle input change
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -52,6 +56,8 @@ export default function EditFinance({
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setSubmitting(true);
+
+    console.log(data);
 
     const response = await UpdateFeeHeader(data);
     setSubmitting(false);
@@ -87,17 +93,12 @@ export default function EditFinance({
       <h1 className="font-bold text-lg mb-8">Finance Data</h1>
       <form
         onSubmit={handleSubmit}
-        className="max-w-7xl mx-auto lg:mt-20 border-2 px-10 py-8 rounded border-gray-800">
+        className="max-w-7xl mx-auto lg:mt-20 border-2 px-10 py-8 rounded bg-[#fff]">
         <div className="grid grid-cols-3 items-center">
           <h3>
             Name<span className="text-red-700">*</span> :
           </h3>
-          <div className="input flex flex-col w-full static mb-4 col-span-2">
-            <label
-              htmlFor="name"
-              className="text-red-600 text-xs font-semibold relative top-2 ml-[7px] px-[6px] rounded bg-[#f8f7f4] w-fit">
-              Name
-            </label>
+          <div className="flex flex-col w-full static mb-4 col-span-2">
             <input
               type="text"
               placeholder="Write here..."
@@ -105,7 +106,7 @@ export default function EditFinance({
               onChange={handleChange}
               name="name"
               required
-              className="border-gray-800 input px-[10px] py-[16px] text-xs bg-[#f8f7f4] border-2 rounded-[5px] w-full focus:outline-none placeholder:text-black/25 font-bold tracking-widest overflow-scroll font-sans"
+              className={`border-2 px-[10px] text-black py-[10px] rounded-[5px] w-full focus:outline-none placeholder:text-black/50 font-semibold font-sans text-[14px] overflow-scroll bg-transparent`}
             />
           </div>
         </div>
@@ -115,11 +116,6 @@ export default function EditFinance({
             Fees Code<span className="text-red-700">*</span> :
           </h3>
           <div className="input flex flex-col w-full static mb-4 col-span-2">
-            <label
-              htmlFor="feesCode"
-              className="text-red-600 text-xs font-semibold relative top-2 ml-[7px] px-[6px] rounded bg-[#f8f7f4] w-fit">
-              Fees Code
-            </label>
             <input
               type="text"
               placeholder="Write here..."
@@ -127,7 +123,8 @@ export default function EditFinance({
               onChange={handleChange}
               name="feesCode"
               required
-              className="border-gray-800 input px-[10px] py-[16px] text-xs bg-[#f8f7f4] border-2 rounded-[5px] w-full focus:outline-none placeholder:text-black/25 font-bold tracking-widest overflow-scroll font-sans"
+              className={`border-2
+       px-[10px] text-black py-[10px] rounded-[5px] w-full focus:outline-none placeholder:text-black/50 font-semibold font-sans text-[14px] overflow-scroll bg-transparent`}
             />
           </div>
         </div>
@@ -136,12 +133,7 @@ export default function EditFinance({
           <h3>
             Occurrence<span className="text-red-700">*</span> :
           </h3>
-          <div className="input flex flex-col w-full static mb-4 col-span-2">
-            <label
-              htmlFor="occurrence"
-              className="text-red-600 text-xs font-semibold relative top-2 ml-[7px] px-[6px] rounded bg-[#f8f7f4] w-fit">
-              Occurrence
-            </label>
+          <div className="flex flex-col w-full static mb-4 col-span-2">
             <input
               type="text"
               placeholder="Write here..."
@@ -149,7 +141,8 @@ export default function EditFinance({
               value={data.occurrence}
               onChange={handleChange}
               required
-              className="border-gray-800 input px-[10px] py-[16px] text-xs bg-[#f8f7f4] border-2 rounded-[5px] w-full focus:outline-none placeholder:text-black/25 font-bold tracking-widest overflow-scroll font-sans"
+              className={`border-2
+       px-[10px] text-black py-[10px] rounded-[5px] w-full focus:outline-none placeholder:text-black/50 font-semibold font-sans text-[14px] overflow-scroll bg-transparent`}
             />
           </div>
         </div>
@@ -158,12 +151,7 @@ export default function EditFinance({
           <h3>
             Due Date<span className="text-red-700">*</span> :
           </h3>
-          <div className="input flex flex-col w-full static mb-4 col-span-2">
-            <label
-              htmlFor="dueDate"
-              className="text-red-600 text-xs font-semibold relative top-2 ml-[7px] px-[6px] rounded bg-[#f8f7f4] w-fit">
-              Due Date
-            </label>
+          <div className="flex flex-col w-full static mb-4 col-span-2">
             <input
               type="date"
               placeholder="Write here..."
@@ -171,19 +159,15 @@ export default function EditFinance({
               value={data.dueDate}
               onChange={handleChange}
               required
-              className="border-gray-800 input px-[10px] py-[16px] text-xs bg-[#f8f7f4] border-2 rounded-[5px] w-full focus:outline-none placeholder:text-black/25 font-bold tracking-widest overflow-scroll font-sans"
+              className={`border-2
+       px-[10px] text-black py-[10px] rounded-[5px] w-full focus:outline-none placeholder:text-black/50 font-semibold font-sans text-[14px] overflow-scroll bg-transparent`}
             />
           </div>
         </div>
 
         <div className="grid grid-cols-3 items-center">
           <h3>Description :</h3>
-          <div className="input flex flex-col w-full static mb-4 col-span-2">
-            <label
-              htmlFor="description"
-              className="text-red-600 text-xs font-semibold relative top-2 ml-[7px] px-[6px] rounded bg-[#f8f7f4] w-fit">
-              Description
-            </label>
+          <div className="flex flex-col w-full static mb-4 col-span-2">
             <input
               type="text"
               placeholder="Write here..."
@@ -191,7 +175,8 @@ export default function EditFinance({
               value={data.description}
               onChange={handleChange}
               required
-              className="border-gray-800 input px-[10px] py-[16px] text-xs bg-[#f8f7f4] border-2 rounded-[5px] w-full focus:outline-none placeholder:text-black/25 font-bold tracking-widest overflow-scroll font-sans"
+              className={`border-2
+       px-[10px] text-black py-[10px] rounded-[5px] w-full focus:outline-none placeholder:text-black/50 font-semibold font-sans text-[14px] overflow-scroll bg-transparent`}
             />
           </div>
         </div>

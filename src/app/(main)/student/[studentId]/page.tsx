@@ -1,19 +1,109 @@
+"use client";
+
 import ApproveDialog from "@/components/ApproveDialog";
 import { Button } from "@/components/ui/button";
-import { GetStudentById } from "@/lib/actions/student.action";
+import { Toaster, toast } from "sonner";
+import {
+  GetStudentById,
+  RejectApplication,
+} from "@/lib/actions/student.action";
 import Image from "next/image";
 import Link from "next/link";
+import { useEffect, useState } from "react";
+import { ApproveApplicationCounsellingDone } from "@/lib/actions/counseling.action";
+import PageLoader from "@/components/ui-components/PageLoading";
 
-export default async function StudentInfoPage({
+export default function StudentInfoPage({
   params,
 }: {
   params: { studentId: string };
 }) {
   const { studentId } = params;
+  const [data, setData] = useState<any | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const data = await GetStudentById(studentId);
+  // const data = await GetStudentById(studentId);
+
+  useEffect(() => {
+    const fetchStudentData = async () => {
+      setLoading(true);
+      try {
+        const studentData = await GetStudentById(studentId);
+        setData(studentData);
+      } catch (err: any) {
+        setError(err);
+        toast.error("Failed to fetch student data.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchStudentData();
+  }, [studentId]);
+
   const student = data?.student_details;
-  // console.log("Student Data: ", data);
+
+  const handleCounselingDone = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await ApproveApplicationCounsellingDone({
+        id: studentId,
+        status: "APPROVED",
+      });
+
+      if (response.statusCode === 200) {
+        toast.success("Application approved successfully!");
+        window.location.href = "/student/approve";
+      } else {
+        toast.error("Failed to approve application!");
+      }
+    } catch (err) {
+      toast.error("Failed to approve application! Counseling not done");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleCounselingRejected = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await RejectApplication(studentId);
+      if (response.statusCode === 200) {
+        toast.success("Application rejected successfully!");
+        window.location.href = "/student/reject";
+        console.log("Counseling rejected successfully!");
+      } else {
+        toast.error("Failed to reject application!");
+        console.error("Error rejecting application:", response.error);
+      }
+    } catch (err: any) {
+      toast.error("Error rejecting application!");
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+        <PageLoader />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+        <h2 className="text-red-600 text-lg">
+          Failed to load student information. Please try again later.
+        </h2>
+      </div>
+    );
+  }
 
   return (
     <div className="w-full h-full bg-[#fff]">
@@ -49,18 +139,83 @@ export default async function StudentInfoPage({
           </div>
           {bankInfo(data)}
         </div>
-        <div className="w-full flex justify-end gap-4 p-4">
-          {data?.application_status === "UNDER-COUNSELLING" && (
-            <Link href={`/student/approve-student/${studentId}`}>
-              <Button color="primary">
-                Submit Documents & Approve Student
+        <div className="w-full flex justify-between items-center gap-4 p-6">
+          <div>
+            {data?.application_status === "UNDER-COUNSELLING" && (
+              <Button
+                variant="destructive"
+                onClick={handleCounselingRejected}
+                disabled={loading}>
+                {loading ? (
+                  <span className="flex justify-center items-center">
+                    <svg
+                      className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24">
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"></circle>
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12c0-4.418 3.582-8 8-8 1.75 0 3.375.5 4.748 1.355l-1.304 1.304C13.697 6.032 12.0 6 12 6c-3.313 0-6 2.687-6 6s2.687 6 6 6c0 0 .697-.032 1.444-.062l1.304 1.304C15.375 19.5 13.75 20 12 20c-4.418 0-8-3.582-8-8z"></path>
+                    </svg>
+                    Rejecting...
+                  </span>
+                ) : (
+                  "Reject Application"
+                )}
               </Button>
-            </Link>
-          )}
-          <ApproveDialog
-            docId={studentId}
-            applicationStatus={data?.application_status}
-          />
+            )}
+          </div>
+
+          <div className="w-full flex justify-end gap-4">
+            {data?.application_status === "APPROVED" && (
+              <Link href={`/student/approve-student/${studentId}`}>
+                <Button color="primary">Edit Application</Button>
+              </Link>
+            )}
+            {data?.application_status === "UNDER-COUNSELLING" && (
+              <Button
+                color="primary"
+                onClick={handleCounselingDone}
+                disabled={loading}>
+                {loading ? (
+                  <span className="flex justify-center items-center">
+                    <svg
+                      className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24">
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"></circle>
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12c0-4.418 3.582-8 8-8 1.75 0 3.375.5 4.748 1.355l-1.304 1.304C13.697 6.032 12.0 6 12 6c-3.313 0-6 2.687-6 6s2.687 6 6 6c0 0 .697-.032 1.444-.062l1.304 1.304C15.375 19.5 13.75 20 12 20c-4.418 0-8-3.582-8-8z"></path>
+                    </svg>
+                    Processing...
+                  </span>
+                ) : (
+                  "Approve (Counseling done)"
+                )}
+              </Button>
+            )}
+            {data?.application_status != "APPROVED" && (
+              <ApproveDialog
+                docId={studentId}
+                applicationStatus={data?.application_status}
+              />
+            )}
+          </div>
         </div>
       </div>
     </div>
@@ -97,6 +252,9 @@ const basicSection = (data: any) => {
                     "bg-red-500 text-white"
                   } ${
                     data?.application_status === "UNDER-COUNSELLING" &&
+                    "bg-[#222e8b] text-white"
+                  } ${
+                    data?.application_status === "APPROVED" &&
                     "bg-[#228B22] text-white"
                   }`}>
                   {`Application ${
@@ -156,7 +314,7 @@ const additionalSection = (data: any) => {
   const student = data?.student_details;
 
   return (
-    <div className="p-6 border-2 rounded-lg border-gray-800 text-xs md:text-[14px]">
+    <div className="p-6 border-2 rounded-lg text-xs md:text-[14px]">
       <h3 className="font-semibold text-lg text-gray-600 mb-5">
         Additional Information of Student
       </h3>
@@ -185,7 +343,7 @@ const additionalSection = (data: any) => {
 const fatherInfo = (data: any) => {
   const student = data?.parent_guardian_details?.father_information;
   return (
-    <div className="p-6 border-2 rounded-lg border-gray-800 text-xs md:text-[14px]">
+    <div className="p-6 border-2 rounded-lg text-xs md:text-[14px]">
       <h3 className="font-semibold text-lg text-gray-600 mb-5">
         Father Information
       </h3>
@@ -204,7 +362,7 @@ const fatherInfo = (data: any) => {
 const motherInfo = (data: any) => {
   const student = data?.parent_guardian_details?.mother_information;
   return (
-    <div className="p-6 border-2 rounded-lg border-gray-800 text-xs md:text-[14px]">
+    <div className="p-6 border-2 rounded-lg text-xs md:text-[14px]">
       <h3 className="font-semibold text-lg text-gray-600 mb-5">
         Mother Information
       </h3>
@@ -223,7 +381,7 @@ const motherInfo = (data: any) => {
 const guardianInfo = (data: any) => {
   const student = data?.parent_guardian_details?.guardian_information;
   return (
-    <div className="p-6 border-2 rounded-lg border-gray-800 text-xs md:text-[14px]">
+    <div className="p-6 border-2 rounded-lg text-xs md:text-[14px]">
       <h3 className="font-semibold text-lg text-gray-600 mb-5">
         Guardian Information
       </h3>
@@ -249,7 +407,7 @@ const guardianInfo = (data: any) => {
 const currentAddressInfo = (data: any) => {
   const address = data?.communication_address?.current_address;
   return (
-    <div className="p-6 border-2 rounded-lg border-gray-800 text-xs md:text-[14px]">
+    <div className="p-6 border-2 rounded-lg text-xs md:text-[14px]">
       <h3 className="font-semibold text-lg text-gray-600 mb-5">
         Current Address Details
       </h3>
@@ -282,7 +440,7 @@ const currentAddressInfo = (data: any) => {
 const permanentAddressInfo = (data: any) => {
   const address = data?.communication_address?.permanent_address;
   return (
-    <div className="p-6 border-2 rounded-lg border-gray-800 text-xs md:text-[14px]">
+    <div className="p-6 border-2 rounded-lg text-xs md:text-[14px]">
       <h3 className="font-semibold text-lg text-gray-600 mb-5">
         Permanent Address Details
       </h3>
@@ -315,7 +473,7 @@ const permanentAddressInfo = (data: any) => {
 const academyInfo = (data: any) => {
   const student = data?.other_details?.previous_institute_details;
   return (
-    <div className="p-6 border-2 rounded-lg border-gray-800 text-xs md:text-[14px]">
+    <div className="p-6 border-2 rounded-lg text-xs md:text-[14px]">
       <h3 className="font-semibold text-gray-600 mb-5 text-lg">
         Previous Institute Details
       </h3>
@@ -347,7 +505,7 @@ const academyInfo = (data: any) => {
 const medInfo = (data: any) => {
   const med = data?.other_details?.medical_details;
   return (
-    <div className="p-6 border-2 rounded-lg border-gray-800 text-xs md:text-[14px]">
+    <div className="p-6 border-2 rounded-lg text-xs md:text-[14px]">
       <h3 className="font-semibold text-lg text-gray-600 mb-5">
         Medical Information
       </h3>
@@ -380,7 +538,7 @@ const medInfo = (data: any) => {
 const otherInfo = (data: any) => {
   const applicationData = data;
   return (
-    <div className="p-6 border-2 rounded-lg border-gray-800 text-xs md:text-[14px]">
+    <div className="p-6 border-2 rounded-lg text-xs md:text-[14px]">
       <h3 className="font-semibold text-lg text-gray-600 mb-5">
         Application Information (Status)
       </h3>
@@ -401,7 +559,7 @@ const otherInfo = (data: any) => {
 const bankInfo = (data: any) => {
   const bank = data?.bank_details;
   return (
-    <div className="p-6 border-2 rounded-lg border-gray-800 text-xs md:text-[14px]">
+    <div className="p-6 border-2 rounded-lg text-xs md:text-[14px]">
       <h3 className="font-semibold text-lg text-gray-600 mb-5">
         Bank Information
       </h3>
@@ -425,6 +583,7 @@ const bankInfo = (data: any) => {
           value={bank?.account_holder_name || "Not provided"}
         />
       </div>
+      <Toaster richColors />
     </div>
   );
 };

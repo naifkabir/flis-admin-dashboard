@@ -4,9 +4,21 @@ import apiClient from "../axios";
 import { cookies } from "next/headers";
 
 export async function GetAllApplication(applicationStatus: string) {
+  const cookieStore = cookies();
+  const accessToken = cookieStore.get("accessToken")?.value;
+
+  if (!accessToken) {
+    return { error: "No access token found." };
+  }
+
   try {
     const response = await apiClient.get(
-      `/admission/get-applications/${applicationStatus}`
+      `/admission/get-applications/${applicationStatus}`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
     );
     return response.data.data;
   } catch (error: any) {
@@ -15,9 +27,21 @@ export async function GetAllApplication(applicationStatus: string) {
 }
 
 export async function GetStudentById(studentId: string) {
+  const cookieStore = cookies();
+  const accessToken = cookieStore.get("accessToken")?.value;
+
+  if (!accessToken) {
+    return { error: "No access token found." };
+  }
+
   try {
     const response = await apiClient.get(
-      `/admission/get-application/${studentId}`
+      `/admission/get-application/${studentId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
     );
     return response.data.data;
   } catch (error: any) {
@@ -58,6 +82,29 @@ export async function ApproveApplicationForCounselling(data: any) {
 
   try {
     const response = await apiClient.post(`/communication/counselling`, data, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    return response.data;
+  } catch (error: any) {
+    console.error("Error approving application:", error);
+    return { error: error.message };
+  }
+}
+
+export async function CreateNewStudent(data: any, id: string) {
+  const cookieStore = cookies();
+  const accessToken = cookieStore.get("accessToken")?.value;
+
+  // console.log("Data: ", data);
+
+  if (!accessToken) {
+    return null;
+  }
+
+  try {
+    const response = await apiClient.post(`/student/create/${id}`, data, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },

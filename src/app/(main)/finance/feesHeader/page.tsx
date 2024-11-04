@@ -381,18 +381,18 @@ const FinancePage = () => {
 
     const { name, feesCode, occurrence, dueDate } = formData;
     if (!name || !feesCode || !occurrence || !dueDate) {
-      toast.error("Please fill in all required fields."); // Use toast for error messages
+      toast.error("Please fill in all required fields.");
       return;
     }
 
     const result = await CreateNewFinanceHeader(formData);
     if (result.error) {
       setError(result.error);
-      toast.error("Error creating new header: " + result.error); // Show error toast
+      toast.error("Error creating new header: " + result.error);
     } else {
       setData((prevData) => [...prevData, result]);
       setModalOpen(false);
-      toast.success("Header created successfully!"); // Show success toast
+      toast.success("Header created successfully!");
     }
 
     setFormData({
@@ -505,16 +505,13 @@ const FinancePage = () => {
                           onChange={handleOccurrenceChange}
                           className="w-full py-2 bg-transparent border-2 rounded-lg px-3 text-sm"
                           required>
-                          {[
-                            "Monthly",
-                            "Quarterly",
-                            "Half Yearly",
-                            "Annual",
-                          ].map((option) => (
-                            <option key={option} value={option}>
-                              {option}
-                            </option>
-                          ))}
+                          <option value="" disabled>
+                            Select Occurrence
+                          </option>
+                          <option value="Monthly">Monthly</option>
+                          <option value="Quarterly">Quarterly</option>
+                          <option value="Half Yearly">Half Yearly</option>
+                          <option value="Annual">Annual</option>
                         </select>
                       </div>
                     </div>

@@ -8,6 +8,8 @@
 // import React from "react";
 // import Image from "next/image";
 // import { SignUpFormApi } from "@/lib/actions/adminAuth.action";
+// import { SignUpData } from "@/types/types";
+// import { Toaster, toast } from "sonner";
 
 // export default function SignUp() {
 //   const [showPassword, setShowPassword] = useState<boolean>(false);
@@ -31,6 +33,10 @@
 //   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
 //     e.preventDefault();
 
+//     const lengthRegex = /^.{8,}$/;
+//     const upperCaseRegex = /[A-Z]/;
+//     const lowerCaseRegex = /[a-z]/;
+//     const specialCharacterRegex = /[!@#$%^&*(),.?":{}|<>]/;
 //     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 //     // Validation for empty fields
@@ -40,23 +46,74 @@
 //       password === "" ||
 //       confirmPassword === ""
 //     ) {
-//       alert("All fields are required!");
+//       toast.warning("All fields are required!", {
+//         position: "top-center",
+//       });
+//       return;
+//     }
+
+//     if (!lengthRegex.test(password)) {
+//       toast.warning("Password must be at least 8 characters long.", {
+//         position: "top-center",
+//       });
+//       return;
+//     }
+
+//     if (!upperCaseRegex.test(password)) {
+//       toast.warning("Password must contain at least one uppercase letter.", {
+//         position: "top-center",
+//       });
+//       return;
+//     }
+
+//     if (!lowerCaseRegex.test(password)) {
+//       toast.warning("Password must contain at least one lowercase letter.", {
+//         position: "top-center",
+//       });
+//       return;
+//     }
+
+//     if (!specialCharacterRegex.test(password)) {
+//       toast.warning("Password must contain at least one special character.", {
+//         position: "top-center",
+//       });
+//       return;
+//     }
+
+//     if (password.length <= 5) {
+//       toast.warning(
+//         "Almost there! Just make sure your password is longer than 5 characters for better security.",
+//         {
+//           position: "top-center",
+//         }
+//       );
 //       return;
 //     }
 
 //     // Validate email format
 //     if (!emailRegex.test(email)) {
-//       alert("Provide a valid email");
+//       toast.warning(
+//         "That doesn't seem to be a valid email address. Make sure it includes '@' and a domain name.",
+//         {
+//           position: "top-center",
+//         }
+//       );
 //       return;
 //     }
 
 //     // Check if passwords match
 //     if (password !== confirmPassword) {
-//       alert("Passwords do not match!");
+//       toast.error(
+//         "Hold on! The passwords don’t match. Double-check them and try again!",
+//         {
+//           position: "top-center",
+//         }
+//       );
 //       return;
 //     }
 
-//     const data = { name, email, password };
+//     // Include confirmPassword in the data object
+//     const data: SignUpData = { name, email, password, role: "admin" };
 
 //     setLoading(true);
 //     const result = await SignUpFormApi(data);
@@ -64,8 +121,9 @@
 //     setLoading(false);
 
 //     if (result.statusCode === 200) {
-//       alert("Signup Successful!");
+//       toast.success("Sign up Successful!");
 
+//       // Reset form fields
 //       setName("");
 //       setEmail("");
 //       setPassword("");
@@ -73,7 +131,7 @@
 
 //       router.push("/");
 //     } else if (result.error) {
-//       alert(result.error);
+//       toast.error(result.error);
 //     }
 //   };
 
@@ -89,7 +147,7 @@
 //             Join us to unlock new opportunities!
 //           </p>
 
-//           {/* Signup Form */}
+//           {/* Sign_up Form */}
 //           <form className="space-y-4" onSubmit={handleSubmit}>
 //             {/* Name Input */}
 //             <div className="relative">
@@ -101,7 +159,7 @@
 //                 type="text"
 //                 placeholder="Name"
 //                 value={name}
-//                 onChange={(e) => setName(e.target.value)} // Update name state
+//                 onChange={(e) => setName(e.target.value)}
 //                 className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300"
 //               />
 //             </div>
@@ -163,7 +221,7 @@
 //               </button>
 //             </div>
 
-//             {/* Signup Button */}
+//             {/* Sign_up Button */}
 //             <div>
 //               <button
 //                 type="submit"
@@ -215,7 +273,7 @@
 //             <Image
 //               width={1000}
 //               height={1000}
-//               src="/signup-page.svg"
+//               src="/assets/loaders/sign-up-page.svg"
 //               alt="Illustration"
 //               className="w-72 mx-auto mb-4 object-cover object-center"
 //             />
@@ -232,7 +290,7 @@
 //       <div className="absolute bottom-4 right-4 flex flex-col items-end px-3">
 //         <Link href="#">
 //           <Image
-//             src="/logo apparium.png"
+//             src="/assets/loaders/logo apparium.png"
 //             width={500}
 //             height={500}
 //             alt="Company Logo"
@@ -243,24 +301,43 @@
 //           Created and Developed by <strong>Apparium</strong>, 2024
 //         </span>
 //       </div>
+//       <Toaster richColors />
 //     </div>
 //   );
 // }
 
-// ----------------------------------------------------
-
 "use client";
 
 import { useState, FormEvent } from "react";
+import { z } from "zod";
 import { FaUser, FaLock, FaEye, FaEyeSlash, FaUnlockAlt } from "react-icons/fa";
 import { MdAlternateEmail } from "react-icons/md";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import React from "react";
 import Image from "next/image";
 import { SignUpFormApi } from "@/lib/actions/adminAuth.action";
 import { SignUpData } from "@/types/types";
 import { Toaster, toast } from "sonner";
+
+const SignUpSchema = z
+  .object({
+    name: z.string().min(1, "Name is required"),
+    email: z.string().email("Invalid email address"),
+    password: z
+      .string()
+      .min(8, "Password must be at least 8 characters long")
+      .regex(/[A-Z]/, "Password must contain at least one uppercase letter")
+      .regex(/[a-z]/, "Password must contain at least one lowercase letter")
+      .regex(
+        /[!@#$%^&*(),.?":{}|<>]/,
+        "Password must contain at least one special character"
+      ),
+    confirmPassword: z.string().min(1, "Confirm Password is required"),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords must match",
+    path: ["confirmPassword"],
+  });
 
 export default function SignUp() {
   const [showPassword, setShowPassword] = useState<boolean>(false);
@@ -271,6 +348,7 @@ export default function SignUp() {
   const [password, setPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
+  const [errors, setErrors] = useState<any>({});
   const router = useRouter();
 
   const togglePasswordVisibility = () => {
@@ -284,63 +362,46 @@ export default function SignUp() {
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const validation = SignUpSchema.safeParse({
+      name,
+      email,
+      password,
+      role: "admin",
+      confirmPassword,
+    });
 
-    // Validation for empty fields
-    if (
-      name === "" ||
-      email === "" ||
-      password === "" ||
-      confirmPassword === ""
-    ) {
-      toast.warning("All fields are required!", {
-        position: "top-center",
-      });
-      return;
-    }
-
-    if (password.length <= 5) {
-      toast.warning(
-        "Almost there! Just make sure your password is longer than 5 characters for better security.",
-        {
-          position: "top-center",
-        }
+    if (!validation.success) {
+      const newErrors = validation.error.errors.reduce(
+        (acc: any, error: any) => {
+          acc[error.path[0]] = error.message;
+          return acc;
+        },
+        {}
       );
+      setErrors(newErrors);
       return;
+    } else {
+      setErrors({});
     }
 
-    // Validate email format
-    if (!emailRegex.test(email)) {
-      toast.warning(
-        "That doesn't seem to be a valid email address. Make sure it includes '@' and a domain name.",
-        {
-          position: "top-center",
-        }
-      );
-      return;
-    }
-
-    // Check if passwords match
-    if (password !== confirmPassword) {
-      toast.error(
-        "Hold on! The passwords don’t match. Double-check them and try again!",
-        {
-          position: "top-center",
-        }
-      );
-      return;
-    }
-
-    // Include confirmPassword in the data object
-    const data: SignUpData = { name, email, password, confirmPassword };
+    const data: SignUpData = {
+      name,
+      email,
+      password,
+      role: "admin",
+      confirmPassword,
+    };
 
     setLoading(true);
     const result = await SignUpFormApi(data);
+    console.log("result: ", result);
 
     setLoading(false);
 
-    if (result.statusCode === 200) {
-      alert("Signup Successful!");
+    if (result.statusCode === 201) {
+      toast.success("Sign up Successful!", {
+        position: "top-center",
+      });
 
       // Reset form fields
       setName("");
@@ -350,14 +411,15 @@ export default function SignUp() {
 
       router.push("/");
     } else if (result.error) {
-      alert(result.error);
+      toast.error(result.error, {
+        position: "top-center",
+      });
     }
   };
 
   return (
     <div className="min-h-screen flex justify-center items-center bg-gray-50 relative">
       <div className="flex w-full max-w-6xl p-8 bg-white rounded-lg shadow-lg">
-        {/* Left Column */}
         <div className="w-full md:w-1/2 flex flex-col justify-center p-6">
           <h1 className="text-4xl font-bold text-gray-800 mb-4">
             Create Account
@@ -366,7 +428,6 @@ export default function SignUp() {
             Join us to unlock new opportunities!
           </p>
 
-          {/* Signup Form */}
           <form className="space-y-4" onSubmit={handleSubmit}>
             {/* Name Input */}
             <div className="relative">
@@ -381,6 +442,9 @@ export default function SignUp() {
                 onChange={(e) => setName(e.target.value)}
                 className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300"
               />
+              {errors.name && (
+                <p className="text-red-600 text-xs mt-1">{errors.name}</p>
+              )}
             </div>
 
             {/* Email Input */}
@@ -390,12 +454,15 @@ export default function SignUp() {
                 <MdAlternateEmail />
               </div>
               <input
-                type="text"
+                type="email"
                 placeholder="Email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300"
               />
+              {errors.email && (
+                <p className="text-red-600 text-xs mt-1">{errors.email}</p>
+              )}
             </div>
 
             {/* Password Input */}
@@ -417,6 +484,9 @@ export default function SignUp() {
                 className="absolute right-3 top-4 text-lg text-gray-500">
                 {showPassword ? <FaEyeSlash /> : <FaEye />}
               </button>
+              {errors.password && (
+                <p className="text-red-600 text-xs mt-1">{errors.password}</p>
+              )}
             </div>
 
             {/* Confirm Password Input */}
@@ -438,13 +508,18 @@ export default function SignUp() {
                 className="absolute right-3 top-4 text-lg text-gray-500">
                 {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
               </button>
+              {errors.confirmPassword && (
+                <p className="text-red-600 text-xs mt-1">
+                  {errors.confirmPassword}
+                </p>
+              )}
             </div>
 
-            {/* Signup Button */}
+            {/* Sign Up Button */}
             <div>
               <button
                 type="submit"
-                disabled={loading} // Disable button when loading
+                disabled={loading}
                 className={`w-full py-3 tracking-wider rounded-full transition duration-300 ${
                   loading
                     ? "bg-gray-400 cursor-not-allowed"
@@ -466,7 +541,7 @@ export default function SignUp() {
                       <path
                         className="opacity-75"
                         fill="currentColor"
-                        d="M4 12c0-4.418 3.582-8 8-8 1.75 0 3.375.5 4.748 1.355l-1.304 1.304C13.697 6.032 12.0 6 12 6c-3.313 0-6 2.687-6 6s2.687 6 6 6c0 0 .697-.032 1.444-.659l1.304 1.304C15.375 21.5 13.75 22 12 22c-4.418 0-8-3.582-8-8z"></path>
+                        d="M4 12c0-4.418 3.582-8 8-8 1.75 0 3.375.5 4.748 1.355l-1.304 1.304C13.697 6.032 12.0 6 12 6c-3.313 0-6 2.687-6 6s2.687 6 6 6c0 0 .697-.032 1.444-.062l1.304 1.304C15.375 19.5 13.75 20 12 20c-4.418 0-8-3.582-8-8z"></path>
                     </svg>
                     Loading...
                   </span>
@@ -475,18 +550,18 @@ export default function SignUp() {
                 )}
               </button>
             </div>
+
+            {/* Sign In Link */}
+            <div className="text-center mt-4">
+              <p className="text-gray-600">
+                Already have an account?{" "}
+                <Link href="/login" className="text-blue-500">
+                  Sign In
+                </Link>
+              </p>
+            </div>
           </form>
-
-          {/* Login Link */}
-          <p className="text-center text-sm text-gray-700 mt-6">
-            Already a member?{" "}
-            <Link href="/" className="text-green-600 hover:underline">
-              Login now
-            </Link>
-          </p>
         </div>
-
-        {/* Right Column: Illustration */}
         <div className="hidden md:flex w-1/2 items-center justify-center p-6 bg-gray-100 rounded-lg">
           <div className="text-center">
             <Image
@@ -505,7 +580,6 @@ export default function SignUp() {
         </div>
       </div>
 
-      {/* Footer Logo */}
       <div className="absolute bottom-4 right-4 flex flex-col items-end px-3">
         <Link href="#">
           <Image

@@ -432,7 +432,7 @@ export const FinanceColumnFeeMasters = (
               );
             })
           ) : (
-            <span>No headers available</span>
+            <span className="text-xs text-red-500">No headers available</span>
           )}
         </div>
       );

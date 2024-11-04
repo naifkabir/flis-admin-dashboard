@@ -3,6 +3,7 @@
 import PageLoader from "@/components/ui-components/PageLoading";
 import { GetGroupById, UpdateFeeGroup } from "@/lib/actions/finance.action";
 import { useEffect, useState } from "react";
+import { Toaster, toast } from "sonner";
 
 export default function EditFinance({
   params,
@@ -24,7 +25,6 @@ export default function EditFinance({
   useEffect(() => {
     const fetchData = async () => {
       try {
-        console.log("GroupId: ", groupId);
         const groupFinanceData = await GetGroupById(groupId);
 
         console.log("groupFinanceData: ", groupFinanceData);
@@ -56,12 +56,12 @@ export default function EditFinance({
     const response = await UpdateFeeGroup(data);
     setSubmitting(false);
 
-    console.log("Response: ", response);
+    // console.log("Response: ", response);
 
     if (response.error) {
-      alert("Failed to update finance data: " + response.error);
+      toast.error("Failed to update finance data: " + response.error);
     } else {
-      alert("Group data updated successfully!");
+      toast.success("Group data updated successfully!");
       window.history.back();
     }
   };
@@ -89,17 +89,12 @@ export default function EditFinance({
       <h1 className="font-bold text-lg mb-8">Edit Fee Group</h1>
       <form
         onSubmit={handleSubmit}
-        className="max-w-7xl mx-auto lg:mt-20 border-2 px-10 py-8 rounded border-gray-800">
+        className="max-w-7xl mx-auto lg:mt-20 border-2 px-10 py-8 rounded bg-[#fff]">
         <div className="grid grid-cols-3 items-center">
           <h3>
             Name<span className="text-red-700">*</span> :
           </h3>
-          <div className="input flex flex-col w-full static mb-4 col-span-2">
-            <label
-              htmlFor="name"
-              className="text-red-600 text-xs font-semibold relative top-2 ml-[7px] px-[6px] rounded bg-[#f8f7f4] w-fit">
-              Name
-            </label>
+          <div className="flex flex-col w-full static mb-4 col-span-2">
             <input
               type="text"
               placeholder="Write here..."
@@ -107,7 +102,7 @@ export default function EditFinance({
               onChange={handleChange}
               name="name"
               required
-              className="border-gray-800 input px-[10px] py-[16px] text-xs bg-[#f8f7f4] border-2 rounded-[5px] w-full focus:outline-none placeholder:text-black/25 font-bold tracking-widest overflow-scroll font-sans"
+              className={`border-2 px-[10px] text-black py-[10px] rounded-[5px] w-full focus:outline-none placeholder:text-black/50 font-semibold font-sans text-[14px] overflow-scroll bg-transparent`}
             />
           </div>
         </div>
@@ -116,12 +111,7 @@ export default function EditFinance({
           <h3>
             Group Code<span className="text-red-700">*</span> :
           </h3>
-          <div className="input flex flex-col w-full static mb-4 col-span-2">
-            <label
-              htmlFor="groupCode"
-              className="text-red-600 text-xs font-semibold relative top-2 ml-[7px] px-[6px] rounded bg-[#f8f7f4] w-fit">
-              Group Code
-            </label>
+          <div className="flex flex-col w-full static mb-4 col-span-2">
             <input
               type="text"
               placeholder="Write here..."
@@ -129,19 +119,16 @@ export default function EditFinance({
               onChange={handleChange}
               name="groupCode"
               required
-              className="border-gray-800 input px-[10px] py-[16px] text-xs bg-[#f8f7f4] border-2 rounded-[5px] w-full focus:outline-none placeholder:text-black/25 font-bold tracking-widest overflow-scroll font-sans"
+              className={`border-2 px-[10px] text-black py-[10px] rounded-[5px] w-full focus:outline-none placeholder:text-black/50 font-semibold font-sans text-[14px] overflow-scroll bg-transparent`}
             />
           </div>
         </div>
 
         <div className="grid grid-cols-3 items-center">
-          <h3>Description :</h3>
-          <div className="input flex flex-col w-full static mb-4 col-span-2">
-            <label
-              htmlFor="description"
-              className="text-red-600 text-xs font-semibold relative top-2 ml-[7px] px-[6px] rounded bg-[#f8f7f4] w-fit">
-              Description
-            </label>
+          <h3>
+            Description<span className="text-red-700">*</span> :
+          </h3>
+          <div className="flex flex-col w-full static mb-4 col-span-2">
             <input
               type="text"
               placeholder="Write here..."
@@ -149,7 +136,7 @@ export default function EditFinance({
               value={data.description}
               onChange={handleChange}
               required
-              className="border-gray-800 input px-[10px] py-[16px] text-xs bg-[#f8f7f4] border-2 rounded-[5px] w-full focus:outline-none placeholder:text-black/25 font-bold tracking-widest overflow-scroll font-sans"
+              className={`border-2 px-[10px] text-black py-[10px] rounded-[5px] w-full focus:outline-none placeholder:text-black/50 font-semibold font-sans text-[14px] overflow-scroll bg-transparent`}
             />
           </div>
         </div>
@@ -194,6 +181,7 @@ export default function EditFinance({
           </button>
         </div>
       </form>
+      <Toaster richColors />
     </div>
   );
 }

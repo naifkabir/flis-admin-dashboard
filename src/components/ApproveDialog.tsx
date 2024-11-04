@@ -5,6 +5,7 @@ import { Button } from "./ui/button";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogTitle,
   DialogHeader,
   DialogTrigger,
@@ -41,6 +42,10 @@ const ApproveDialog = ({
 }) => {
   const form = useForm<z.infer<typeof studentApproveFormScheam>>({
     resolver: zodResolver(studentApproveFormScheam),
+    defaultValues: {
+      date: "",
+      time: "",
+    },
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -74,16 +79,13 @@ const ApproveDialog = ({
       docId, // Add docId to the data object
     };
 
-    // console.log("submitData: ", submitData);
-
     try {
       const response = await ApproveApplicationForCounselling(submitData);
       if (response.error) {
-        console.log("Application approved:", response);
-        setError(response.error);
-      } else {
+        setError("Request failed. Please try again.");
+      }
+      if (response.statusCode === 200) {
         setSuccess(true);
-
         setTimeout(() => {
           setOpen(false); // Close the dialog
           window.history.back(); // Navigate back to the previous page
@@ -113,6 +115,7 @@ const ApproveDialog = ({
             ? "Assign New Counselling Date"
             : " Invite Student for Counseling"}
         </DialogTitle>
+        <DialogDescription></DialogDescription>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-3">
             <FormField
@@ -143,7 +146,29 @@ const ApproveDialog = ({
             />
             <div className="flex justify-end pt-4">
               <Button type="submit" disabled={loading} className="bg-[#228B22]">
-                {loading ? "Sending..." : "Send SMS & Email"}
+                {loading ? (
+                  <span className="flex justify-center items-center">
+                    <svg
+                      className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24">
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"></circle>
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12c0-4.418 3.582-8 8-8 1.75 0 3.375.5 4.748 1.355l-1.304 1.304C13.697 6.032 12.0 6 12 6c-3.313 0-6 2.687-6 6s2.687 6 6 6c0 0 .697-.032 1.444-.659l1.304 1.304C15.375 21.5 13.75 22 12 22c-4.418 0-8-3.582-8-8z"></path>
+                    </svg>
+                    Sending...
+                  </span>
+                ) : (
+                  "Send SMS & Email"
+                )}
               </Button>
             </div>
             {error && <p className="text-red-500">{error}</p>}

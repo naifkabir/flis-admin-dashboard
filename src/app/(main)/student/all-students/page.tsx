@@ -3,12 +3,15 @@
 import { useState, useEffect } from "react";
 import { columns } from "@/app/data-table-components/columns";
 import { StudentListDataTable } from "@/app/data-table-components/data-table";
-import { GetAllApplication } from "@/lib/actions/student.action";
+import {
+  GetAllApplication,
+  RejectApplication,
+} from "@/lib/actions/student.action";
 import { studentTableFilter } from "@/constant";
 import PageLoader from "@/components/ui-components/PageLoading";
-import { RejectApplication } from "@/lib/actions/student.action";
+import { Toaster, toast } from "sonner";
 
-export default function ApproveStudentPage() {
+export default function CounselingStudentPage() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
@@ -18,10 +21,12 @@ export default function ApproveStudentPage() {
       setLoading(true);
       setError(false);
       try {
-        const result = await GetAllApplication("APPROVED");
+        const result = await GetAllApplication("UNDER-COUNSELLING");
+        // console.log("Fetched data:", result);
         const filteredData = studentTableFilter(result);
         setData(filteredData);
       } catch (err) {
+        console.error("Error fetching data:", err);
         setError(true);
       } finally {
         setLoading(false);
@@ -31,17 +36,22 @@ export default function ApproveStudentPage() {
     fetchData();
   }, []);
 
-  // New function to handle rejection
   const handleReject = async (studentId: string) => {
-    console.log("studentId: ", studentId);
-    const response = await RejectApplication(studentId);
-    if (response && !response?.error) {
-      // Reload the data after rejection
-      const result = await GetAllApplication("APPROVED");
-      const filteredData = studentTableFilter(result);
-      setData(filteredData);
-    } else {
-      console.error("Error rejecting application:", response.error);
+    try {
+      const response = await RejectApplication(studentId);
+      if (response && !response.error) {
+        // Reload the data after rejection
+        const result = await GetAllApplication("UNDER-COUNSELLING");
+        toast.success("Application rejected successfully");
+        const filteredData = studentTableFilter(result);
+        setData(filteredData);
+      } else {
+        // console.error("Error rejecting application:", response.error);
+        toast.error("Failed to reject application");
+      }
+    } catch (err) {
+      // console.error("Error rejecting application:", err);
+      toast.error("Failed to reject application");
     }
   };
 
@@ -57,7 +67,7 @@ export default function ApproveStudentPage() {
     return (
       <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
         <h2 className="text-red-600 text-lg">
-          Failed to load approved students. Please try again later.
+          Failed to load pending students. Please try again later.
         </h2>
       </div>
     );
@@ -66,12 +76,13 @@ export default function ApproveStudentPage() {
   return (
     <div className="w-full h-screen my-auto">
       <div className="sub-container px-4">
-        <h1 className="font-bold text-lg mb-8">Counseling Done Student List</h1>
+        <h1 className="font-bold text-lg mb-8">All Students List</h1>
         <StudentListDataTable
           columns={columns(handleReject)}
           data={data ? data : []}
         />
       </div>
+      <Toaster richColors />
     </div>
   );
 }

@@ -69,7 +69,7 @@ export const menuItems = [
       },
       {
         label: "Student Information",
-        href: "/dashboard/list/students",
+        href: "/student/all-students",
         description: "Access detailed information about students.",
       },
       {

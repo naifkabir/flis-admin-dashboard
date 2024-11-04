@@ -311,13 +311,7 @@ export async function DeleteHeaderInMaster(data: any) {
       },
     });
 
-    if (response.status === 200) {
-      return { success: true };
-    } else {
-      return {
-        error: `Failed to delete header in master: ${response.statusText}`,
-      };
-    }
+    return response.data;
   } catch (error: any) {
     return { error: error.message };
   }
@@ -388,13 +382,7 @@ export async function AddHeaderInMaster(data: any) {
       },
     });
 
-    if (response.status === 200) {
-      return { success: true };
-    } else {
-      return {
-        error: `Failed to delete header in master: ${response.statusText}`,
-      };
-    }
+    return response.data;
   } catch (error: any) {
     return { error: error.message };
   }
