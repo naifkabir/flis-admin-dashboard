@@ -25,8 +25,9 @@ export default function CounselingStudentPage() {
         // console.log("Fetched data:", result);
         const filteredData = studentTableFilter(result);
         setData(filteredData);
-      } catch (err) {
-        console.error("Error fetching data:", err);
+      } catch (err: any) {
+        // console.error("Error fetching data:", err);
+        toast.error("Failed to fetch data", err);
         setError(true);
       } finally {
         setLoading(false);

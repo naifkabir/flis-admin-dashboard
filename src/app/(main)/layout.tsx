@@ -14,7 +14,7 @@ export default function Layout({
       </div>
 
       {/* Main Content Area */}
-      <div className="flex-1 px-8 py-20 md:py-5">{children}</div>
+      <div className="flex-1 px-3 md:px-8 py-20 md:py-5">{children}</div>
     </div>
   );
 }

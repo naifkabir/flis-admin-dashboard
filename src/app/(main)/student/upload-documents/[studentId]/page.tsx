@@ -179,7 +179,7 @@ export default function StudentInfoPage({
         toast.warning("No Documents Found!");
       }
     } catch (error) {
-      console.error("Error uploading documents:", error);
+      // console.error("Error uploading documents:", error);
       setError("Error uploading documents. Please try again.");
       toast.error("Error uploading documents. Please try again.");
     } finally {
