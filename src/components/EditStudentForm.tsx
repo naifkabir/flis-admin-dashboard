@@ -542,19 +542,17 @@ const EditStudentForm = ({ data }: { data: any }) => {
     appendFormData(formData, data1);
 
     console.log('Form data: ', formData);
-    try {
-      const response = await CreateNewStudent(formData, data._id);
-      console.log(response);
+    // try {
+    //   const response = await CreateNewStudent(formData, data._id);
+    //   console.log(response);
 
-      if (response.statusCode === 500 && !response.success) {
-        // window.location.href = `/student/upload-documents/${data._id}`;
-      }
-    } catch (error) {
-      console.log(error);
-      // window.location.href = `/student/upload-documents/${data._id}`;
-    }
-
-    console.log('Form data: ', formData);
+    //   if (response.statusCode === 500 && !response.success) {
+    //     // window.location.href = `/student/upload-documents/${data._id}`;
+    //   }
+    // } catch (error) {
+    //   console.log(error);
+    //   // window.location.href = `/student/upload-documents/${data._id}`;
+    // }
   };
 
   return (
