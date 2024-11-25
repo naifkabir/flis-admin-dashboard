@@ -144,6 +144,7 @@ export const columns = (
         //   });
         //   window.location.reload();
         // }
+        console.log(data.id);
         toast.success('Admission deleted successfully', {
           position: 'top-center',
         });

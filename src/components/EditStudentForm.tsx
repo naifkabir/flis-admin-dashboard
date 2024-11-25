@@ -188,7 +188,7 @@ const EditStudentForm = ({ data }: { data: any }) => {
 
   const [previewImage, setPreviewImage] = useState<string | null>(null);
   const [academicEras, setAcademicEras] = useState<string[]>([
-    'Genesis Scholastic Era',
+    'Innovate Prime Era (2025-2026)',
   ]);
   const [currentStatesList, setCurrentStatesList] = useState<IState[]>([]);
   const [currentDistrictsList, setCurrentDistrictsList] = useState<string[]>(
