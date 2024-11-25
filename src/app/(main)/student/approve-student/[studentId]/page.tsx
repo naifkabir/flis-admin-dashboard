@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
-import { GetStudentById } from "@/lib/actions/student.action";
-import PageLoader from "@/components/ui-components/PageLoading";
-import { Link } from "lucide-react";
-import EditStudentForm from "@/components/EditStudentForm";
+import { useEffect, useState } from 'react';
+import { GetStudentById } from '@/lib/actions/student.action';
+import PageLoader from '@/components/ui-components/PageLoading';
+import { Link } from 'lucide-react';
+import EditStudentForm from '@/components/EditStudentForm';
 
 // Main Function Start -------------------------------------------------
 
@@ -72,7 +72,6 @@ export default function StudentInfoPage({
     ...data.bank_details,
     ...data.student_details,
     ...data.communication_address,
-    ...data.communication_address.current_address,
     ...data.other_details.medical_details,
     ...data.other_details.previous_institute_details,
     ...data.parent_guardian_details,
@@ -84,6 +83,8 @@ export default function StudentInfoPage({
     payment_status: data.payment_status,
     _id: data._id,
   };
+
+  console.log(data1);
 
   return (
     <div className="bg-gray-50 p-8 rounded-lg">

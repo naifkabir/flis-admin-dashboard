@@ -1,15 +1,15 @@
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
-import { columns } from "@/app/data-table-components/columns";
-import { StudentListDataTable } from "@/app/data-table-components/data-table";
-import { GetAllApplication } from "@/lib/actions/student.action";
-import { studentTableFilter } from "@/constant";
-import PageLoader from "@/components/ui-components/PageLoading";
-import { RejectApplication } from "@/lib/actions/student.action";
-import { DynamicBreadcrumb } from "@/components/StudentBreadcrumb";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
+import { useState, useEffect } from 'react';
+import { columns } from '@/app/data-table-components/columns';
+import { StudentListDataTable } from '@/app/data-table-components/data-table';
+import { GetAllApplication } from '@/lib/actions/student.action';
+import { studentTableFilter } from '@/constant';
+import PageLoader from '@/components/ui-components/PageLoading';
+import { RejectApplication } from '@/lib/actions/student.action';
+import { DynamicBreadcrumb } from '@/components/StudentBreadcrumb';
+import { Button } from '@/components/ui/button';
+import Link from 'next/link';
 
 export default function PendingStudentPage() {
   const [data, setData] = useState([]);
@@ -21,7 +21,7 @@ export default function PendingStudentPage() {
       setLoading(true);
       setError(false);
       try {
-        const result = await GetAllApplication("PENDING");
+        const result = await GetAllApplication('PENDING');
         // console.log("Fetched data:", result);
         const filteredData = studentTableFilter(result);
         setData(filteredData);
@@ -43,11 +43,11 @@ export default function PendingStudentPage() {
     // console.log("After Call");
     if (response && !response.error) {
       // Reload the data after rejection
-      const result = await GetAllApplication("PENDING");
+      const result = await GetAllApplication('PENDING');
       const filteredData = studentTableFilter(result);
       setData(filteredData);
     } else {
-      console.error("Error rejecting application:", response.error);
+      console.error('Error rejecting application:', response.error);
     }
   };
 
@@ -77,7 +77,17 @@ export default function PendingStudentPage() {
             <h1 className="font-bold text-lg mb-1.5">Pending Student List</h1>
             <DynamicBreadcrumb currentPage="Pending Applications" />
           </div>
-          <Link href="/student/create-student"></Link>
+          <div className="flex gap-2">
+            <Link href="/student/counseling">
+              <Button>Counselling List</Button>
+            </Link>
+            <Link href="/student/reject">
+              <Button>Archived List</Button>
+            </Link>
+            <Link href="/student/approve">
+              <Button>Approved List</Button>
+            </Link>
+          </div>
         </div>
 
         <StudentListDataTable
