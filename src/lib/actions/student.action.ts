@@ -93,18 +93,18 @@ export async function ApproveApplicationForCounselling(data: any) {
   }
 }
 
-export async function CreateNewStudent(data: any, id: string) {
+export async function submitAfterEditApplication(data: any, id: string) {
   const cookieStore = cookies();
   const accessToken = cookieStore.get("accessToken")?.value;
 
-  // console.log("Data: ", data);
+  console.log("Data: ", id);
 
   if (!accessToken) {
     return null;
   }
 
   try {
-    const response = await apiClient.post(`/student/create/${id}`, data, {
+    const response = await apiClient.put(`/admission/update/${id}`, data, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
@@ -116,22 +116,23 @@ export async function CreateNewStudent(data: any, id: string) {
   }
 }
 
-// Submit Documents -------------- REMOVE IT
-export async function SubmitApplicationFormWithValidDocs(data: any) {
+export async function deleteAdmissionFromDatabase(id: string) {
   const cookieStore = cookies();
   const accessToken = cookieStore.get("accessToken")?.value;
+
+  // console.log("Data: ", id);
 
   if (!accessToken) {
     return null;
   }
 
   try {
-    const response = await apiClient.post(`/`, data, {
+    const response = await apiClient.delete(`/admission/delete/${id}`, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
     });
-    return response.data.data;
+    return response.data;
   } catch (error: any) {
     console.error("Error approving application:", error);
     return { error: error.message };

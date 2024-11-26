@@ -14,7 +14,7 @@ import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
-import { CreateNewStudent } from "@/lib/actions/student.action";
+import { submitAfterEditApplication } from "@/lib/actions/student.action";
 import { MdOutlinePhotoSizeSelectActual } from "react-icons/md";
 import { IoArrowRedoOutline } from "react-icons/io5";
 import { Country, IState, State } from "country-state-city";
@@ -610,17 +610,16 @@ const EditStudentForm = ({ data }: { data: any }) => {
     appendFormData(formData, data1);
 
     console.log("Form data: ", formData);
-    // try {
-    //   const response = await CreateNewStudent(formData, data._id);
-    //   console.log(response);
+    console.log("Id", data._id);
+    try {
+      const response = await submitAfterEditApplication(formData, data._id);
+      console.log(response);
 
-    //   if (response.statusCode === 500 && !response.success) {
-    //     // window.location.href = `/student/upload-documents/${data._id}`;
-    //   }
-    // } catch (error) {
-    //   console.log(error);
-    //   // window.location.href = `/student/upload-documents/${data._id}`;
-    // }
+      if (response.statusCode === 200) {
+        console.log("Successful");
+        window.location.href = `/student/upload-documents/${data._id}`;
+      }
+    } catch (error) {}
   };
 
   return (
@@ -1199,100 +1198,6 @@ const EditStudentForm = ({ data }: { data: any }) => {
                     }}
                   />
                 </div>
-
-                {/* <FormField
-                control={form.control}
-                name="blood_group"
-                render={({ field }) => (
-                  <FormItem className={cn("flex flex-col w-full text-[13px]")}>
-                    <FormLabel
-                      className={cn(
-                        "text-gray-500 font-semibold w-fit mb-0.5"
-                      )}>
-                      Blood Group<span className="text-red-500">*</span> :
-                    </FormLabel>
-                    <FormControl
-                      className={cn(
-                        "px-[10px] text-gray-700 bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
-                      )}>
-                      <select
-                        {...field}
-                        className="w-full bg-transparent focus:outline-none border-2 py-[10px] bg-[#fff]"
-                        disabled={!isEditable}
-                        value={field.value || ""} // Controlled approach
-                        onChange={field.onChange} // Ensure that the onChange handler is connected
-                      >
-                        <option value="" disabled>
-                          Select blood group
-                        </option>
-                        <option value="A+">A+</option>
-                        <option value="A-">A-</option>
-                        <option value="B+">B+</option>
-                        <option value="B-">B-</option>
-                        <option value="AB+">AB+</option>
-                        <option value="AB-">AB-</option>
-                        <option value="O+">O+</option>
-                        <option value="O-">O-</option>
-                      </select>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              /> */}
-
-                {/* <FormField
-                control={form.control}
-                name="height"
-                render={({ field }) => (
-                  <FormItem className={cn("flex flex-col w-full text-[13px]")}>
-                    <FormLabel
-                      className={cn(
-                        "text-gray-500 font-semibold w-fit mb-0.5"
-                      )}>
-                      Height (cm)<span className="text-red-500">*</span> :
-                    </FormLabel>
-                    <FormControl
-                      className={cn(
-                        "border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
-                      )}>
-                      <Input
-                        placeholder="Height"
-                        disabled={!isEditable}
-                        {...field}
-                        className="w-full"
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              /> */}
-
-                {/* <FormField
-                control={form.control}
-                name="weight"
-                render={({ field }) => (
-                  <FormItem className={cn("flex flex-col w-full text-[13px]")}>
-                    <FormLabel
-                      className={cn(
-                        "text-gray-500 font-semibold w-fit mb-0.5"
-                      )}>
-                      Weight (kg)<span className="text-red-500">*</span> :
-                    </FormLabel>
-                    <FormControl
-                      className={cn(
-                        "border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
-                      )}>
-                      <Input
-                        placeholder="Weight"
-                        disabled={!isEditable}
-                        {...field}
-                        className="w-full"
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              /> */}
 
                 <FormField
                   control={form.control}
@@ -3299,7 +3204,7 @@ const EditStudentForm = ({ data }: { data: any }) => {
                       ? "bg-red-500 hover:bg-red-600"
                       : "bg-blue-500 hover:bg-blue-600"
                   } text-white`}>
-                  {isEditable ? "Cancel Edit" : "Edit"}
+                  {isEditable ? "Cancel" : "Edit"}
                 </Button>
                 {isEditable && (
                   <Button
@@ -3309,8 +3214,8 @@ const EditStudentForm = ({ data }: { data: any }) => {
                   </Button>
                 )}
                 {!isEditable && (
-                  <Button type="submit" className={cn("w-36 h-12")}>
-                    Submit
+                  <Button type="submit" className={cn("w-fit h-12")}>
+                    Submit & Upload Documents
                   </Button>
                 )}
               </div>

@@ -180,6 +180,11 @@ export default function StudentInfoPage({
                 <Button color="primary">Edit Application</Button>
               </Link>
             )}
+            {data?.application_status === "APPROVED" && (
+              <Link href={`/student/upload-documents/${studentId}`}>
+                <Button color="primary">Submit & Upload Documents</Button>
+              </Link>
+            )}
             {data?.application_status === "UNDER-COUNSELLING" && (
               <Button
                 color="primary"
@@ -222,6 +227,16 @@ export default function StudentInfoPage({
     </div>
   );
 }
+
+// TODO: # Show Documents Of Admitted Students Start
+const showAdmittedStudentDocs = (data: any) => {
+  return (
+    <div>
+      <h3 className="font-semibold text-gray-600 mb-5 text-lg"> Documents </h3>
+    </div>
+  );
+};
+// TODO: # Show Documents Of Admitted Students End
 
 const basicSection = (data: any) => {
   // console.log("Data: ", data);

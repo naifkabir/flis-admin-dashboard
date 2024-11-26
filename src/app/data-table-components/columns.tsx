@@ -1,11 +1,11 @@
-'use client';
+"use client";
 
-import { ColumnDef } from '@tanstack/react-table';
-import { DataTableColumnHeader } from './data-table-column-header';
-import Image from 'next/image';
-import { Button } from '@/components/ui/button';
-import Link from 'next/link';
-import { FinanceHeader } from '@/types/types';
+import { ColumnDef } from "@tanstack/react-table";
+import { DataTableColumnHeader } from "./data-table-column-header";
+import Image from "next/image";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import { FinanceHeader } from "@/types/types";
 
 type Student = {
   [x: string]: any;
@@ -27,7 +27,7 @@ export const columns = (
   handleReject?: (studentId: string) => Promise<void>
 ): ColumnDef<Student>[] => [
   {
-    id: 'serial_number',
+    id: "serial_number",
     header: () => <span>Sl. No.</span>,
     cell: ({ row }) => (
       <div className="flex justify-center items-center">
@@ -38,14 +38,14 @@ export const columns = (
     enableHiding: false,
   },
   {
-    accessorKey: 'name',
+    accessorKey: "name",
     header: ({ column }) => (
       <div>
         <DataTableColumnHeader column={column} title="Information" />
       </div>
     ),
     cell: ({ row }) => {
-      const studentPhoto = row.original.photo || '/path/to/placeholder.jpg';
+      const studentPhoto = row.original.photo || "/path/to/placeholder.jpg";
 
       return (
         <div className="gap-5 w-fit flex items-center justify-center">
@@ -57,8 +57,8 @@ export const columns = (
             className="rounded-full transition-all duration-300 object-cover object-center w-10 h-10 hover:scale-150"
           />
           <div className="flex flex-col items-start">
-            <span className="font-semibold">{row.getValue('name')}</span>
-            <span>{row.original.gender || 'N/A'}</span>
+            <span className="font-semibold">{row.getValue("name")}</span>
+            <span>{row.original.gender || "N/A"}</span>
           </div>
         </div>
       );
@@ -67,88 +67,81 @@ export const columns = (
     enableSorting: true,
   },
   {
-    accessorKey: 'dob',
+    accessorKey: "dob",
     header: ({ column }) => (
       <div className="flex justify-center">
         <DataTableColumnHeader column={column} title="Date of Birth" />
       </div>
     ),
     cell: ({ row }) => (
-      <p>{new Date(row.getValue('dob')).toLocaleDateString('gd-IN')}</p>
+      <p>{new Date(row.getValue("dob")).toLocaleDateString("gd-IN")}</p>
     ),
   },
   {
-    accessorKey: 'class',
+    accessorKey: "class",
     header: ({ column }) => (
       <div className="flex justify-center">
         <DataTableColumnHeader column={column} title="Class" />
       </div>
     ),
-    cell: ({ row }) => <p>{row.getValue('class')}</p>,
+    cell: ({ row }) => <p>{row.getValue("class")}</p>,
     filterFn: (row, id, value) => value.includes(row.getValue(id)),
     enableHiding: true,
     enableSorting: true,
   },
   {
-    accessorKey: 'g_name',
+    accessorKey: "g_name",
     header: ({ column }) => (
       <div className="flex justify-center">
         <DataTableColumnHeader column={column} title="Guardian" />
       </div>
     ),
-    cell: ({ row }) => <p>{row.getValue('g_name')}</p>,
+    cell: ({ row }) => <p>{row.getValue("g_name")}</p>,
     filterFn: (row, id, value) => value.includes(row.getValue(id)),
     enableHiding: true,
     enableSorting: true,
   },
   {
-    accessorKey: 'g_contact',
+    accessorKey: "g_contact",
     header: ({ column }) => (
       <div className="flex justify-center">
         <DataTableColumnHeader column={column} title="Phone" />
       </div>
     ),
-    cell: ({ row }) => <p>{row.getValue('g_contact')}</p>,
+    cell: ({ row }) => <p>{row.getValue("g_contact")}</p>,
     filterFn: (row, id, value) => value.includes(row.getValue(id)),
     enableHiding: true,
     enableSorting: true,
   },
   {
-    accessorKey: 'address',
+    accessorKey: "address",
     header: ({ column }) => (
       <div className="flex justify-center">
         <DataTableColumnHeader column={column} title="Address" />
       </div>
     ),
-    cell: ({ row }) => <p>{row.getValue('address')}</p>,
+    cell: ({ row }) => <p>{row.getValue("address")}</p>,
     enableHiding: true,
     enableSorting: true,
   },
   {
-    accessorKey: 'action',
-    header: 'Action',
+    accessorKey: "action",
+    header: "Action",
     cell: ({ row }) => {
       const data = row.original;
       const status = row.original.status;
 
       const handleDelete = async () => {
-        // const result = await DeleteAdmission(data.id);
+        const result = await deleteAdmissionFromDatabase(data.id);
 
-        // if (result.error) {
-        //   toast.error('Something went wrong while deleting the admission', {
-        //     position: 'top-center',
-        //   });
-        // } else {
-        //   toast.success('Admission deleted successfully', {
-        //     position: 'top-center',
-        //   });
-        //   window.location.reload();
-        // }
-        console.log(data.id);
-        toast.success('Admission deleted successfully', {
-          position: 'top-center',
-        });
-        window.location.reload();
+        if (result.error) {
+          toast.error("Something went wrong while deleting the admission", {
+            position: "top-center",
+          });
+        } else {
+          toast.success("Admission deleted successfully");
+          window.location.reload();
+        }
       };
 
       return (
@@ -159,7 +152,149 @@ export const columns = (
           <Button variant="destructive" onClick={handleDelete}>
             Delete
           </Button>
-          {(status === 'PENDING' || status === 'UNDER-COUNSELLING') &&
+          {(status === "PENDING" || status === "UNDER-COUNSELLING") &&
+            handleReject && (
+              <Button onClick={() => handleReject(data.id)}>Reject</Button>
+            )}
+        </div>
+      );
+    },
+  },
+];
+
+// --------------------------------------------------------------------------------------------------
+// --------------------------------------------------------------------------------------------------
+
+export const admittedStudent = (
+  handleReject?: (studentId: string) => Promise<void>
+): ColumnDef<Student>[] => [
+  {
+    id: "serial_number",
+    header: () => <span>Sl. No.</span>,
+    cell: ({ row }) => (
+      <div className="flex justify-center items-center">
+        <span>{row.index + 1}</span>
+      </div>
+    ),
+    enableSorting: false,
+    enableHiding: false,
+  },
+  {
+    accessorKey: "name",
+    header: ({ column }) => (
+      <div>
+        <DataTableColumnHeader column={column} title="Information" />
+      </div>
+    ),
+    cell: ({ row }) => {
+      const studentPhoto = row.original.photo || "/path/to/placeholder.jpg";
+
+      return (
+        <div className="gap-5 w-fit flex items-center justify-center">
+          <Image
+            src={studentPhoto}
+            alt="student_photo"
+            width={500}
+            height={500}
+            className="rounded-full transition-all duration-300 object-cover object-center w-10 h-10 hover:scale-150"
+          />
+          <div className="flex flex-col items-start">
+            <span className="font-semibold">{row.getValue("name")}</span>
+            <span>{row.original.gender || "N/A"}</span>
+          </div>
+        </div>
+      );
+    },
+    enableHiding: true,
+    enableSorting: true,
+  },
+  {
+    accessorKey: "dob",
+    header: ({ column }) => (
+      <div className="flex justify-center">
+        <DataTableColumnHeader column={column} title="Date of Birth" />
+      </div>
+    ),
+    cell: ({ row }) => (
+      <p>{new Date(row.getValue("dob")).toLocaleDateString("gd-IN")}</p>
+    ),
+  },
+  {
+    accessorKey: "class",
+    header: ({ column }) => (
+      <div className="flex justify-center">
+        <DataTableColumnHeader column={column} title="Class" />
+      </div>
+    ),
+    cell: ({ row }) => <p>{row.getValue("class")}</p>,
+    filterFn: (row, id, value) => value.includes(row.getValue(id)),
+    enableHiding: true,
+    enableSorting: true,
+  },
+  {
+    accessorKey: "g_name",
+    header: ({ column }) => (
+      <div className="flex justify-center">
+        <DataTableColumnHeader column={column} title="Guardian" />
+      </div>
+    ),
+    cell: ({ row }) => <p>{row.getValue("g_name")}</p>,
+    filterFn: (row, id, value) => value.includes(row.getValue(id)),
+    enableHiding: true,
+    enableSorting: true,
+  },
+  {
+    accessorKey: "g_contact",
+    header: ({ column }) => (
+      <div className="flex justify-center">
+        <DataTableColumnHeader column={column} title="Phone" />
+      </div>
+    ),
+    cell: ({ row }) => <p>{row.getValue("g_contact")}</p>,
+    filterFn: (row, id, value) => value.includes(row.getValue(id)),
+    enableHiding: true,
+    enableSorting: true,
+  },
+  {
+    accessorKey: "address",
+    header: ({ column }) => (
+      <div className="flex justify-center">
+        <DataTableColumnHeader column={column} title="Address" />
+      </div>
+    ),
+    cell: ({ row }) => <p>{row.getValue("address")}</p>,
+    enableHiding: true,
+    enableSorting: true,
+  },
+  {
+    accessorKey: "action",
+    header: "Action",
+    cell: ({ row }) => {
+      const data = row.original;
+      const status = row.original.status;
+
+      const handleDelete = async () => {
+        const result = await deleteAdmissionFromDatabase(data.id);
+
+        if (result.error) {
+          toast.error("Something went wrong while deleting the admission", {
+            position: "top-center",
+          });
+        } else {
+          toast.success("Admission deleted successfully");
+          window.location.reload();
+        }
+      };
+
+      return (
+        <div className="flex justify-center gap-4">
+          <Link href={`/student/${data.id}`}>
+            <Button>View</Button>
+          </Link>
+          <Button variant="destructive" onClick={handleDelete}>
+            Delete
+          </Button>
+          {(status === "PENDING" || status === "UNDER-COUNSELLING") &&
             handleReject && (
               <Button onClick={() => handleReject(data.id)}>Reject</Button>
             )}
@@ -177,7 +312,7 @@ export const FinanceColumnFeeHeaders = (
   handleDeleteHeader?: (termId: string) => Promise<void>
 ): ColumnDef<any>[] => [
   {
-    id: 'serial_number',
+    id: "serial_number",
     header: () => <span>Sl. No.</span>,
     cell: ({ row }) => (
       <div className="flex justify-center items-center">
@@ -188,63 +323,63 @@ export const FinanceColumnFeeHeaders = (
     enableHiding: false,
   },
   {
-    accessorKey: 'name',
+    accessorKey: "name",
     header: ({ column }) => (
       <div className="flex justify-center items-center">
         <DataTableColumnHeader column={column} title="Name" />
       </div>
     ),
-    cell: ({ row }) => <p>{row.getValue('name')}</p>,
+    cell: ({ row }) => <p>{row.getValue("name")}</p>,
     enableHiding: true,
     enableSorting: true,
   },
   {
-    accessorKey: 'feesCode',
+    accessorKey: "feesCode",
     header: ({ column }) => (
       <div className="flex justify-center items-center">
         <DataTableColumnHeader column={column} title="Fees Code" />
       </div>
     ),
-    cell: ({ row }) => <p>{row.getValue('feesCode')}</p>,
+    cell: ({ row }) => <p>{row.getValue("feesCode")}</p>,
     enableHiding: true,
     enableSorting: true,
   },
   {
-    accessorKey: 'occurrence',
+    accessorKey: "occurrence",
     header: ({ column }) => (
       <div className="flex justify-center items-center">
         <DataTableColumnHeader column={column} title="Occurrence" />
       </div>
     ),
-    cell: ({ row }) => <p>{row.getValue('occurrence')}</p>,
+    cell: ({ row }) => <p>{row.getValue("occurrence")}</p>,
     enableHiding: true,
     enableSorting: true,
   },
   {
-    accessorKey: 'dueDate',
+    accessorKey: "dueDate",
     header: ({ column }) => (
       <div className="flex justify-center items-center">
         <DataTableColumnHeader column={column} title="Due Date" />
       </div>
     ),
-    cell: ({ row }) => <p>{row.getValue('dueDate')}</p>,
+    cell: ({ row }) => <p>{row.getValue("dueDate")}</p>,
     enableHiding: true,
     enableSorting: true,
   },
   {
-    accessorKey: 'description',
+    accessorKey: "description",
     header: ({ column }) => (
       <div className="flex justify-center items-center">
         <DataTableColumnHeader column={column} title="Description" />
       </div>
     ),
-    cell: ({ row }) => <p>{row.getValue('description')}</p>,
+    cell: ({ row }) => <p>{row.getValue("description")}</p>,
     enableHiding: true,
     enableSorting: true,
   },
   {
-    accessorKey: 'action',
-    header: 'Action',
+    accessorKey: "action",
+    header: "Action",
     cell: ({ row }) => {
       const data = row.original;
 
@@ -255,8 +390,7 @@ export const FinanceColumnFeeHeaders = (
           </Link>
           <Button
             onClick={() => handleDeleteHeader?.(data._id)}
-            variant="destructive"
-          >
+            variant="destructive">
             Delete
           </Button>
         </div>
@@ -272,7 +406,7 @@ export const FinanceColumnFeeGroups = (
   handleDeleteGroup?: (termId: string) => Promise<void>
 ): ColumnDef<any>[] => [
   {
-    id: 'serial_number',
+    id: "serial_number",
     header: () => <span>Sl. No.</span>,
     cell: ({ row }) => (
       <div className="flex justify-center items-center">
@@ -283,41 +417,41 @@ export const FinanceColumnFeeGroups = (
     enableHiding: false,
   },
   {
-    accessorKey: 'name',
+    accessorKey: "name",
     header: ({ column }) => (
       <div className="flex justify-center items-center">
         <DataTableColumnHeader column={column} title="Name" />
       </div>
     ),
-    cell: ({ row }) => <p>{row.getValue('name')}</p>,
+    cell: ({ row }) => <p>{row.getValue("name")}</p>,
     enableHiding: true,
     enableSorting: true,
   },
   {
-    accessorKey: 'groupCode',
+    accessorKey: "groupCode",
     header: ({ column }) => (
       <div className="flex justify-center items-center">
         <DataTableColumnHeader column={column} title="Group Code" />
       </div>
     ),
-    cell: ({ row }) => <p>{row.getValue('groupCode')}</p>,
+    cell: ({ row }) => <p>{row.getValue("groupCode")}</p>,
     enableHiding: true,
     enableSorting: true,
   },
   {
-    accessorKey: 'description',
+    accessorKey: "description",
     header: ({ column }) => (
       <div className="flex justify-center items-center">
         <DataTableColumnHeader column={column} title="Description" />
       </div>
     ),
-    cell: ({ row }) => <p>{row.getValue('description')}</p>,
+    cell: ({ row }) => <p>{row.getValue("description")}</p>,
     enableHiding: true,
     enableSorting: true,
   },
   {
-    accessorKey: 'action',
-    header: 'Action',
+    accessorKey: "action",
+    header: "Action",
     cell: ({ row }) => {
       const data = row.original;
 
@@ -328,8 +462,7 @@ export const FinanceColumnFeeGroups = (
           </Link>
           <Button
             onClick={() => handleDeleteGroup?.(data._id)}
-            variant="destructive"
-          >
+            variant="destructive">
             Delete
           </Button>
         </div>
@@ -341,9 +474,10 @@ export const FinanceColumnFeeGroups = (
 // --------------------------------------------------------------------------------------------------
 // --------------------------------------------------------------------------------------------------
 
-import { FaRegTrashCan } from 'react-icons/fa6';
-import { FaEdit } from 'react-icons/fa';
-import { toast } from 'sonner';
+import { FaRegTrashCan } from "react-icons/fa6";
+import { FaEdit } from "react-icons/fa";
+import { toast } from "sonner";
+import { deleteAdmissionFromDatabase } from "@/lib/actions/student.action";
 
 export const FinanceColumnFeeMasters = (
   handleEditAmount?: (amountData: any) => void,
@@ -352,7 +486,7 @@ export const FinanceColumnFeeMasters = (
   handleDeleteMaster?: (master_id: string) => Promise<void>
 ): ColumnDef<any>[] => [
   {
-    id: 'serial_number',
+    id: "serial_number",
     header: () => <span>Sl. No.</span>,
     cell: ({ row }) => (
       <div className="flex justify-center items-center">
@@ -363,7 +497,7 @@ export const FinanceColumnFeeMasters = (
     enableSorting: true,
   },
   {
-    accessorKey: 'group',
+    accessorKey: "group",
     header: ({ column }) => (
       <div className="flex justify-center items-center">
         <DataTableColumnHeader column={column} title="Group" />
@@ -376,7 +510,7 @@ export const FinanceColumnFeeMasters = (
         <div>
           <p className="mb-1">
             <span className="text-[11px] justify-self-start">
-              Group Name :{' '}
+              Group Name :{" "}
               <strong className="text-[13px] font-bold tracking-wider">
                 {data?.groupData?.name}
               </strong>
@@ -394,7 +528,7 @@ export const FinanceColumnFeeMasters = (
     enableSorting: false,
   },
   {
-    accessorKey: 'headers',
+    accessorKey: "headers",
     header: ({ column }) => (
       <div className="flex justify-center items-center">
         <DataTableColumnHeader column={column} title="Assigned Fee Headers" />
@@ -402,14 +536,14 @@ export const FinanceColumnFeeMasters = (
     ),
     cell: ({ row }) => {
       const master_id = row.original?._id;
-      const headers = (row.getValue('headers') as FinanceHeader[]) || [];
+      const headers = (row.getValue("headers") as FinanceHeader[]) || [];
 
       return (
         <div>
           {headers.length > 0 ? (
             headers.map((header) => {
               const amountBgClass =
-                header.amount == '0' ? 'text-red-600' : 'text-green-600';
+                header.amount == "0" ? "text-red-600" : "text-green-600";
 
               const obj_id = header._id;
               const amount = header.amount;
@@ -417,24 +551,21 @@ export const FinanceColumnFeeMasters = (
               return (
                 <div
                   key={header._id}
-                  className="grid grid-cols-3 gap-3 place-items-center p-2"
-                >
+                  className="grid grid-cols-3 gap-3 place-items-center p-2">
                   <span className="text-[11px] justify-self-start">
-                    Header Name :{' '}
+                    Header Name :{" "}
                     <strong className="text-[13px] font-bold tracking-wider">
                       {header.name}
                     </strong>
                   </span>
                   <span
-                    className={`p-1 font-bold tracking-wide justify-self-start" ${amountBgClass}`}
-                  >
+                    className={`p-1 font-bold tracking-wide justify-self-start" ${amountBgClass}`}>
                     {header.amount}
                   </span>
                   <div className="flex">
                     <section
                       // href={`/finance/editFeeHeader/${header._id}`}
-                      className="m-1"
-                    >
+                      className="m-1">
                       <Button
                         variant="outline"
                         onClick={() =>
@@ -444,8 +575,7 @@ export const FinanceColumnFeeMasters = (
                             amount,
                           })
                         }
-                        className="font-extrabold bg-gray-950 text-[#fff] hover:bg-gray-800 hover:text-[#fff]"
-                      >
+                        className="font-extrabold bg-gray-950 text-[#fff] hover:bg-gray-800 hover:text-[#fff]">
                         <FaEdit />
                       </Button>
                     </section>
@@ -454,8 +584,7 @@ export const FinanceColumnFeeMasters = (
                         handleDeleteHeader?.({ obj_id, master_id })
                       }
                       variant="destructive"
-                      className="text-[16px] font-extrabold m-1"
-                    >
+                      className="text-[16px] font-extrabold m-1">
                       <FaRegTrashCan />
                     </Button>
                   </div>
@@ -472,8 +601,8 @@ export const FinanceColumnFeeMasters = (
     enableSorting: false,
   },
   {
-    accessorKey: 'action',
-    header: 'Actions',
+    accessorKey: "action",
+    header: "Actions",
     cell: ({ row }) => {
       const data = row.original;
 
@@ -484,8 +613,7 @@ export const FinanceColumnFeeMasters = (
           </Button>
           <Button
             onClick={() => handleDeleteMaster?.(data._id)}
-            variant="destructive"
-          >
+            variant="destructive">
             Delete Master
           </Button>
         </div>
