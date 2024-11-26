@@ -265,7 +265,7 @@ const EditStudentForm = ({ data }: { data: any }) => {
 
   // Set initial date of birth if it exists in data
   useEffect(() => {
-    if (data.date_of_birth) {
+    if (data?.date_of_birth) {
       const normalizedDate = new Date(data.date_of_birth);
       const formattedDate = `${normalizedDate.getFullYear()}-${(
         normalizedDate.getMonth() + 1
@@ -1324,90 +1324,571 @@ const EditStudentForm = ({ data }: { data: any }) => {
               </div>
             </div>
 
-            <div className="grid md:grid-cols-2 md:gap-x-3 gap-y-5 md:gap-y-10 bg-[#fff] rounded-lg p-9 border-2 relative">
+            <div className="p-9 border-2 relative bg-[#fff]">
               <h2 className="uppercase text-gray-700 font-bold text-[12.5px] tracking-wide absolute -top-[9px] left-[29px] bg-[#fff] px-1 rounded-full">
                 Admission Information
               </h2>
-              <FormField
-                control={form.control}
-                name="class"
-                render={({ field }) => (
-                  <FormItem className={cn("flex flex-col w-full text-[13px]")}>
-                    <FormLabel
-                      className={cn("text-gray-500 font-semibold mb-0.5")}>
-                      Class (want to join)
-                      <span className="text-red-500">*</span> :
-                    </FormLabel>
-                    <Select
-                      disabled={!isEditable}
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}>
-                      <FormControl>
-                        <SelectTrigger className="w-full">
-                          <SelectValue placeholder="Select Class" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {classOptions.length > 0 &&
-                          classOptions.map((className) => (
-                            <SelectItem key={className} value={className}>
-                              {className}
-                            </SelectItem>
-                          ))}
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
 
-              <FormField
-                control={form.control}
-                name="academic_era"
-                render={({ field }) => (
-                  <FormItem className={cn("flex flex-col w-full text-[13px]")}>
-                    <FormLabel
-                      className={cn("text-gray-500 font-semibold mb-0.5")}>
-                      Academic Era<span className="text-red-500">*</span> :
-                    </FormLabel>
-                    <Select
-                      disabled={!isEditable}
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}>
-                      <FormControl>
-                        <SelectTrigger className="w-full">
-                          <SelectValue placeholder="Select Academic Era" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {academicEras.length > 0 &&
-                          academicEras.map((era) => (
-                            <SelectItem key={era} value={era}>
-                              {era}
-                            </SelectItem>
-                          ))}
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-
-            <div className="grid grid-cols-2 gap-x-10">
-              <div className="lg:grid grid-cols-3 lg:gap-x-3 gap-y-10 bg-[#fff] rounded-lg p-9 border-2 relative">
-                <h2 className="uppercase text-gray-700 font-bold text-[12.5px] tracking-wide absolute -top-[9px] left-[29px] bg-[#fff] px-1 rounded-full">
-                  Father Details
-                </h2>
+              <div className="pt-16 grid md:grid-cols-2 md:gap-x-3 gap-y-5 md:gap-y-10 rounded-lg">
                 <FormField
                   control={form.control}
-                  name="father_name"
+                  name="class"
                   render={({ field }) => (
                     <FormItem
                       className={cn("flex flex-col w-full text-[13px]")}>
                       <FormLabel
                         className={cn("text-gray-500 font-semibold mb-0.5")}>
-                        Father&apos;s Name
+                        Class (want to join)
+                        <span className="text-red-500">*</span> :
+                      </FormLabel>
+                      <Select
+                        disabled={!isEditable}
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}>
+                        <FormControl>
+                          <SelectTrigger className="w-full">
+                            <SelectValue placeholder="Select Class" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {classOptions.length > 0 &&
+                            classOptions.map((className) => (
+                              <SelectItem key={className} value={className}>
+                                {className}
+                              </SelectItem>
+                            ))}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="academic_era"
+                  render={({ field }) => (
+                    <FormItem
+                      className={cn("flex flex-col w-full text-[13px]")}>
+                      <FormLabel
+                        className={cn("text-gray-500 font-semibold mb-0.5")}>
+                        Academic Era<span className="text-red-500">*</span> :
+                      </FormLabel>
+                      <Select
+                        disabled={!isEditable}
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}>
+                        <FormControl>
+                          <SelectTrigger className="w-full">
+                            <SelectValue placeholder="Select Academic Era" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {academicEras.length > 0 &&
+                            academicEras.map((era) => (
+                              <SelectItem key={era} value={era}>
+                                {era}
+                              </SelectItem>
+                            ))}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-x-10">
+              <div className="bg-[#fff] p-9 border-2 relative">
+                <h2 className="uppercase text-gray-700 font-bold text-[12.5px] tracking-wide absolute -top-[9px] left-[29px] bg-[#fff] px-1 rounded-full">
+                  Father Details
+                </h2>
+
+                {/* Father Details */}
+                <div className="pt-16 grid lg:grid-cols-3 lg:gap-x-3 gap-y-5 lg:gap-y-10 rounded-lg">
+                  <FormField
+                    control={form.control}
+                    name="father_name"
+                    render={({ field }) => (
+                      <FormItem
+                        className={cn("flex flex-col w-full text-[13px]")}>
+                        <FormLabel
+                          className={cn("text-gray-500 font-semibold mb-0.5")}>
+                          Father&apos;s Name
+                          <span className="text-red-500">*</span> :
+                        </FormLabel>
+                        <FormControl
+                          className={cn(
+                            "border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
+                          )}>
+                          <Input
+                            placeholder="Father's name"
+                            disabled={!isEditable}
+                            {...field}
+                            className="w-full"
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="father_occupation"
+                    render={({ field }) => (
+                      <FormItem
+                        className={cn("flex flex-col w-full text-[13px]")}>
+                        <FormLabel
+                          className={cn("text-gray-500 font-semibold mb-0.5")}>
+                          Father&apos;s Occupation
+                          <span className="text-red-500">*</span> :
+                        </FormLabel>
+                        <Select
+                          disabled={!isEditable}
+                          onValueChange={field.onChange}
+                          defaultValue={field.value}>
+                          <FormControl>
+                            <SelectTrigger className="w-full">
+                              <SelectValue placeholder="Select Occupation" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            <SelectItem value="Unemployed">
+                              Unemployed
+                            </SelectItem>
+                            <SelectItem value="Self Employed">
+                              Self Employed
+                            </SelectItem>
+                            <SelectItem value="Small Business">
+                              Small Business
+                            </SelectItem>
+                            <SelectItem value="Large Business">
+                              Large Business
+                            </SelectItem>
+                            <SelectItem value="Government Job">
+                              Government Job
+                            </SelectItem>
+                            <SelectItem value="Private Job">
+                              Private Job
+                            </SelectItem>
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="father_contact"
+                    render={({ field }) => (
+                      <FormItem
+                        className={cn("flex flex-col w-full text-[13px]")}>
+                        <FormLabel
+                          className={cn("text-gray-500 font-semibold mb-0.5")}>
+                          Father&apos;s Contact
+                          <span className="text-red-500">*</span> :
+                        </FormLabel>
+                        <FormControl
+                          className={cn(
+                            "border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
+                          )}>
+                          <Input
+                            placeholder="Father's contact number"
+                            disabled={!isEditable}
+                            {...field}
+                            className="w-full"
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="father_annual_income"
+                    render={({ field }) => (
+                      <FormItem
+                        className={cn("flex flex-col w-full text-[13px]")}>
+                        <FormLabel
+                          className={cn("text-gray-500 font-semibold mb-0.5")}>
+                          Father&apos;s Annual Income
+                          <span className="text-red-500">*</span> :
+                        </FormLabel>
+                        <FormControl
+                          className={cn(
+                            "border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
+                          )}>
+                          <Input
+                            placeholder="Father's Annual Income"
+                            disabled={!isEditable}
+                            {...field}
+                            className="w-full"
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="father_qualification"
+                    render={({ field }) => (
+                      <FormItem
+                        className={cn("flex flex-col w-full text-[13px]")}>
+                        <FormLabel
+                          className={cn("text-gray-500 font-semibold mb-0.5")}>
+                          Father&apos;s Qualification
+                          <span className="text-red-500">*</span> :
+                        </FormLabel>
+                        <Select
+                          disabled={!isEditable}
+                          onValueChange={field.onChange}
+                          defaultValue={field.value}>
+                          <FormControl>
+                            <SelectTrigger className="w-full">
+                              <SelectValue placeholder="Select Occupation" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            <SelectItem value="Letterless">
+                              Letterless
+                            </SelectItem>
+                            <SelectItem value="Primary">Primary</SelectItem>
+                            <SelectItem value="Upper Primary">
+                              Upper Primary
+                            </SelectItem>
+                            <SelectItem value="Secondary">Secondary</SelectItem>
+                            <SelectItem value="Higher Secondary">
+                              Higher Secondary
+                            </SelectItem>
+                            <SelectItem value="Graduate">Graduate</SelectItem>
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="father_email"
+                    render={({ field }) => (
+                      <FormItem
+                        className={cn("flex flex-col w-full text-[13px]")}>
+                        <FormLabel
+                          className={cn("text-gray-500 font-semibold mb-0.5")}>
+                          Father&apos;s Email :
+                        </FormLabel>
+                        <FormControl
+                          className={cn(
+                            "border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
+                          )}>
+                          <Input
+                            placeholder="Father's Email"
+                            disabled={!isEditable}
+                            {...field}
+                            className="w-full"
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="father_whatsapp_no"
+                    render={({ field }) => (
+                      <FormItem
+                        className={cn("flex flex-col w-full text-[13px]")}>
+                        <FormLabel
+                          className={cn("text-gray-500 font-semibold mb-0.5")}>
+                          Father&apos;s Whatsapp Number :
+                        </FormLabel>
+                        <FormControl
+                          className={cn(
+                            "border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
+                          )}>
+                          <Input
+                            placeholder="Father's Whatsapp Number"
+                            disabled={!isEditable}
+                            {...field}
+                            className="w-full"
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              </div>
+
+              <div className="bg-[#fff] p-9 border-2 relative">
+                <h2 className="uppercase text-gray-700 font-bold text-[12.5px] tracking-wide absolute -top-[9px] left-[29px] bg-[#fff] px-1 rounded-full">
+                  Mother Details
+                </h2>
+
+                {/* Mother Details */}
+                <div className="pt-16 grid lg:grid-cols-3 lg:gap-x-3 gap-y-5 lg:gap-y-10 rounded-lg">
+                  <FormField
+                    control={form.control}
+                    name="mother_name"
+                    render={({ field }) => (
+                      <FormItem
+                        className={cn("flex flex-col w-full text-[13px]")}>
+                        <FormLabel
+                          className={cn(
+                            "text-gray-500 font-semibold w-fit mb-0.5"
+                          )}>
+                          Mother&apos;s Name
+                          <span className="text-red-500">*</span> :
+                        </FormLabel>
+                        <FormControl
+                          className={cn(
+                            "border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
+                          )}>
+                          <Input
+                            placeholder="Mother's name"
+                            disabled={!isEditable}
+                            {...field}
+                            className="w-full"
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="mother_occupation"
+                    render={({ field }) => (
+                      <FormItem
+                        className={cn("flex flex-col w-full text-[13px]")}>
+                        <FormLabel
+                          className={cn(
+                            "text-gray-500 font-semibold w-fit mb-0.5"
+                          )}>
+                          Mother&apos;s Occupation
+                          <span className="text-red-500">*</span> :
+                        </FormLabel>
+                        <Select
+                          disabled={!isEditable}
+                          onValueChange={field.onChange}
+                          defaultValue={field.value}>
+                          <FormControl>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select Occupation" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            <SelectItem value="House Wife">
+                              House Wife
+                            </SelectItem>
+                            <SelectItem value="Self Employed">
+                              Self Employed
+                            </SelectItem>
+                            <SelectItem value="Small Business">
+                              Small Business
+                            </SelectItem>
+                            <SelectItem value="Large Business">
+                              Large Business
+                            </SelectItem>
+                            <SelectItem value="Government Job">
+                              Government Job
+                            </SelectItem>
+                            <SelectItem value="Private Job">
+                              Private Job
+                            </SelectItem>
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="mother_contact"
+                    render={({ field }) => (
+                      <FormItem
+                        className={cn("flex flex-col w-full text-[13px]")}>
+                        <FormLabel
+                          className={cn(
+                            "text-gray-500 font-semibold w-fit mb-0.5"
+                          )}>
+                          Mother&apos;s Contact
+                          <span className="text-red-500">*</span> :
+                        </FormLabel>
+                        <FormControl
+                          className={cn(
+                            "border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
+                          )}>
+                          <Input
+                            placeholder="Mother's contact number"
+                            disabled={!isEditable}
+                            {...field}
+                            className="w-full"
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="mother_annual_income"
+                    render={({ field }) => (
+                      <FormItem
+                        className={cn("flex flex-col w-full text-[13px]")}>
+                        <FormLabel
+                          className={cn(
+                            "text-gray-500 font-semibold w-fit mb-0.5"
+                          )}>
+                          Mother&apos;s Annual Income
+                          <span className="text-red-500">*</span> :
+                        </FormLabel>
+                        <FormControl
+                          className={cn(
+                            "border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
+                          )}>
+                          <Input
+                            placeholder="Mother's Annual Income"
+                            disabled={!isEditable}
+                            {...field}
+                            className="w-full"
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="mother_qualification"
+                    render={({ field }) => (
+                      <FormItem
+                        className={cn("flex flex-col w-full text-[13px]")}>
+                        <FormLabel
+                          className={cn(
+                            "text-gray-500 font-semibold w-fit mb-0.5"
+                          )}>
+                          Mother&apos;s Qualification
+                          <span className="text-red-500">*</span> :
+                        </FormLabel>
+                        <Select
+                          disabled={!isEditable}
+                          onValueChange={field.onChange}
+                          defaultValue={field.value}>
+                          <FormControl>
+                            <SelectTrigger className="w-full">
+                              <SelectValue placeholder="Select Occupation" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            <SelectItem value="Letterless">
+                              Letterless
+                            </SelectItem>
+                            <SelectItem value="Primary">Primary</SelectItem>
+                            <SelectItem value="Upper Primary">
+                              Upper Primary
+                            </SelectItem>
+                            <SelectItem value="Secondary">Secondary</SelectItem>
+                            <SelectItem value="Higher Secondary">
+                              Higher Secondary
+                            </SelectItem>
+                            <SelectItem value="Graduate">Graduate</SelectItem>
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="mother_email"
+                    render={({ field }) => (
+                      <FormItem
+                        className={cn("flex flex-col w-full text-[13px]")}>
+                        <FormLabel
+                          className={cn(
+                            "text-gray-500 font-semibold w-fit mb-0.5"
+                          )}>
+                          Mother&apos;s Email :
+                        </FormLabel>
+                        <FormControl
+                          className={cn(
+                            "border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
+                          )}>
+                          <Input
+                            placeholder="Mother's Email"
+                            disabled={!isEditable}
+                            {...field}
+                            className="w-full"
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="mother_whatsapp_no"
+                    render={({ field }) => (
+                      <FormItem
+                        className={cn("flex flex-col w-full text-[13px]")}>
+                        <FormLabel
+                          className={cn(
+                            "text-gray-500 font-semibold w-fit mb-0.5"
+                          )}>
+                          Mother&apos;s Whatsapp Number :
+                        </FormLabel>
+                        <FormControl
+                          className={cn(
+                            "border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
+                          )}>
+                          <Input
+                            placeholder="Mother's Whatsapp Number"
+                            disabled={!isEditable}
+                            {...field}
+                            className="w-full"
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-[#fff] rounded-lg p-9 border-2 relative">
+              <h2 className="uppercase text-gray-700 font-bold text-[12.5px] tracking-wide absolute -top-[9px] left-[29px] bg-[#fff] px-1 rounded-full">
+                Guardian Details
+              </h2>
+
+              {/* Guardian Details */}
+              <div className="pt-16 grid lg:grid-cols-4 lg:gap-x-3 gap-y-5 lg:gap-y-10 rounded-lg">
+                <FormField
+                  control={form.control}
+                  name="guardian_relationship"
+                  render={({ field }) => (
+                    <FormItem
+                      className={cn("flex flex-col w-full text-[13px]")}>
+                      <FormLabel
+                        className={cn(
+                          "text-gray-500 font-semibold w-fit mb-0.5"
+                        )}>
+                        Guardian Relationship
                         <span className="text-red-500">*</span> :
                       </FormLabel>
                       <FormControl
@@ -1415,7 +1896,7 @@ const EditStudentForm = ({ data }: { data: any }) => {
                           "border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
                         )}>
                         <Input
-                          placeholder="Father's name"
+                          placeholder="Relationship to guardian"
                           disabled={!isEditable}
                           {...field}
                           className="w-full"
@@ -1428,13 +1909,44 @@ const EditStudentForm = ({ data }: { data: any }) => {
 
                 <FormField
                   control={form.control}
-                  name="father_occupation"
+                  name="guardian_name"
                   render={({ field }) => (
                     <FormItem
                       className={cn("flex flex-col w-full text-[13px]")}>
                       <FormLabel
-                        className={cn("text-gray-500 font-semibold mb-0.5")}>
-                        Father&apos;s Occupation
+                        className={cn(
+                          "text-gray-500 font-semibold w-fit mb-0.5"
+                        )}>
+                        Guardian&apos;s Name
+                        <span className="text-red-500">*</span> :
+                      </FormLabel>
+                      <FormControl
+                        className={cn(
+                          "border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
+                        )}>
+                        <Input
+                          placeholder="Guardian's name"
+                          disabled={!isEditable}
+                          {...field}
+                          className="w-full"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="guardian_occupation"
+                  render={({ field }) => (
+                    <FormItem
+                      className={cn("flex flex-col w-full text-[13px]")}>
+                      <FormLabel
+                        className={cn(
+                          "text-gray-500 font-semibold w-fit mb-0.5"
+                        )}>
+                        Guardian&apos;s Occupation
                         <span className="text-red-500">*</span> :
                       </FormLabel>
                       <Select
@@ -1442,11 +1954,12 @@ const EditStudentForm = ({ data }: { data: any }) => {
                         onValueChange={field.onChange}
                         defaultValue={field.value}>
                         <FormControl>
-                          <SelectTrigger className="w-full">
+                          <SelectTrigger>
                             <SelectValue placeholder="Select Occupation" />
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
+                          <SelectItem value="House Wife">House Wife</SelectItem>
                           <SelectItem value="Unemployed">Unemployed</SelectItem>
                           <SelectItem value="Self Employed">
                             Self Employed
@@ -1472,13 +1985,15 @@ const EditStudentForm = ({ data }: { data: any }) => {
 
                 <FormField
                   control={form.control}
-                  name="father_contact"
+                  name="guardian_contact_no"
                   render={({ field }) => (
                     <FormItem
                       className={cn("flex flex-col w-full text-[13px]")}>
                       <FormLabel
-                        className={cn("text-gray-500 font-semibold mb-0.5")}>
-                        Father&apos;s Contact
+                        className={cn(
+                          "text-gray-500 font-semibold w-fit mb-0.5"
+                        )}>
+                        Guardian&apos;s Contact Number
                         <span className="text-red-500">*</span> :
                       </FormLabel>
                       <FormControl
@@ -1486,7 +2001,7 @@ const EditStudentForm = ({ data }: { data: any }) => {
                           "border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
                         )}>
                         <Input
-                          placeholder="Father's contact number"
+                          placeholder="Guardian's contact number"
                           disabled={!isEditable}
                           {...field}
                           className="w-full"
@@ -1499,13 +2014,15 @@ const EditStudentForm = ({ data }: { data: any }) => {
 
                 <FormField
                   control={form.control}
-                  name="father_annual_income"
+                  name="guardian_whatsapp_no"
                   render={({ field }) => (
                     <FormItem
                       className={cn("flex flex-col w-full text-[13px]")}>
                       <FormLabel
-                        className={cn("text-gray-500 font-semibold mb-0.5")}>
-                        Father&apos;s Annual Income
+                        className={cn(
+                          "text-gray-500 font-semibold w-fit mb-0.5"
+                        )}>
+                        Guardian&apos;s WhatsApp Number
                         <span className="text-red-500">*</span> :
                       </FormLabel>
                       <FormControl
@@ -1513,7 +2030,7 @@ const EditStudentForm = ({ data }: { data: any }) => {
                           "border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
                         )}>
                         <Input
-                          placeholder="Father's Annual Income"
+                          placeholder="Guardian's WhatsApp number"
                           disabled={!isEditable}
                           {...field}
                           className="w-full"
@@ -1526,13 +2043,44 @@ const EditStudentForm = ({ data }: { data: any }) => {
 
                 <FormField
                   control={form.control}
-                  name="father_qualification"
+                  name="guardian_email"
                   render={({ field }) => (
                     <FormItem
                       className={cn("flex flex-col w-full text-[13px]")}>
                       <FormLabel
-                        className={cn("text-gray-500 font-semibold mb-0.5")}>
-                        Father&apos;s Qualification
+                        className={cn(
+                          "text-gray-500 font-semibold w-fit mb-0.5"
+                        )}>
+                        Email<span className="text-red-500">*</span> :
+                      </FormLabel>
+                      <FormControl
+                        className={cn(
+                          "border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
+                        )}>
+                        <Input
+                          type="email"
+                          placeholder="Guardian's email"
+                          disabled={!isEditable}
+                          {...field}
+                          className="w-full"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="guardian_qualification"
+                  render={({ field }) => (
+                    <FormItem
+                      className={cn("flex flex-col w-full text-[13px]")}>
+                      <FormLabel
+                        className={cn(
+                          "text-gray-500 font-semibold w-fit mb-0.5"
+                        )}>
+                        Guardian&apos;s Qualification
                         <span className="text-red-500">*</span> :
                       </FormLabel>
                       <Select
@@ -1564,46 +2112,22 @@ const EditStudentForm = ({ data }: { data: any }) => {
 
                 <FormField
                   control={form.control}
-                  name="father_email"
+                  name="guardian_annual_income"
                   render={({ field }) => (
                     <FormItem
                       className={cn("flex flex-col w-full text-[13px]")}>
                       <FormLabel
-                        className={cn("text-gray-500 font-semibold mb-0.5")}>
-                        Father&apos;s Email :
+                        className={cn(
+                          "text-gray-500 font-semibold w-fit mb-0.5"
+                        )}>
+                        Annual Income<span className="text-red-500">*</span> :
                       </FormLabel>
                       <FormControl
                         className={cn(
                           "border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
                         )}>
                         <Input
-                          placeholder="Father's Email"
-                          disabled={!isEditable}
-                          {...field}
-                          className="w-full"
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="father_whatsapp_no"
-                  render={({ field }) => (
-                    <FormItem
-                      className={cn("flex flex-col w-full text-[13px]")}>
-                      <FormLabel
-                        className={cn("text-gray-500 font-semibold mb-0.5")}>
-                        Father&apos;s Whatsapp Number :
-                      </FormLabel>
-                      <FormControl
-                        className={cn(
-                          "border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
-                        )}>
-                        <Input
-                          placeholder="Father's Whatsapp Number"
+                          placeholder="Annual income"
                           disabled={!isEditable}
                           {...field}
                           className="w-full"
@@ -1614,14 +2138,480 @@ const EditStudentForm = ({ data }: { data: any }) => {
                   )}
                 />
               </div>
+            </div>
 
-              <div className="lg:grid grid-cols-3 lg:gap-x-3 gap-y-10 bg-[#fff] rounded-lg p-9 border-2 relative">
+            <div className="grid grid-cols-2 gap-x-10">
+              <div className="bg-[#fff] rounded-lg p-9 border-2 relative">
                 <h2 className="uppercase text-gray-700 font-bold text-[12.5px] tracking-wide absolute -top-[9px] left-[29px] bg-[#fff] px-1 rounded-full">
-                  Mother Details
+                  Current Address Details
                 </h2>
+
+                {/* Current Address Details */}
+                <div className="pt-16 grid lg:grid-cols-4 lg:gap-x-3 gap-y-5 lg:gap-y-10 rounded-lg">
+                  <FormField
+                    control={form.control}
+                    name="village"
+                    render={({ field }) => (
+                      <FormItem
+                        className={cn("flex flex-col w-full text-[13px]")}>
+                        <FormLabel
+                          className={cn(
+                            "text-gray-500 font-semibold w-fit mb-0.5"
+                          )}>
+                          Village<span className="text-red-500">*</span> :
+                        </FormLabel>
+                        <FormControl
+                          className={cn(
+                            "border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
+                          )}>
+                          <Input
+                            placeholder="Village"
+                            disabled={!isEditable}
+                            {...field}
+                            className="w-full"
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="post_office"
+                    render={({ field }) => (
+                      <FormItem
+                        className={cn("flex flex-col w-full text-[13px]")}>
+                        <FormLabel
+                          className={cn(
+                            "text-gray-500 font-semibold w-fit mb-0.5"
+                          )}>
+                          Post Office<span className="text-red-500">*</span> :
+                        </FormLabel>
+                        <FormControl
+                          className={cn(
+                            "border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
+                          )}>
+                          <Input
+                            placeholder="Post Office"
+                            disabled={!isEditable}
+                            {...field}
+                            className="w-full"
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="police_station"
+                    render={({ field }) => (
+                      <FormItem
+                        className={cn("flex flex-col w-full text-[13px]")}>
+                        <FormLabel
+                          className={cn(
+                            "text-gray-500 font-semibold w-fit mb-0.5"
+                          )}>
+                          Police Station<span className="text-red-500">*</span>{" "}
+                          :
+                        </FormLabel>
+                        <FormControl
+                          className={cn(
+                            "border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
+                          )}>
+                          <Input
+                            placeholder="Police Station"
+                            disabled={!isEditable}
+                            {...field}
+                            className="w-full"
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="district"
+                    render={({ field }) => (
+                      <FormItem
+                        className={cn("flex flex-col w-full text-[13px]")}>
+                        <FormLabel
+                          className={cn(
+                            "text-gray-500 font-semibold w-fit mb-0.5"
+                          )}>
+                          District<span className="text-red-500">*</span> :
+                        </FormLabel>
+                        <Select
+                          onValueChange={field.onChange}
+                          defaultValue={field.value}
+                          disabled={
+                            !isEditable || !currentDistrictsList.length
+                          }>
+                          <FormControl>
+                            <SelectTrigger className="w-full">
+                              <SelectValue placeholder="Select District" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            {currentDistrictsList.map((district, index) => (
+                              <SelectItem key={index} value={district}>
+                                {district}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="state"
+                    render={({ field }) => (
+                      <FormItem
+                        className={cn("flex flex-col w-full text-[13px]")}>
+                        <FormLabel
+                          className={cn(
+                            "text-gray-500 font-semibold w-fit mb-0.5"
+                          )}>
+                          State<span className="text-red-500">*</span> :
+                        </FormLabel>
+                        <Select
+                          onValueChange={field.onChange}
+                          defaultValue={field.value}
+                          disabled={!isEditable || !currentStatesList.length}>
+                          <FormControl>
+                            <SelectTrigger className="w-full">
+                              <SelectValue placeholder="Select State" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            {currentStatesList.map((state) => (
+                              <SelectItem
+                                key={state.isoCode}
+                                value={state.isoCode}>
+                                {state.name}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="country"
+                    render={({ field }) => (
+                      <FormItem
+                        className={cn("flex flex-col w-full text-[13px]")}>
+                        <FormLabel
+                          className={cn(
+                            "text-gray-500 font-semibold w-fit mb-0.5"
+                          )}>
+                          Country
+                        </FormLabel>
+                        <Select
+                          onValueChange={field.onChange}
+                          defaultValue={field.value}
+                          disabled={!isEditable}>
+                          <FormControl>
+                            <SelectTrigger className="w-full">
+                              <SelectValue placeholder="Select Country" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            {Country.getAllCountries().map((country) => (
+                              <SelectItem
+                                key={country.isoCode}
+                                value={country.isoCode}>
+                                {country.name}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="postal_code"
+                    render={({ field }) => (
+                      <FormItem
+                        className={cn("flex flex-col w-full text-[13px]")}>
+                        <FormLabel
+                          className={cn(
+                            "text-gray-500 font-semibold w-fit mb-0.5"
+                          )}>
+                          Postal Code<span className="text-red-500">*</span> :
+                        </FormLabel>
+                        <FormControl
+                          className={cn(
+                            "border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
+                          )}>
+                          <Input
+                            placeholder="Postal Code"
+                            disabled={!isEditable}
+                            {...field}
+                            className="w-full"
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              </div>
+
+              <div className="bg-[#fff] rounded-lg p-9 border-2 relative">
+                <h2 className="uppercase text-gray-700 font-bold text-[12.5px] tracking-wide absolute -top-[9px] left-[29px] bg-[#fff] px-1 rounded-full">
+                  Permanent Address Details
+                </h2>
+
+                {/* Permanent Address Details */}
+                <div className="pt-16 grid lg:grid-cols-4 lg:gap-x-3 gap-y-5 lg:gap-y-10 rounded-lg">
+                  <FormField
+                    control={form.control}
+                    name="permanent_village"
+                    render={({ field }) => (
+                      <FormItem
+                        className={cn("flex flex-col w-full text-[13px]")}>
+                        <FormLabel
+                          className={cn(
+                            "text-gray-500 font-semibold w-fit mb-0.5"
+                          )}>
+                          Village<span className="text-red-500">*</span> :
+                        </FormLabel>
+                        <FormControl
+                          className={cn(
+                            "border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
+                          )}>
+                          <Input
+                            placeholder="Permanent Village"
+                            disabled={!isEditable}
+                            {...field}
+                            className="w-full"
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="permanent_post_office"
+                    render={({ field }) => (
+                      <FormItem
+                        className={cn("flex flex-col w-full text-[13px]")}>
+                        <FormLabel
+                          className={cn(
+                            "text-gray-500 font-semibold w-fit mb-0.5"
+                          )}>
+                          Post Office<span className="text-red-500">*</span> :
+                        </FormLabel>
+                        <FormControl
+                          className={cn(
+                            "border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
+                          )}>
+                          <Input
+                            placeholder="Permanent Post Office"
+                            disabled={!isEditable}
+                            {...field}
+                            className="w-full"
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="permanent_police_station"
+                    render={({ field }) => (
+                      <FormItem
+                        className={cn("flex flex-col w-full text-[13px]")}>
+                        <FormLabel
+                          className={cn(
+                            "text-gray-500 font-semibold w-fit mb-0.5"
+                          )}>
+                          Police Station<span className="text-red-500">*</span>{" "}
+                          :
+                        </FormLabel>
+                        <FormControl
+                          className={cn(
+                            "border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
+                          )}>
+                          <Input
+                            placeholder="Permanent Police Station"
+                            disabled={!isEditable}
+                            {...field}
+                            className="w-full"
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="permanent_district"
+                    render={({ field }) => (
+                      <FormItem
+                        className={cn("flex flex-col w-full text-[13px]")}>
+                        <FormLabel
+                          className={cn(
+                            "text-gray-500 font-semibold w-fit mb-0.5"
+                          )}>
+                          District<span className="text-red-500">*</span> :
+                        </FormLabel>
+                        <Select
+                          onValueChange={field.onChange}
+                          defaultValue={field.value}
+                          disabled={
+                            !isEditable || !permanentDistrictsList.length
+                          }>
+                          <FormControl>
+                            <SelectTrigger className="w-full">
+                              <SelectValue placeholder="Select District" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            {permanentDistrictsList.map((district, index) => (
+                              <SelectItem key={index} value={district}>
+                                {district}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="permanent_state"
+                    render={({ field }) => (
+                      <FormItem
+                        className={cn("flex flex-col w-full text-[13px]")}>
+                        <FormLabel
+                          className={cn(
+                            "text-gray-500 font-semibold w-fit mb-0.5"
+                          )}>
+                          State<span className="text-red-500">*</span> :
+                        </FormLabel>
+                        <Select
+                          onValueChange={field.onChange}
+                          defaultValue={field.value}
+                          disabled={!isEditable || !permanentStatesList.length}>
+                          <FormControl>
+                            <SelectTrigger className="w-full">
+                              <SelectValue placeholder="Select State" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            {permanentStatesList.map((state) => (
+                              <SelectItem
+                                key={state.isoCode}
+                                value={state.isoCode}>
+                                {state.name}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="permanent_country"
+                    render={({ field }) => (
+                      <FormItem
+                        className={cn("flex flex-col w-full text-[13px]")}>
+                        <FormLabel
+                          className={cn(
+                            "text-gray-500 font-semibold w-fit mb-0.5"
+                          )}>
+                          Country<span className="text-red-500">*</span> :
+                        </FormLabel>
+                        <Select
+                          onValueChange={field.onChange}
+                          defaultValue={field.value}
+                          disabled={!isEditable}>
+                          <FormControl>
+                            <SelectTrigger className="w-full">
+                              <SelectValue placeholder="Select Country" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            {Country.getAllCountries().map((country) => (
+                              <SelectItem
+                                key={country.isoCode}
+                                value={country.isoCode}>
+                                {country.name}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="permanent_postal_code"
+                    render={({ field }) => (
+                      <FormItem
+                        className={cn("flex flex-col w-full text-[13px]")}>
+                        <FormLabel
+                          className={cn(
+                            "text-gray-500 font-semibold w-fit mb-0.5"
+                          )}>
+                          Postal Code<span className="text-red-500">*</span> :
+                        </FormLabel>
+                        <FormControl
+                          className={cn(
+                            "border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
+                          )}>
+                          <Input
+                            placeholder="Permanent Postal Code"
+                            disabled={!isEditable}
+                            {...field}
+                            className="w-full"
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-[#fff] rounded-lg p-9 border-2 relative">
+              <h2 className="uppercase text-gray-700 font-bold text-[12.5px] tracking-wide absolute -top-[9px] left-[29px] bg-[#fff] px-1 rounded-full">
+                Previous Institute Details
+              </h2>
+
+              {/* Previous Institute Details */}
+              <div className="pt-16 grid lg:grid-cols-4 lg:gap-x-3 gap-y-5 lg:gap-y-10 rounded-lg">
                 <FormField
                   control={form.control}
-                  name="mother_name"
+                  name="institute_name"
                   render={({ field }) => (
                     <FormItem
                       className={cn("flex flex-col w-full text-[13px]")}>
@@ -1629,15 +2619,14 @@ const EditStudentForm = ({ data }: { data: any }) => {
                         className={cn(
                           "text-gray-500 font-semibold w-fit mb-0.5"
                         )}>
-                        Mother&apos;s Name
-                        <span className="text-red-500">*</span> :
+                        Institute Name :
                       </FormLabel>
                       <FormControl
                         className={cn(
                           "border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
                         )}>
                         <Input
-                          placeholder="Mother's name"
+                          placeholder="Institute Name"
                           disabled={!isEditable}
                           {...field}
                           className="w-full"
@@ -1650,7 +2639,7 @@ const EditStudentForm = ({ data }: { data: any }) => {
 
                 <FormField
                   control={form.control}
-                  name="mother_occupation"
+                  name="board_affiliation"
                   render={({ field }) => (
                     <FormItem
                       className={cn("flex flex-col w-full text-[13px]")}>
@@ -1658,8 +2647,329 @@ const EditStudentForm = ({ data }: { data: any }) => {
                         className={cn(
                           "text-gray-500 font-semibold w-fit mb-0.5"
                         )}>
-                        Mother&apos;s Occupation
-                        <span className="text-red-500">*</span> :
+                        Board Affiliation :
+                      </FormLabel>
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                        disabled={!isEditable}>
+                        <FormControl>
+                          <SelectTrigger className="w-full">
+                            <SelectValue placeholder="Select Board" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value="N/A">N/A</SelectItem>
+                          <SelectItem value="CBSE">
+                            Central Board of Secondary Education (CBSE)
+                          </SelectItem>
+                          <SelectItem value="ICSE">
+                            Indian Certificate of Secondary Education (ICSE)
+                          </SelectItem>
+                          <SelectItem value="State Board of Education (West Bengal) Bengali Medium">
+                            State Board of Education (West Bengal) Bengali
+                            Medium
+                          </SelectItem>
+                          <SelectItem value="State Board of Education (West Bengal) English Medium">
+                            State Board of Education (West Bengal) English
+                            Medium
+                          </SelectItem>
+                          <SelectItem value="State Board of Education (others) English Medium">
+                            State Board of Education (others) English Medium
+                          </SelectItem>
+                          <SelectItem value="State Board of Education (others) Religion Language Medium">
+                            State Board of Education (others) Religion Language
+                            Medium
+                          </SelectItem>
+                          <SelectItem value="Others">Others</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="previous_class"
+                  render={({ field }) => (
+                    <FormItem
+                      className={cn("flex flex-col w-full text-[13px]")}>
+                      <FormLabel
+                        className={cn(
+                          "text-gray-500 font-semibold w-fit mb-0.5"
+                        )}>
+                        Previous Class :
+                      </FormLabel>
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                        disabled={!isEditable}>
+                        <FormControl>
+                          <SelectTrigger className="w-full">
+                            <SelectValue placeholder="Select Board" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value="N/A">N/A</SelectItem>
+                          <SelectItem value="Playgroup">Playgroup</SelectItem>
+                          <SelectItem value="Lower Kindergarten">
+                            Lower Kindergarten
+                          </SelectItem>
+                          <SelectItem value="Upper Kindergarten">
+                            Upper Kindergarten
+                          </SelectItem>
+                          <SelectItem value="Class One">Class One</SelectItem>
+                          <SelectItem value="Class Two">Class Two</SelectItem>
+                          <SelectItem value="Class Three">
+                            Class Three
+                          </SelectItem>
+                          <SelectItem value="Class Four">Class Four</SelectItem>
+                          <SelectItem value="Class Five">Class Five</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="tc_submitted"
+                  render={({ field }) => (
+                    <FormItem
+                      className={cn("flex flex-col w-full text-[13px]")}>
+                      <FormLabel
+                        className={cn(
+                          "text-gray-500 font-semibold w-fit mb-0.5"
+                        )}>
+                        TC Submitted :
+                      </FormLabel>
+                      <div className="flex items-center justify-evenly h-full">
+                        <label className="flex items-center mr-4">
+                          <input
+                            type="checkbox"
+                            {...field}
+                            disabled={!isEditable}
+                            value="true"
+                            checked={field.value === true} // Controlled checkbox
+                            onChange={() => field.onChange(true)} // Set to true when checked
+                            className="mr-2"
+                          />
+                          TC Submitted
+                        </label>
+                        <label className="flex items-center">
+                          <input
+                            type="checkbox"
+                            {...field}
+                            disabled={!isEditable}
+                            value="false"
+                            checked={field.value === false} // Controlled checkbox
+                            onChange={() => field.onChange(false)} // Set to false when checked
+                            className="mr-2"
+                          />
+                          TC Not Submitted
+                        </label>
+                      </div>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="previous_section"
+                  render={({ field }) => (
+                    <FormItem
+                      className={cn("flex flex-col w-full text-[13px]")}>
+                      <FormLabel
+                        className={cn(
+                          "text-gray-500 font-semibold w-fit mb-0.5"
+                        )}>
+                        Previous Section :
+                      </FormLabel>
+                      <FormControl
+                        className={cn(
+                          "border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
+                        )}>
+                        <Input
+                          placeholder="Previous Section"
+                          disabled={!isEditable}
+                          {...field}
+                          className="w-full"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="previous_roll_no"
+                  render={({ field }) => (
+                    <FormItem
+                      className={cn("flex flex-col w-full text-[13px]")}>
+                      <FormLabel
+                        className={cn(
+                          "text-gray-500 font-semibold w-fit mb-0.5"
+                        )}>
+                        Previous Roll No :
+                      </FormLabel>
+                      <FormControl
+                        className={cn(
+                          "border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
+                        )}>
+                        <Input
+                          placeholder="Previous Roll No"
+                          disabled={!isEditable}
+                          {...field}
+                          className="w-full"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="previous_portal_id"
+                  render={({ field }) => (
+                    <FormItem
+                      className={cn("flex flex-col w-full text-[13px]")}>
+                      <FormLabel
+                        className={cn(
+                          "text-gray-500 font-semibold w-fit mb-0.5"
+                        )}>
+                        Previous Portal ID :
+                      </FormLabel>
+                      <FormControl
+                        className={cn(
+                          "border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
+                        )}>
+                        <Input
+                          placeholder="Previous Portal ID"
+                          disabled={!isEditable}
+                          {...field}
+                          className="w-full"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="previous_from_date"
+                  render={({ field }) => (
+                    <FormItem
+                      className={cn("flex flex-col w-full text-[13px]")}>
+                      <FormLabel
+                        className={cn(
+                          "text-gray-500 font-semibold w-fit mb-0.5"
+                        )}>
+                        Previous From Date (MM/DD/YYYY) :
+                      </FormLabel>
+                      <FormControl
+                        className={cn(
+                          "text-gray-700 bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
+                        )}>
+                        <div className="border-2 py-[1px]">
+                          <Input
+                            type="date"
+                            placeholder="Previous From Date"
+                            disabled={!isEditable}
+                            {...field}
+                            className="w-full border-none outline-none"
+                          />
+                        </div>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="previous_to_date"
+                  render={({ field }) => (
+                    <FormItem
+                      className={cn("flex flex-col w-full text-[13px]")}>
+                      <FormLabel
+                        className={cn(
+                          "text-gray-500 font-semibold w-fit mb-0.5"
+                        )}>
+                        Previous To Date (MM/DD/YYYY) :
+                      </FormLabel>
+                      <FormControl
+                        className={cn(
+                          "text-gray-700 bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
+                        )}>
+                        <div className="border-2 py-[1px]">
+                          <Input
+                            type="date"
+                            placeholder="Previous To Date"
+                            disabled={!isEditable}
+                            {...field}
+                            className="w-full border-none outline-none"
+                          />
+                        </div>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="reason_for_leaving"
+                  render={({ field }) => (
+                    <FormItem
+                      className={cn("flex flex-col w-full text-[13px]")}>
+                      <FormLabel
+                        className={cn(
+                          "text-gray-500 font-semibold w-fit mb-0.5"
+                        )}>
+                        Reason For Leaving :
+                      </FormLabel>
+                      <FormControl
+                        className={cn(
+                          "border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
+                        )}>
+                        <Input
+                          placeholder="Reason "
+                          disabled={!isEditable}
+                          {...field}
+                          className="w-full"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+            </div>
+
+            <div className="bg-[#fff] rounded-lg p-9 border-2 relative">
+              <h2 className="uppercase text-gray-700 font-bold text-[12.5px] tracking-wide absolute -top-[9px] left-[29px] bg-[#fff] px-1 rounded-full">
+                Medical Details
+              </h2>
+
+              {/* Medical Details */}
+              <div className="pt-16 grid lg:grid-cols-4 lg:gap-x-3 gap-y-5 lg:gap-y-10 rounded-lg">
+                <FormField
+                  control={form.control}
+                  name="blood_group"
+                  render={({ field }) => (
+                    <FormItem
+                      className={cn("flex flex-col w-full text-[13px]")}>
+                      <FormLabel
+                        className={cn(
+                          "text-gray-500 font-semibold w-fit mb-0.5"
+                        )}>
+                        Blood Group :
                       </FormLabel>
                       <Select
                         disabled={!isEditable}
@@ -1667,26 +2977,19 @@ const EditStudentForm = ({ data }: { data: any }) => {
                         defaultValue={field.value}>
                         <FormControl>
                           <SelectTrigger>
-                            <SelectValue placeholder="Select Occupation" />
+                            <SelectValue placeholder="Select Blood Group" />
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          <SelectItem value="House Wife">House Wife</SelectItem>
-                          <SelectItem value="Self Employed">
-                            Self Employed
-                          </SelectItem>
-                          <SelectItem value="Small Business">
-                            Small Business
-                          </SelectItem>
-                          <SelectItem value="Large Business">
-                            Large Business
-                          </SelectItem>
-                          <SelectItem value="Government Job">
-                            Government Job
-                          </SelectItem>
-                          <SelectItem value="Private Job">
-                            Private Job
-                          </SelectItem>
+                          <SelectItem value="N/A">N/A</SelectItem>
+                          <SelectItem value="A+">A positive (A+)</SelectItem>
+                          <SelectItem value="A-">A negative (A-)</SelectItem>
+                          <SelectItem value="B+">B positive (B+)</SelectItem>
+                          <SelectItem value="B-">B negative (B-)</SelectItem>
+                          <SelectItem value="AB+">AB positive (AB+)</SelectItem>
+                          <SelectItem value="AB-">AB negative (AB-)</SelectItem>
+                          <SelectItem value="O+">O positive (O+)</SelectItem>
+                          <SelectItem value="O-">O negative (O-)</SelectItem>
                         </SelectContent>
                       </Select>
                       <FormMessage />
@@ -1696,7 +2999,7 @@ const EditStudentForm = ({ data }: { data: any }) => {
 
                 <FormField
                   control={form.control}
-                  name="mother_contact"
+                  name="allergies.details"
                   render={({ field }) => (
                     <FormItem
                       className={cn("flex flex-col w-full text-[13px]")}>
@@ -1704,15 +3007,14 @@ const EditStudentForm = ({ data }: { data: any }) => {
                         className={cn(
                           "text-gray-500 font-semibold w-fit mb-0.5"
                         )}>
-                        Mother&apos;s Contact
-                        <span className="text-red-500">*</span> :
+                        Allergy Details :
                       </FormLabel>
                       <FormControl
                         className={cn(
                           "border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
                         )}>
                         <Input
-                          placeholder="Mother's contact number"
+                          placeholder="Allergy Details"
                           disabled={!isEditable}
                           {...field}
                           className="w-full"
@@ -1725,7 +3027,7 @@ const EditStudentForm = ({ data }: { data: any }) => {
 
                 <FormField
                   control={form.control}
-                  name="mother_annual_income"
+                  name="special_medical_conditions.details"
                   render={({ field }) => (
                     <FormItem
                       className={cn("flex flex-col w-full text-[13px]")}>
@@ -1733,15 +3035,14 @@ const EditStudentForm = ({ data }: { data: any }) => {
                         className={cn(
                           "text-gray-500 font-semibold w-fit mb-0.5"
                         )}>
-                        Mother&apos;s Annual Income
-                        <span className="text-red-500">*</span> :
+                        Special Medical Condition :
                       </FormLabel>
                       <FormControl
                         className={cn(
                           "border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
                         )}>
                         <Input
-                          placeholder="Mother's Annual Income"
+                          placeholder="Special Medical Condition Details"
                           disabled={!isEditable}
                           {...field}
                           className="w-full"
@@ -1754,7 +3055,7 @@ const EditStudentForm = ({ data }: { data: any }) => {
 
                 <FormField
                   control={form.control}
-                  name="mother_qualification"
+                  name="regular_medication.details"
                   render={({ field }) => (
                     <FormItem
                       className={cn("flex flex-col w-full text-[13px]")}>
@@ -1762,54 +3063,14 @@ const EditStudentForm = ({ data }: { data: any }) => {
                         className={cn(
                           "text-gray-500 font-semibold w-fit mb-0.5"
                         )}>
-                        Mother&apos;s Qualification
-                        <span className="text-red-500">*</span> :
-                      </FormLabel>
-                      <Select
-                        disabled={!isEditable}
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}>
-                        <FormControl>
-                          <SelectTrigger className="w-full">
-                            <SelectValue placeholder="Select Occupation" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          <SelectItem value="Letterless">Letterless</SelectItem>
-                          <SelectItem value="Primary">Primary</SelectItem>
-                          <SelectItem value="Upper Primary">
-                            Upper Primary
-                          </SelectItem>
-                          <SelectItem value="Secondary">Secondary</SelectItem>
-                          <SelectItem value="Higher Secondary">
-                            Higher Secondary
-                          </SelectItem>
-                          <SelectItem value="Graduate">Graduate</SelectItem>
-                        </SelectContent>
-                      </Select>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="mother_email"
-                  render={({ field }) => (
-                    <FormItem
-                      className={cn("flex flex-col w-full text-[13px]")}>
-                      <FormLabel
-                        className={cn(
-                          "text-gray-500 font-semibold w-fit mb-0.5"
-                        )}>
-                        Mother&apos;s Email :
+                        Regular Medication Details :
                       </FormLabel>
                       <FormControl
                         className={cn(
                           "border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
                         )}>
                         <Input
-                          placeholder="Mother's Email"
+                          placeholder="Regular Medication Details"
                           disabled={!isEditable}
                           {...field}
                           className="w-full"
@@ -1822,7 +3083,7 @@ const EditStudentForm = ({ data }: { data: any }) => {
 
                 <FormField
                   control={form.control}
-                  name="mother_whatsapp_no"
+                  name="special_assistance.details"
                   render={({ field }) => (
                     <FormItem
                       className={cn("flex flex-col w-full text-[13px]")}>
@@ -1830,14 +3091,70 @@ const EditStudentForm = ({ data }: { data: any }) => {
                         className={cn(
                           "text-gray-500 font-semibold w-fit mb-0.5"
                         )}>
-                        Mother&apos;s Whatsapp Number :
+                        Special Assistance Details :
                       </FormLabel>
                       <FormControl
                         className={cn(
                           "border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
                         )}>
                         <Input
-                          placeholder="Mother's Whatsapp Number"
+                          placeholder="Special Assistance Details"
+                          disabled={!isEditable}
+                          {...field}
+                          className="w-full"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="height"
+                  render={({ field }) => (
+                    <FormItem
+                      className={cn("flex flex-col w-full text-[13px]")}>
+                      <FormLabel
+                        className={cn(
+                          "text-gray-500 font-semibold w-fit mb-0.5"
+                        )}>
+                        Height :
+                      </FormLabel>
+                      <FormControl
+                        className={cn(
+                          "border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
+                        )}>
+                        <Input
+                          placeholder="Height"
+                          disabled={!isEditable}
+                          {...field}
+                          className="w-full"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="weight"
+                  render={({ field }) => (
+                    <FormItem
+                      className={cn("flex flex-col w-full text-[13px]")}>
+                      <FormLabel
+                        className={cn(
+                          "text-gray-500 font-semibold w-fit mb-0.5"
+                        )}>
+                        Weight :
+                      </FormLabel>
+                      <FormControl
+                        className={cn(
+                          "border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
+                        )}>
+                        <Input
+                          placeholder="Weight"
                           disabled={!isEditable}
                           {...field}
                           className="w-full"
@@ -1850,1383 +3167,126 @@ const EditStudentForm = ({ data }: { data: any }) => {
               </div>
             </div>
 
-            <div className="lg:grid grid-cols-4 lg:gap-x-3 gap-y-10 bg-[#fff] rounded-lg p-9 border-2 relative">
-              <h2 className="uppercase text-gray-700 font-bold text-[12.5px] tracking-wide absolute -top-[9px] left-[29px] bg-[#fff] px-1 rounded-full">
-                Guardian Details
-              </h2>
-              <FormField
-                control={form.control}
-                name="guardian_relationship"
-                render={({ field }) => (
-                  <FormItem className={cn("flex flex-col w-full text-[13px]")}>
-                    <FormLabel
-                      className={cn(
-                        "text-gray-500 font-semibold w-fit mb-0.5"
-                      )}>
-                      Guardian Relationship
-                      <span className="text-red-500">*</span> :
-                    </FormLabel>
-                    <FormControl
-                      className={cn(
-                        "border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
-                      )}>
-                      <Input
-                        placeholder="Relationship to guardian"
-                        disabled={!isEditable}
-                        {...field}
-                        className="w-full"
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="guardian_name"
-                render={({ field }) => (
-                  <FormItem className={cn("flex flex-col w-full text-[13px]")}>
-                    <FormLabel
-                      className={cn(
-                        "text-gray-500 font-semibold w-fit mb-0.5"
-                      )}>
-                      Guardian&apos;s Name
-                      <span className="text-red-500">*</span> :
-                    </FormLabel>
-                    <FormControl
-                      className={cn(
-                        "border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
-                      )}>
-                      <Input
-                        placeholder="Guardian's name"
-                        disabled={!isEditable}
-                        {...field}
-                        className="w-full"
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="guardian_occupation"
-                render={({ field }) => (
-                  <FormItem className={cn("flex flex-col w-full text-[13px]")}>
-                    <FormLabel
-                      className={cn(
-                        "text-gray-500 font-semibold w-fit mb-0.5"
-                      )}>
-                      Guardian&apos;s Occupation
-                      <span className="text-red-500">*</span> :
-                    </FormLabel>
-                    <Select
-                      disabled={!isEditable}
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}>
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select Occupation" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        <SelectItem value="House Wife">House Wife</SelectItem>
-                        <SelectItem value="Unemployed">Unemployed</SelectItem>
-                        <SelectItem value="Self Employed">
-                          Self Employed
-                        </SelectItem>
-                        <SelectItem value="Small Business">
-                          Small Business
-                        </SelectItem>
-                        <SelectItem value="Large Business">
-                          Large Business
-                        </SelectItem>
-                        <SelectItem value="Government Job">
-                          Government Job
-                        </SelectItem>
-                        <SelectItem value="Private Job">Private Job</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="guardian_contact_no"
-                render={({ field }) => (
-                  <FormItem className={cn("flex flex-col w-full text-[13px]")}>
-                    <FormLabel
-                      className={cn(
-                        "text-gray-500 font-semibold w-fit mb-0.5"
-                      )}>
-                      Guardian&apos;s Contact Number
-                      <span className="text-red-500">*</span> :
-                    </FormLabel>
-                    <FormControl
-                      className={cn(
-                        "border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
-                      )}>
-                      <Input
-                        placeholder="Guardian's contact number"
-                        disabled={!isEditable}
-                        {...field}
-                        className="w-full"
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="guardian_whatsapp_no"
-                render={({ field }) => (
-                  <FormItem className={cn("flex flex-col w-full text-[13px]")}>
-                    <FormLabel
-                      className={cn(
-                        "text-gray-500 font-semibold w-fit mb-0.5"
-                      )}>
-                      Guardian&apos;s WhatsApp Number
-                      <span className="text-red-500">*</span> :
-                    </FormLabel>
-                    <FormControl
-                      className={cn(
-                        "border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
-                      )}>
-                      <Input
-                        placeholder="Guardian's WhatsApp number"
-                        disabled={!isEditable}
-                        {...field}
-                        className="w-full"
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="guardian_email"
-                render={({ field }) => (
-                  <FormItem className={cn("flex flex-col w-full text-[13px]")}>
-                    <FormLabel
-                      className={cn(
-                        "text-gray-500 font-semibold w-fit mb-0.5"
-                      )}>
-                      Email<span className="text-red-500">*</span> :
-                    </FormLabel>
-                    <FormControl
-                      className={cn(
-                        "border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
-                      )}>
-                      <Input
-                        type="email"
-                        placeholder="Guardian's email"
-                        disabled={!isEditable}
-                        {...field}
-                        className="w-full"
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="guardian_qualification"
-                render={({ field }) => (
-                  <FormItem className={cn("flex flex-col w-full text-[13px]")}>
-                    <FormLabel
-                      className={cn(
-                        "text-gray-500 font-semibold w-fit mb-0.5"
-                      )}>
-                      Guardian&apos;s Qualification
-                      <span className="text-red-500">*</span> :
-                    </FormLabel>
-                    <Select
-                      disabled={!isEditable}
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}>
-                      <FormControl>
-                        <SelectTrigger className="w-full">
-                          <SelectValue placeholder="Select Occupation" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        <SelectItem value="Letterless">Letterless</SelectItem>
-                        <SelectItem value="Primary">Primary</SelectItem>
-                        <SelectItem value="Upper Primary">
-                          Upper Primary
-                        </SelectItem>
-                        <SelectItem value="Secondary">Secondary</SelectItem>
-                        <SelectItem value="Higher Secondary">
-                          Higher Secondary
-                        </SelectItem>
-                        <SelectItem value="Graduate">Graduate</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="guardian_annual_income"
-                render={({ field }) => (
-                  <FormItem className={cn("flex flex-col w-full text-[13px]")}>
-                    <FormLabel
-                      className={cn(
-                        "text-gray-500 font-semibold w-fit mb-0.5"
-                      )}>
-                      Annual Income<span className="text-red-500">*</span> :
-                    </FormLabel>
-                    <FormControl
-                      className={cn(
-                        "border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
-                      )}>
-                      <Input
-                        placeholder="Annual income"
-                        disabled={!isEditable}
-                        {...field}
-                        className="w-full"
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-
-            <div className="grid grid-cols-2 gap-x-10">
-              <div className="lg:grid grid-cols-4 lg:gap-x-3 gap-y-10 bg-[#fff] rounded-lg p-9 border-2 relative">
-                <h2 className="uppercase text-gray-700 font-bold text-[12.5px] tracking-wide absolute -top-[9px] left-[29px] bg-[#fff] px-1 rounded-full">
-                  Current Address Details
-                </h2>
-                <FormField
-                  control={form.control}
-                  name="village"
-                  render={({ field }) => (
-                    <FormItem
-                      className={cn("flex flex-col w-full text-[13px]")}>
-                      <FormLabel
-                        className={cn(
-                          "text-gray-500 font-semibold w-fit mb-0.5"
-                        )}>
-                        Village<span className="text-red-500">*</span> :
-                      </FormLabel>
-                      <FormControl
-                        className={cn(
-                          "border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
-                        )}>
-                        <Input
-                          placeholder="Village"
-                          disabled={!isEditable}
-                          {...field}
-                          className="w-full"
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="post_office"
-                  render={({ field }) => (
-                    <FormItem
-                      className={cn("flex flex-col w-full text-[13px]")}>
-                      <FormLabel
-                        className={cn(
-                          "text-gray-500 font-semibold w-fit mb-0.5"
-                        )}>
-                        Post Office<span className="text-red-500">*</span> :
-                      </FormLabel>
-                      <FormControl
-                        className={cn(
-                          "border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
-                        )}>
-                        <Input
-                          placeholder="Post Office"
-                          disabled={!isEditable}
-                          {...field}
-                          className="w-full"
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="police_station"
-                  render={({ field }) => (
-                    <FormItem
-                      className={cn("flex flex-col w-full text-[13px]")}>
-                      <FormLabel
-                        className={cn(
-                          "text-gray-500 font-semibold w-fit mb-0.5"
-                        )}>
-                        Police Station<span className="text-red-500">*</span> :
-                      </FormLabel>
-                      <FormControl
-                        className={cn(
-                          "border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
-                        )}>
-                        <Input
-                          placeholder="Police Station"
-                          disabled={!isEditable}
-                          {...field}
-                          className="w-full"
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="district"
-                  render={({ field }) => (
-                    <FormItem
-                      className={cn("flex flex-col w-full text-[13px]")}>
-                      <FormLabel
-                        className={cn(
-                          "text-gray-500 font-semibold w-fit mb-0.5"
-                        )}>
-                        District<span className="text-red-500">*</span> :
-                      </FormLabel>
-                      <Select
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
-                        disabled={!isEditable || !currentDistrictsList.length}>
-                        <FormControl>
-                          <SelectTrigger className="w-full">
-                            <SelectValue placeholder="Select District" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          {currentDistrictsList.map((district, index) => (
-                            <SelectItem key={index} value={district}>
-                              {district}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="state"
-                  render={({ field }) => (
-                    <FormItem
-                      className={cn("flex flex-col w-full text-[13px]")}>
-                      <FormLabel
-                        className={cn(
-                          "text-gray-500 font-semibold w-fit mb-0.5"
-                        )}>
-                        State<span className="text-red-500">*</span> :
-                      </FormLabel>
-                      <Select
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
-                        disabled={!isEditable || !currentStatesList.length}>
-                        <FormControl>
-                          <SelectTrigger className="w-full">
-                            <SelectValue placeholder="Select State" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          {currentStatesList.map((state) => (
-                            <SelectItem
-                              key={state.isoCode}
-                              value={state.isoCode}>
-                              {state.name}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="country"
-                  render={({ field }) => (
-                    <FormItem
-                      className={cn("flex flex-col w-full text-[13px]")}>
-                      <FormLabel
-                        className={cn(
-                          "text-gray-500 font-semibold w-fit mb-0.5"
-                        )}>
-                        Country
-                      </FormLabel>
-                      <Select
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
-                        disabled={!isEditable}>
-                        <FormControl>
-                          <SelectTrigger className="w-full">
-                            <SelectValue placeholder="Select Country" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          {Country.getAllCountries().map((country) => (
-                            <SelectItem
-                              key={country.isoCode}
-                              value={country.isoCode}>
-                              {country.name}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="postal_code"
-                  render={({ field }) => (
-                    <FormItem
-                      className={cn("flex flex-col w-full text-[13px]")}>
-                      <FormLabel
-                        className={cn(
-                          "text-gray-500 font-semibold w-fit mb-0.5"
-                        )}>
-                        Postal Code<span className="text-red-500">*</span> :
-                      </FormLabel>
-                      <FormControl
-                        className={cn(
-                          "border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
-                        )}>
-                        <Input
-                          placeholder="Postal Code"
-                          disabled={!isEditable}
-                          {...field}
-                          className="w-full"
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-
-              <div className="lg:grid grid-cols-4 lg:gap-x-3 gap-y-10 bg-[#fff] rounded-lg p-9 border-2 relative">
-                <h2 className="uppercase text-gray-700 font-bold text-[12.5px] tracking-wide absolute -top-[9px] left-[29px] bg-[#fff] px-1 rounded-full">
-                  Permanent Address Details
-                </h2>
-                <FormField
-                  control={form.control}
-                  name="permanent_village"
-                  render={({ field }) => (
-                    <FormItem
-                      className={cn("flex flex-col w-full text-[13px]")}>
-                      <FormLabel
-                        className={cn(
-                          "text-gray-500 font-semibold w-fit mb-0.5"
-                        )}>
-                        Village<span className="text-red-500">*</span> :
-                      </FormLabel>
-                      <FormControl
-                        className={cn(
-                          "border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
-                        )}>
-                        <Input
-                          placeholder="Permanent Village"
-                          disabled={!isEditable}
-                          {...field}
-                          className="w-full"
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="permanent_post_office"
-                  render={({ field }) => (
-                    <FormItem
-                      className={cn("flex flex-col w-full text-[13px]")}>
-                      <FormLabel
-                        className={cn(
-                          "text-gray-500 font-semibold w-fit mb-0.5"
-                        )}>
-                        Post Office<span className="text-red-500">*</span> :
-                      </FormLabel>
-                      <FormControl
-                        className={cn(
-                          "border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
-                        )}>
-                        <Input
-                          placeholder="Permanent Post Office"
-                          disabled={!isEditable}
-                          {...field}
-                          className="w-full"
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="permanent_police_station"
-                  render={({ field }) => (
-                    <FormItem
-                      className={cn("flex flex-col w-full text-[13px]")}>
-                      <FormLabel
-                        className={cn(
-                          "text-gray-500 font-semibold w-fit mb-0.5"
-                        )}>
-                        Police Station<span className="text-red-500">*</span> :
-                      </FormLabel>
-                      <FormControl
-                        className={cn(
-                          "border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
-                        )}>
-                        <Input
-                          placeholder="Permanent Police Station"
-                          disabled={!isEditable}
-                          {...field}
-                          className="w-full"
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="permanent_district"
-                  render={({ field }) => (
-                    <FormItem
-                      className={cn("flex flex-col w-full text-[13px]")}>
-                      <FormLabel
-                        className={cn(
-                          "text-gray-500 font-semibold w-fit mb-0.5"
-                        )}>
-                        District<span className="text-red-500">*</span> :
-                      </FormLabel>
-                      <Select
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
-                        disabled={
-                          !isEditable || !permanentDistrictsList.length
-                        }>
-                        <FormControl>
-                          <SelectTrigger className="w-full">
-                            <SelectValue placeholder="Select District" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          {permanentDistrictsList.map((district, index) => (
-                            <SelectItem key={index} value={district}>
-                              {district}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="permanent_state"
-                  render={({ field }) => (
-                    <FormItem
-                      className={cn("flex flex-col w-full text-[13px]")}>
-                      <FormLabel
-                        className={cn(
-                          "text-gray-500 font-semibold w-fit mb-0.5"
-                        )}>
-                        State<span className="text-red-500">*</span> :
-                      </FormLabel>
-                      <Select
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
-                        disabled={!isEditable || !permanentStatesList.length}>
-                        <FormControl>
-                          <SelectTrigger className="w-full">
-                            <SelectValue placeholder="Select State" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          {permanentStatesList.map((state) => (
-                            <SelectItem
-                              key={state.isoCode}
-                              value={state.isoCode}>
-                              {state.name}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="permanent_country"
-                  render={({ field }) => (
-                    <FormItem
-                      className={cn("flex flex-col w-full text-[13px]")}>
-                      <FormLabel
-                        className={cn(
-                          "text-gray-500 font-semibold w-fit mb-0.5"
-                        )}>
-                        Country<span className="text-red-500">*</span> :
-                      </FormLabel>
-                      <Select
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
-                        disabled={!isEditable}>
-                        <FormControl>
-                          <SelectTrigger className="w-full">
-                            <SelectValue placeholder="Select Country" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          {Country.getAllCountries().map((country) => (
-                            <SelectItem
-                              key={country.isoCode}
-                              value={country.isoCode}>
-                              {country.name}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="permanent_postal_code"
-                  render={({ field }) => (
-                    <FormItem
-                      className={cn("flex flex-col w-full text-[13px]")}>
-                      <FormLabel
-                        className={cn(
-                          "text-gray-500 font-semibold w-fit mb-0.5"
-                        )}>
-                        Postal Code<span className="text-red-500">*</span> :
-                      </FormLabel>
-                      <FormControl
-                        className={cn(
-                          "border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
-                        )}>
-                        <Input
-                          placeholder="Permanent Postal Code"
-                          disabled={!isEditable}
-                          {...field}
-                          className="w-full"
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-            </div>
-
-            <div className="lg:grid grid-cols-4 lg:gap-x-3 gap-y-10 bg-[#fff] rounded-lg p-9 border-2 relative">
-              <h2 className="uppercase text-gray-700 font-bold text-[12.5px] tracking-wide absolute -top-[9px] left-[29px] bg-[#fff] px-1 rounded-full">
-                Previous Institute Details
-              </h2>
-              <FormField
-                control={form.control}
-                name="institute_name"
-                render={({ field }) => (
-                  <FormItem className={cn("flex flex-col w-full text-[13px]")}>
-                    <FormLabel
-                      className={cn(
-                        "text-gray-500 font-semibold w-fit mb-0.5"
-                      )}>
-                      Institute Name :
-                    </FormLabel>
-                    <FormControl
-                      className={cn(
-                        "border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
-                      )}>
-                      <Input
-                        placeholder="Institute Name"
-                        disabled={!isEditable}
-                        {...field}
-                        className="w-full"
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="board_affiliation"
-                render={({ field }) => (
-                  <FormItem className={cn("flex flex-col w-full text-[13px]")}>
-                    <FormLabel
-                      className={cn(
-                        "text-gray-500 font-semibold w-fit mb-0.5"
-                      )}>
-                      Board Affiliation :
-                    </FormLabel>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                      disabled={!isEditable}>
-                      <FormControl>
-                        <SelectTrigger className="w-full">
-                          <SelectValue placeholder="Select Board" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        <SelectItem value="N/A">N/A</SelectItem>
-                        <SelectItem value="CBSE">
-                          Central Board of Secondary Education (CBSE)
-                        </SelectItem>
-                        <SelectItem value="ICSE">
-                          Indian Certificate of Secondary Education (ICSE)
-                        </SelectItem>
-                        <SelectItem value="State Board of Education (West Bengal) Bengali Medium">
-                          State Board of Education (West Bengal) Bengali Medium
-                        </SelectItem>
-                        <SelectItem value="State Board of Education (West Bengal) English Medium">
-                          State Board of Education (West Bengal) English Medium
-                        </SelectItem>
-                        <SelectItem value="State Board of Education (others) English Medium">
-                          State Board of Education (others) English Medium
-                        </SelectItem>
-                        <SelectItem value="State Board of Education (others) Religion Language Medium">
-                          State Board of Education (others) Religion Language
-                          Medium
-                        </SelectItem>
-                        <SelectItem value="Others">Others</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="previous_class"
-                render={({ field }) => (
-                  <FormItem className={cn("flex flex-col w-full text-[13px]")}>
-                    <FormLabel
-                      className={cn(
-                        "text-gray-500 font-semibold w-fit mb-0.5"
-                      )}>
-                      Previous Class :
-                    </FormLabel>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                      disabled={!isEditable}>
-                      <FormControl>
-                        <SelectTrigger className="w-full">
-                          <SelectValue placeholder="Select Board" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        <SelectItem value="N/A">N/A</SelectItem>
-                        <SelectItem value="Playgroup">Playgroup</SelectItem>
-                        <SelectItem value="Lower Kindergarten">
-                          Lower Kindergarten
-                        </SelectItem>
-                        <SelectItem value="Upper Kindergarten">
-                          Upper Kindergarten
-                        </SelectItem>
-                        <SelectItem value="Class One">Class One</SelectItem>
-                        <SelectItem value="Class Two">Class Two</SelectItem>
-                        <SelectItem value="Class Three">Class Three</SelectItem>
-                        <SelectItem value="Class Four">Class Four</SelectItem>
-                        <SelectItem value="Class Five">Class Five</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="tc_submitted"
-                render={({ field }) => (
-                  <FormItem className={cn("flex flex-col w-full text-[13px]")}>
-                    <FormLabel
-                      className={cn(
-                        "text-gray-500 font-semibold w-fit mb-0.5"
-                      )}>
-                      TC Submitted :
-                    </FormLabel>
-                    <div className="flex items-center justify-evenly h-full">
-                      <label className="flex items-center mr-4">
-                        <input
-                          type="checkbox"
-                          {...field}
-                          disabled={!isEditable}
-                          value="true"
-                          checked={field.value === true} // Controlled checkbox
-                          onChange={() => field.onChange(true)} // Set to true when checked
-                          className="mr-2"
-                        />
-                        TC Submitted
-                      </label>
-                      <label className="flex items-center">
-                        <input
-                          type="checkbox"
-                          {...field}
-                          disabled={!isEditable}
-                          value="false"
-                          checked={field.value === false} // Controlled checkbox
-                          onChange={() => field.onChange(false)} // Set to false when checked
-                          className="mr-2"
-                        />
-                        TC Not Submitted
-                      </label>
-                    </div>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="previous_section"
-                render={({ field }) => (
-                  <FormItem className={cn("flex flex-col w-full text-[13px]")}>
-                    <FormLabel
-                      className={cn(
-                        "text-gray-500 font-semibold w-fit mb-0.5"
-                      )}>
-                      Previous Section :
-                    </FormLabel>
-                    <FormControl
-                      className={cn(
-                        "border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
-                      )}>
-                      <Input
-                        placeholder="Previous Section"
-                        disabled={!isEditable}
-                        {...field}
-                        className="w-full"
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="previous_roll_no"
-                render={({ field }) => (
-                  <FormItem className={cn("flex flex-col w-full text-[13px]")}>
-                    <FormLabel
-                      className={cn(
-                        "text-gray-500 font-semibold w-fit mb-0.5"
-                      )}>
-                      Previous Roll No :
-                    </FormLabel>
-                    <FormControl
-                      className={cn(
-                        "border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
-                      )}>
-                      <Input
-                        placeholder="Previous Roll No"
-                        disabled={!isEditable}
-                        {...field}
-                        className="w-full"
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="previous_portal_id"
-                render={({ field }) => (
-                  <FormItem className={cn("flex flex-col w-full text-[13px]")}>
-                    <FormLabel
-                      className={cn(
-                        "text-gray-500 font-semibold w-fit mb-0.5"
-                      )}>
-                      Previous Portal ID :
-                    </FormLabel>
-                    <FormControl
-                      className={cn(
-                        "border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
-                      )}>
-                      <Input
-                        placeholder="Previous Portal ID"
-                        disabled={!isEditable}
-                        {...field}
-                        className="w-full"
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="previous_from_date"
-                render={({ field }) => (
-                  <FormItem className={cn("flex flex-col w-full text-[13px]")}>
-                    <FormLabel
-                      className={cn(
-                        "text-gray-500 font-semibold w-fit mb-0.5"
-                      )}>
-                      Previous From Date :
-                    </FormLabel>
-                    <FormControl
-                      className={cn(
-                        "border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
-                      )}>
-                      <Input
-                        type="date"
-                        placeholder="Previous From Date"
-                        disabled={!isEditable}
-                        {...field}
-                        className="w-full"
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="previous_to_date"
-                render={({ field }) => (
-                  <FormItem className={cn("flex flex-col w-full text-[13px]")}>
-                    <FormLabel
-                      className={cn(
-                        "text-gray-500 font-semibold w-fit mb-0.5"
-                      )}>
-                      Previous To Date :
-                    </FormLabel>
-                    <FormControl
-                      className={cn(
-                        "border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
-                      )}>
-                      <Input
-                        type="date"
-                        placeholder="Previous To Date"
-                        disabled={!isEditable}
-                        {...field}
-                        className="w-full"
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="reason_for_leaving"
-                render={({ field }) => (
-                  <FormItem className={cn("flex flex-col w-full text-[13px]")}>
-                    <FormLabel
-                      className={cn(
-                        "text-gray-500 font-semibold w-fit mb-0.5"
-                      )}>
-                      Reason For Leaving :
-                    </FormLabel>
-                    <FormControl
-                      className={cn(
-                        "border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
-                      )}>
-                      <Input
-                        placeholder="Reason "
-                        disabled={!isEditable}
-                        {...field}
-                        className="w-full"
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="reason_for_leaving"
-                render={({ field }) => (
-                  <FormItem className={cn("flex flex-col w-full text-[13px]")}>
-                    <FormLabel
-                      className={cn(
-                        "text-gray-500 font-semibold w-fit mb-0.5"
-                      )}>
-                      Reason For Leaving<span className="text-red-500">*</span>{" "}
-                      :
-                    </FormLabel>
-                    <FormControl
-                      className={cn(
-                        "border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
-                      )}>
-                      <Input
-                        placeholder="Reason "
-                        disabled={!isEditable}
-                        {...field}
-                        className="w-full"
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-
-            <div className="lg:grid grid-cols-4 lg:gap-x-3 gap-y-10 bg-[#fff] rounded-lg p-9 border-2 relative">
-              <h2 className="uppercase text-gray-700 font-bold text-[12.5px] tracking-wide absolute -top-[9px] left-[29px] bg-[#fff] px-1 rounded-full">
-                Medical Details
-              </h2>
-              <FormField
-                control={form.control}
-                name="blood_group"
-                render={({ field }) => (
-                  <FormItem className={cn("flex flex-col w-full text-[13px]")}>
-                    <FormLabel
-                      className={cn(
-                        "text-gray-500 font-semibold w-fit mb-0.5"
-                      )}>
-                      Blood Group :
-                    </FormLabel>
-                    <Select
-                      disabled={!isEditable}
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}>
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select Blood Group" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        <SelectItem value="N/A">N/A</SelectItem>
-                        <SelectItem value="A+">A positive (A+)</SelectItem>
-                        <SelectItem value="A-">A negative (A-)</SelectItem>
-                        <SelectItem value="B+">B positive (B+)</SelectItem>
-                        <SelectItem value="B-">B negative (B-)</SelectItem>
-                        <SelectItem value="AB+">AB positive (AB+)</SelectItem>
-                        <SelectItem value="AB-">AB negative (AB-)</SelectItem>
-                        <SelectItem value="O+">O positive (O+)</SelectItem>
-                        <SelectItem value="O-">O negative (O-)</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="allergies.details"
-                render={({ field }) => (
-                  <FormItem className={cn("flex flex-col w-full text-[13px]")}>
-                    <FormLabel
-                      className={cn(
-                        "text-gray-500 font-semibold w-fit mb-0.5"
-                      )}>
-                      Allergy Details :
-                    </FormLabel>
-                    <FormControl
-                      className={cn(
-                        "border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
-                      )}>
-                      <Input
-                        placeholder="Allergy Details"
-                        disabled={!isEditable}
-                        {...field}
-                        className="w-full"
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="special_medical_conditions.details"
-                render={({ field }) => (
-                  <FormItem className={cn("flex flex-col w-full text-[13px]")}>
-                    <FormLabel
-                      className={cn(
-                        "text-gray-500 font-semibold w-fit mb-0.5"
-                      )}>
-                      Special Medical Condition :
-                    </FormLabel>
-                    <FormControl
-                      className={cn(
-                        "border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
-                      )}>
-                      <Input
-                        placeholder="Special Medical Condition Details"
-                        disabled={!isEditable}
-                        {...field}
-                        className="w-full"
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="regular_medication.details"
-                render={({ field }) => (
-                  <FormItem className={cn("flex flex-col w-full text-[13px]")}>
-                    <FormLabel
-                      className={cn(
-                        "text-gray-500 font-semibold w-fit mb-0.5"
-                      )}>
-                      Regular Medication Details :
-                    </FormLabel>
-                    <FormControl
-                      className={cn(
-                        "border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
-                      )}>
-                      <Input
-                        placeholder="Regular Medication Details"
-                        disabled={!isEditable}
-                        {...field}
-                        className="w-full"
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="special_assistance.details"
-                render={({ field }) => (
-                  <FormItem className={cn("flex flex-col w-full text-[13px]")}>
-                    <FormLabel
-                      className={cn(
-                        "text-gray-500 font-semibold w-fit mb-0.5"
-                      )}>
-                      Special Assistance Details :
-                    </FormLabel>
-                    <FormControl
-                      className={cn(
-                        "border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
-                      )}>
-                      <Input
-                        placeholder="Special Assistance Details"
-                        disabled={!isEditable}
-                        {...field}
-                        className="w-full"
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="height"
-                render={({ field }) => (
-                  <FormItem className={cn("flex flex-col w-full text-[13px]")}>
-                    <FormLabel
-                      className={cn(
-                        "text-gray-500 font-semibold w-fit mb-0.5"
-                      )}>
-                      Height :
-                    </FormLabel>
-                    <FormControl
-                      className={cn(
-                        "border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
-                      )}>
-                      <Input
-                        placeholder="Height"
-                        disabled={!isEditable}
-                        {...field}
-                        className="w-full"
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="weight"
-                render={({ field }) => (
-                  <FormItem className={cn("flex flex-col w-full text-[13px]")}>
-                    <FormLabel
-                      className={cn(
-                        "text-gray-500 font-semibold w-fit mb-0.5"
-                      )}>
-                      Weight :
-                    </FormLabel>
-                    <FormControl
-                      className={cn(
-                        "border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
-                      )}>
-                      <Input
-                        placeholder="Weight"
-                        disabled={!isEditable}
-                        {...field}
-                        className="w-full"
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-
-            <div className="lg:grid grid-cols-4 lg:gap-x-3 gap-y-10 bg-[#fff] rounded-lg p-9 border-2 relative">
+            <div className="bg-[#fff] rounded-lg p-9 border-2 relative">
               <h2 className="uppercase text-gray-700 font-bold text-[12.5px] tracking-wide absolute -top-[9px] left-[29px] bg-[#fff] px-1 rounded-full">
                 Bank Details
               </h2>
-              <FormField
-                control={form.control}
-                name="account_holder_name"
-                render={({ field }) => (
-                  <FormItem className={cn("flex flex-col w-full text-[13px]")}>
-                    <FormLabel
-                      className={cn(
-                        "text-gray-500 font-semibold w-fit mb-0.5"
-                      )}>
-                      Account Holder Name<span className="text-red-500">*</span>{" "}
-                      :
-                    </FormLabel>
-                    <FormControl
-                      className={cn(
-                        "border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
-                      )}>
-                      <Input
-                        placeholder="Account Holder Name"
-                        disabled={!isEditable}
-                        {...field}
-                        className="w-full"
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
 
-              <FormField
-                control={form.control}
-                name="bank_name"
-                render={({ field }) => (
-                  <FormItem className={cn("flex flex-col w-full text-[13px]")}>
-                    <FormLabel
-                      className={cn(
-                        "text-gray-500 font-semibold w-fit mb-0.5"
-                      )}>
-                      Bank Name<span className="text-red-500">*</span> :
-                    </FormLabel>
-                    <FormControl
-                      className={cn(
-                        "border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
-                      )}>
-                      <Input
-                        placeholder="Bank Name"
-                        disabled={!isEditable}
-                        {...field}
-                        className="w-full"
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+              {/* Bank Details */}
+              <div className="pt-16 grid lg:grid-cols-4 lg:gap-x-3 gap-y-5 lg:gap-y-10 rounded-lg">
+                <FormField
+                  control={form.control}
+                  name="account_holder_name"
+                  render={({ field }) => (
+                    <FormItem
+                      className={cn("flex flex-col w-full text-[13px]")}>
+                      <FormLabel
+                        className={cn(
+                          "text-gray-500 font-semibold w-fit mb-0.5"
+                        )}>
+                        Account Holder Name
+                        <span className="text-red-500">*</span> :
+                      </FormLabel>
+                      <FormControl
+                        className={cn(
+                          "border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
+                        )}>
+                        <Input
+                          placeholder="Account Holder Name"
+                          disabled={!isEditable}
+                          {...field}
+                          className="w-full"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-              <FormField
-                control={form.control}
-                name="account_no"
-                render={({ field }) => (
-                  <FormItem className={cn("flex flex-col w-full text-[13px]")}>
-                    <FormLabel
-                      className={cn(
-                        "text-gray-500 font-semibold w-fit mb-0.5"
-                      )}>
-                      Account Number<span className="text-red-500">*</span> :
-                    </FormLabel>
-                    <FormControl
-                      className={cn(
-                        "border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
-                      )}>
-                      <Input
-                        placeholder="Account Number"
-                        disabled={!isEditable}
-                        {...field}
-                        className="w-full"
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+                <FormField
+                  control={form.control}
+                  name="bank_name"
+                  render={({ field }) => (
+                    <FormItem
+                      className={cn("flex flex-col w-full text-[13px]")}>
+                      <FormLabel
+                        className={cn(
+                          "text-gray-500 font-semibold w-fit mb-0.5"
+                        )}>
+                        Bank Name<span className="text-red-500">*</span> :
+                      </FormLabel>
+                      <FormControl
+                        className={cn(
+                          "border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
+                        )}>
+                        <Input
+                          placeholder="Bank Name"
+                          disabled={!isEditable}
+                          {...field}
+                          className="w-full"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-              <FormField
-                control={form.control}
-                name="ifsc_code"
-                render={({ field }) => (
-                  <FormItem className={cn("flex flex-col w-full text-[13px]")}>
-                    <FormLabel
-                      className={cn(
-                        "text-gray-500 font-semibold w-fit mb-0.5"
-                      )}>
-                      IFSC Code<span className="text-red-500">*</span> :
-                    </FormLabel>
-                    <FormControl
-                      className={cn(
-                        "border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
-                      )}>
-                      <Input
-                        placeholder="IFSC Code"
-                        disabled={!isEditable}
-                        {...field}
-                        className="w-full"
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+                <FormField
+                  control={form.control}
+                  name="account_no"
+                  render={({ field }) => (
+                    <FormItem
+                      className={cn("flex flex-col w-full text-[13px]")}>
+                      <FormLabel
+                        className={cn(
+                          "text-gray-500 font-semibold w-fit mb-0.5"
+                        )}>
+                        Account Number<span className="text-red-500">*</span> :
+                      </FormLabel>
+                      <FormControl
+                        className={cn(
+                          "border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
+                        )}>
+                        <Input
+                          placeholder="Account Number"
+                          disabled={!isEditable}
+                          {...field}
+                          className="w-full"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="ifsc_code"
+                  render={({ field }) => (
+                    <FormItem
+                      className={cn("flex flex-col w-full text-[13px]")}>
+                      <FormLabel
+                        className={cn(
+                          "text-gray-500 font-semibold w-fit mb-0.5"
+                        )}>
+                        IFSC Code<span className="text-red-500">*</span> :
+                      </FormLabel>
+                      <FormControl
+                        className={cn(
+                          "border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
+                        )}>
+                        <Input
+                          placeholder="IFSC Code"
+                          disabled={!isEditable}
+                          {...field}
+                          className="w-full"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
             </div>
 
             <div className="mt-8 grid justify-end">
