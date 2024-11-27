@@ -56,21 +56,21 @@ const DocumentUpload = ({ studentID }: { studentID: string }) => {
 
     console.log("Data to be send: ", formData);
 
-    try {
-      const response = await UploadStudentDocs(formData);
+    // try {
+    //   // const response = await UploadStudentDocs(formData);
 
-      if (!response) {
-        throw new Error("Failed to upload documents");
-      }
+    //   // if (!response) {
+    //   //   throw new Error("Failed to upload documents");
+    //   // }
 
-      alert("Documents uploaded successfully!");
+    //   alert("Documents uploaded successfully!");
 
-      // Clear the documents array after successful upload
-      setDocuments([]);
-    } catch (error) {
-      console.error("Error uploading documents:", error);
-      alert("Error uploading documents. Please try again.");
-    }
+    //   // Clear the documents array after successful upload
+    //   setDocuments([]);
+    // } catch (error) {
+    //   console.error("Error uploading documents:", error);
+    //   alert("Error uploading documents. Please try again.");
+    // }
   };
 
   useEffect(() => {

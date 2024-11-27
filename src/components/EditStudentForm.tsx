@@ -19,6 +19,7 @@ import { MdOutlinePhotoSizeSelectActual } from "react-icons/md";
 import { IoArrowRedoOutline } from "react-icons/io5";
 import { Country, IState, State } from "country-state-city";
 import { districtsData } from "@/data/districtsData";
+import { Toaster, toast } from "sonner";
 
 import {
   Select,
@@ -616,10 +617,14 @@ const EditStudentForm = ({ data }: { data: any }) => {
       console.log(response);
 
       if (response.statusCode === 200) {
-        console.log("Successful");
-        window.location.href = `/student/upload-documents/${data._id}`;
+        // console.log("Successful");
+        // console.log(response.data);
+        const studentId = response.data.data;
+        window.location.href = `/student/upload-documents/${studentId}`;
       }
-    } catch (error) {}
+    } catch (error) {
+      toast.error("Something went wrong. Please try again.");
+    }
   };
 
   return (
@@ -3223,6 +3228,7 @@ const EditStudentForm = ({ data }: { data: any }) => {
           </div>
         </form>
       </Form>
+      <Toaster richColors />
     </div>
   );
 };

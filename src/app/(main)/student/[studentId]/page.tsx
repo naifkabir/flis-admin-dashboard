@@ -6,6 +6,7 @@ import { Toaster, toast } from "sonner";
 import {
   GetStudentById,
   RejectApplication,
+  submitWithoutEditApplication,
 } from "@/lib/actions/student.action";
 import Image from "next/image";
 import Link from "next/link";
@@ -18,7 +19,7 @@ export default function StudentInfoPage({
 }: {
   params: { studentId: string };
 }) {
-  const { studentId } = params;
+  const { studentId } = params; // This is admission id
   const [data, setData] = useState<any | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -61,6 +62,40 @@ export default function StudentInfoPage({
       }
     } catch (err) {
       toast.error("Failed to approve application! Counseling not done");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // console.log("Main data: ", data);
+
+  const dataToBeSubmitted = {
+    student_details: data?.student_details,
+    parent_guardian_details: data?.parent_guardian_details,
+    communication_address: data?.communication_address,
+    other_details: data?.other_details,
+    bank_details: data?.bank_details,
+  };
+
+  // console.log("Data to be submitted: ", dataToBeSubmitted);
+
+  const handleWithoutEditApplication = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await submitWithoutEditApplication(
+        dataToBeSubmitted,
+        studentId // This is admission_id
+      );
+      if (response.statusCode === 200) {
+        // const studentId = response.data.data;
+        console.log("response: ", response);
+        // window.location.href = `/student/upload-documents/${studentId}`; // This is student_id coming from response
+      } else {
+        toast.error("Failed to submit application!");
+      }
+    } catch (err) {
+      toast.error("Student not found!");
     } finally {
       setLoading(false);
     }
@@ -182,7 +217,9 @@ export default function StudentInfoPage({
             )}
             {data?.application_status === "APPROVED" && (
               <Link href={`/student/upload-documents/${studentId}`}>
-                <Button color="primary">Submit & Upload Documents</Button>
+                <Button color="primary" onClick={handleWithoutEditApplication}>
+                  Submit & Upload Documents
+                </Button>
               </Link>
             )}
             {data?.application_status === "UNDER-COUNSELLING" && (

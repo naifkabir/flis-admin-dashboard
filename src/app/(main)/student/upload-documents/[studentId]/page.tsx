@@ -24,7 +24,7 @@ export default function StudentInfoPage({
   params: { studentId: string };
 }) {
   const { studentId } = params;
-  // console.log(studentId);
+  console.log(studentId);
 
   const [file, setFile] = useState<File | null>(null);
   const [title, setTitle] = useState("");
@@ -43,40 +43,6 @@ export default function StudentInfoPage({
   useEffect(() => {
     setIsLoaded(true);
   }, []);
-
-  //   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //     if (e.target.files) {
-  //       setFile(e.target.files[0]);
-  //     }
-  //   };
-
-  //   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //     const selectedFile = e.target.files?.[0];
-
-  //     if (selectedFile) {
-  //       // Check file size
-  //       if (selectedFile.size > 500 * 1024) {
-  //         // 500KB
-  //         setValidationErrors((prev) => ({
-  //           ...prev,
-  //           file: "File size must be 500KB or less.",
-  //         }));
-  //         setFile(null); // Reset file if validation fails
-  //       } else {
-  //         setFile(selectedFile);
-  //         setValidationErrors((prev) => {
-  //           const { file, ...rest } = prev;
-  //           return rest;
-  //         }); // Clear file error
-  //       }
-  //     } else {
-  //       setFile(null);
-  //       setValidationErrors((prev) => ({
-  //         ...prev,
-  //         file: "File is required.",
-  //       }));
-  //     }
-  //   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0];
@@ -162,10 +128,10 @@ export default function StudentInfoPage({
           formData.append("description", doc.description);
           formData.append("student", studentId);
 
-          // console.log("Form Data: ", formData);
+          console.log("Form Data: ", formData);
 
           const response = await UploadStudentDocs(formData);
-          // console.log("response: ", response);
+          console.log("response: ", response);
 
           if (response.error) {
             toast.error("Failed to upload documents. Please try again.");
