@@ -3,25 +3,28 @@
 import apiClient from "../axios";
 import { cookies } from "next/headers";
 
-export async function UploadStudentDocs(data: any) {
+interface ApiResponse<T> {
+  message: string;
+  data?: T;
+}
+
+export const GetAllClasses = async (): Promise<any | null> => {
   const cookieStore = cookies();
   const accessToken = cookieStore.get("accessToken")?.value;
 
-  // console.log("Data: ", data);
-
   if (!accessToken) {
-    return { error: "No access token found." };
+    return null;
   }
 
   try {
-    const response = await apiClient.post(`/document/create`, data, {
+    const response = await apiClient.get<ApiResponse<any>>("/class/get-all", {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
     });
-
-    return response.data;
+    return response.data.data || null;
   } catch (error: any) {
-    return { error: error.message };
+    console.error("Fetch user failed:", error);
+    return null;
   }
-}
+};

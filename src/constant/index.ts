@@ -69,8 +69,9 @@ export const menuItems = [
       },
       {
         label: "Student Information",
-        href: "/student/all-students",
-        description: "Access detailed information about students.",
+        href: "/student/all-admitted-student",
+        description:
+          "Access detailed information about students admitted on school.",
       },
       {
         label: "School House",
@@ -81,11 +82,6 @@ export const menuItems = [
         label: "Archived List",
         href: "/student/reject",
         description: "View a list of archived student applications.",
-      },
-      {
-        label: "Approved List",
-        href: "/student/approve",
-        description: "Review all approved student applications.",
       },
     ],
   },
@@ -261,6 +257,23 @@ export const studentTableFilter = (data: any) => {
         address.postal_code ? `, ${address.postal_code}` : ""
       }`,
       status: item.status,
+    };
+  });
+  return result;
+};
+
+// function
+export const admittedStudentTableFilter = (data: any) => {
+  const result = data.map((item: any) => {
+    return {
+      id: item.id,
+      name: item.student_details.name,
+      photo: item.student_details.photo,
+      admission_id: item.student_details.admission_id,
+      admission_date: item.student_details.admission_date,
+      dob: item.student_details.date_of_birth,
+      academic_era: item.student_details.academic_era,
+      gender: item.student_details.gender,
     };
   });
   return result;

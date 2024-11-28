@@ -1,17 +1,18 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { columns } from '@/app/data-table-components/columns';
-import { StudentListDataTable } from '@/app/data-table-components/data-table';
+import { useState, useEffect } from "react";
+import { columns } from "@/app/data-table-components/columns";
+import { StudentListDataTable } from "@/app/data-table-components/data-table";
 import {
   GetAllApplication,
   RejectApplication,
-} from '@/lib/actions/student.action';
-import { studentTableFilter } from '@/constant';
-import PageLoader from '@/components/ui-components/PageLoading';
-import { Toaster, toast } from 'sonner';
-import Link from 'next/link';
-import { Button } from '@/components/ui/button';
+} from "@/lib/actions/student.action";
+import { studentTableFilter } from "@/constant";
+import PageLoader from "@/components/ui-components/PageLoading";
+import { Toaster, toast } from "sonner";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { DynamicBreadcrumb } from "@/components/StudentBreadcrumb";
 
 export default function CounselingStudentPage() {
   const [data, setData] = useState([]);
@@ -23,13 +24,13 @@ export default function CounselingStudentPage() {
       setLoading(true);
       setError(false);
       try {
-        const result = await GetAllApplication('UNDER-COUNSELLING');
+        const result = await GetAllApplication("UNDER-COUNSELLING");
         // console.log("Fetched data:", result);
         const filteredData = studentTableFilter(result);
         setData(filteredData);
       } catch (err: any) {
         // console.error("Error fetching data:", err);
-        toast.error('Failed to fetch data', err);
+        toast.error("Failed to fetch data", err);
         setError(true);
       } finally {
         setLoading(false);
@@ -44,17 +45,17 @@ export default function CounselingStudentPage() {
       const response = await RejectApplication(studentId);
       if (response && !response.error) {
         // Reload the data after rejection
-        const result = await GetAllApplication('UNDER-COUNSELLING');
-        toast.success('Application rejected successfully');
+        const result = await GetAllApplication("UNDER-COUNSELLING");
+        toast.success("Application rejected successfully");
         const filteredData = studentTableFilter(result);
         setData(filteredData);
       } else {
         // console.error("Error rejecting application:", response.error);
-        toast.error('Failed to reject application');
+        toast.error("Failed to reject application");
       }
     } catch (err) {
       // console.error("Error rejecting application:", err);
-      toast.error('Failed to reject application');
+      toast.error("Failed to reject application");
     }
   };
 
@@ -77,23 +78,24 @@ export default function CounselingStudentPage() {
   }
 
   return (
-    <div className="w-full h-screen my-auto">
+    <div className="w-full h-full my-auto">
       <div className="sub-container px-4">
         <div className="flex justify-between items-center my-10">
           <div>
             <h1 className="font-bold text-lg mb-1.5">
               Counselling Student List
             </h1>
+            <DynamicBreadcrumb currentPage="Under Counseling Application" />
           </div>
           <div className="flex gap-2">
             <Link href="/student/pending">
-              <Button>Application List</Button>
+              <Button>Pending List</Button>
             </Link>
             <Link href="/student/reject">
               <Button>Archived List</Button>
             </Link>
-            <Link href="/student/approve">
-              <Button>Approved List</Button>
+            <Link href="/student/all-admitted-student">
+              <Button>All Students</Button>
             </Link>
           </div>
         </div>

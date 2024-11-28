@@ -24,7 +24,7 @@ export default function StudentInfoPage({
   params: { studentId: string };
 }) {
   const { studentId } = params;
-  console.log(studentId);
+  // console.log(studentId);
 
   const [file, setFile] = useState<File | null>(null);
   const [title, setTitle] = useState("");
@@ -118,36 +118,44 @@ export default function StudentInfoPage({
 
   const handleFinalSubmit = async () => {
     setIsUploading(true);
-
     try {
       if (documents.length > 0) {
+        let uploadSuccess = true;
+
         for (const doc of documents) {
           const formData = new FormData();
-          formData.append("file", doc.file);
+          formData.append("document", doc.file);
           formData.append("documentType", doc.title);
           formData.append("description", doc.description);
           formData.append("student", studentId);
 
-          console.log("Form Data: ", formData);
+          // console.log("Form Data: ", formData);
 
+          // Upload each document to the backend
           const response = await UploadStudentDocs(formData);
-          console.log("response: ", response);
+          // console.log("response: ", response);
 
-          if (response.error) {
-            toast.error("Failed to upload documents. Please try again.");
-            return;
+          if (response.statusCode !== 200) {
+            toast.error(`Failed to upload ${doc.title}. Please try again.`);
+            uploadSuccess = false;
+            break;
           } else {
-            toast.success("All documents uploaded successfully!");
-            setDocuments([]);
+            toast.success(`${doc.title} uploaded successfully!`);
           }
         }
+
+        if (uploadSuccess) {
+          toast.success("All documents uploaded successfully!");
+          setDocuments([]);
+        }
       } else {
-        toast.warning("No Documents Found!");
+        toast.warning("No documents found to upload!");
       }
     } catch (error) {
       // console.error("Error uploading documents:", error);
-      setError("Error uploading documents. Please try again.");
-      toast.error("Error uploading documents. Please try again.");
+      toast.error(
+        "An error occurred while uploading documents. Please try again."
+      );
     } finally {
       setIsUploading(false);
     }
@@ -299,15 +307,34 @@ export default function StudentInfoPage({
                   Document Title
                   <span className="text-red-500">*</span> :
                 </label>
-                <input
+                <select
                   id="title"
-                  placeholder="Enter title"
-                  type="text"
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
                   className={`border
-       px-[10px] text-black py-[10px] rounded-[5px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll bg-transparent`}
-                />
+      px-[10px] text-black py-[10px] rounded-[5px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] bg-transparent`}>
+                  <option value="" disabled>
+                    Select Document
+                  </option>
+                  <option value="Aadhaar Card">Aadhaar Card</option>
+                  <option value="Passport">Passport</option>
+                  <option value="Voter ID Card">Voter ID Card</option>
+                  <option value="Driver’s License">Driver’s License</option>
+                  <option value="PAN Card">PAN Card</option>
+                  <option value="Ration Card">Ration Card</option>
+                  <option value="Birth Certificate">Birth Certificate</option>
+                  <option value="Caste Certificate">Caste Certificate</option>
+                  <option value="Income Certificate">Income Certificate</option>
+                  <option value="Father Aadhaar Card">
+                    Father Aadhaar Card
+                  </option>
+                  <option value="Mother Aadhaar Card">
+                    Mother Aadhaar Card
+                  </option>
+                  <option value="Guardian Income Certificate">
+                    Guardian Income Certificate
+                  </option>
+                </select>
                 {validationErrors.title && (
                   <p className="text-red-500 text-xs mt-1">
                     {validationErrors.title}

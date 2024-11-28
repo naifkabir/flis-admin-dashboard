@@ -182,29 +182,68 @@ export const admittedStudent = (
   {
     accessorKey: "name",
     header: ({ column }) => (
-      <div>
-        <DataTableColumnHeader column={column} title="Information" />
+      <div className="flex justify-center items-center">
+        <DataTableColumnHeader column={column} title="Student Name" />
+      </div>
+    ),
+    cell: ({ row }) => {
+      return (
+        <div className="gap-5 w-full flex items-center justify-center">
+          <div className="flex flex-col items-start">
+            <span className="font-semibold">{row.getValue("name")}</span>
+          </div>
+        </div>
+      );
+    },
+    enableHiding: true,
+    enableSorting: true,
+  },
+  {
+    accessorKey: "student_photo",
+    header: ({ column }) => (
+      <div className="flex justify-center items-center">
+        <DataTableColumnHeader column={column} title="Photo" />
       </div>
     ),
     cell: ({ row }) => {
       const studentPhoto = row.original.photo || "/path/to/placeholder.jpg";
 
       return (
-        <div className="gap-5 w-fit flex items-center justify-center">
+        <div className="gap-5 w-full flex items-center justify-center">
           <Image
             src={studentPhoto}
             alt="student_photo"
             width={500}
             height={500}
-            className="rounded-full transition-all duration-300 object-cover object-center w-10 h-10 hover:scale-150"
+            className="object-cover object-center w-20 h-24"
           />
-          <div className="flex flex-col items-start">
-            <span className="font-semibold">{row.getValue("name")}</span>
-            <span>{row.original.gender || "N/A"}</span>
-          </div>
         </div>
       );
     },
+    enableHiding: true,
+    enableSorting: false,
+  },
+  {
+    accessorKey: "admission_id",
+    header: ({ column }) => (
+      <div className="flex justify-center">
+        <DataTableColumnHeader column={column} title="Admission Id" />
+      </div>
+    ),
+    cell: ({ row }) => <p>{row.getValue("id")}</p>,
+    filterFn: (row, id, value) => value.includes(row.getValue(id)),
+    enableHiding: true,
+    enableSorting: true,
+  },
+  {
+    accessorKey: "admission_date",
+    header: ({ column }) => (
+      <div className="flex justify-center">
+        <DataTableColumnHeader column={column} title="Admission Date" />
+      </div>
+    ),
+    cell: ({ row }) => <p>{row.getValue("id")}</p>,
+    filterFn: (row, id, value) => value.includes(row.getValue(id)),
     enableHiding: true,
     enableSorting: true,
   },
@@ -220,49 +259,36 @@ export const admittedStudent = (
     ),
   },
   {
-    accessorKey: "class",
+    accessorKey: "academic_era",
     header: ({ column }) => (
       <div className="flex justify-center">
-        <DataTableColumnHeader column={column} title="Class" />
+        <DataTableColumnHeader column={column} title="Academic Era" />
       </div>
     ),
-    cell: ({ row }) => <p>{row.getValue("class")}</p>,
+    cell: ({ row }) => {
+      return (
+        <div className="flex justify-center items-center">
+          {row.getValue("academic_era")}
+        </div>
+      );
+    },
     filterFn: (row, id, value) => value.includes(row.getValue(id)),
     enableHiding: true,
     enableSorting: true,
   },
   {
-    accessorKey: "g_name",
+    accessorKey: "Gender",
     header: ({ column }) => (
       <div className="flex justify-center">
-        <DataTableColumnHeader column={column} title="Guardian" />
+        <DataTableColumnHeader column={column} title="Gender" />
       </div>
     ),
-    cell: ({ row }) => <p>{row.getValue("g_name")}</p>,
+    cell: ({ row }) => (
+      <p>
+        <span>{row.original.gender || "N/A"}</span>
+      </p>
+    ),
     filterFn: (row, id, value) => value.includes(row.getValue(id)),
-    enableHiding: true,
-    enableSorting: true,
-  },
-  {
-    accessorKey: "g_contact",
-    header: ({ column }) => (
-      <div className="flex justify-center">
-        <DataTableColumnHeader column={column} title="Phone" />
-      </div>
-    ),
-    cell: ({ row }) => <p>{row.getValue("g_contact")}</p>,
-    filterFn: (row, id, value) => value.includes(row.getValue(id)),
-    enableHiding: true,
-    enableSorting: true,
-  },
-  {
-    accessorKey: "address",
-    header: ({ column }) => (
-      <div className="flex justify-center">
-        <DataTableColumnHeader column={column} title="Address" />
-      </div>
-    ),
-    cell: ({ row }) => <p>{row.getValue("address")}</p>,
     enableHiding: true,
     enableSorting: true,
   },
@@ -271,33 +297,12 @@ export const admittedStudent = (
     header: "Action",
     cell: ({ row }) => {
       const data = row.original;
-      const status = row.original.status;
-
-      const handleDelete = async () => {
-        const result = await deleteAdmissionFromDatabase(data.id);
-
-        if (result.error) {
-          toast.error("Something went wrong while deleting the admission", {
-            position: "top-center",
-          });
-        } else {
-          toast.success("Admission deleted successfully");
-          window.location.reload();
-        }
-      };
 
       return (
         <div className="flex justify-center gap-4">
-          <Link href={`/student/${data.id}`}>
+          <Link href={`/school/${data.id}`}>
             <Button>View</Button>
           </Link>
-          <Button variant="destructive" onClick={handleDelete}>
-            Delete
-          </Button>
-          {(status === "PENDING" || status === "UNDER-COUNSELLING") &&
-            handleReject && (
-              <Button onClick={() => handleReject(data.id)}>Reject</Button>
-            )}
         </div>
       );
     },

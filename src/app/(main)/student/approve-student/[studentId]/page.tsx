@@ -5,6 +5,7 @@ import { GetStudentById } from "@/lib/actions/student.action";
 import PageLoader from "@/components/ui-components/PageLoading";
 import { Link } from "lucide-react";
 import EditStudentForm from "@/components/EditStudentForm";
+import { GetAllClasses } from "@/lib/actions/class.action";
 
 // Main Function Start -------------------------------------------------
 
@@ -17,6 +18,7 @@ export default function StudentInfoPage({
 
   // State -------------------------------------------------------------
   const [data, setData] = useState<any>({});
+  const [allClasses, setAllClasses] = useState<any>({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -25,7 +27,9 @@ export default function StudentInfoPage({
     const fetchData = async () => {
       try {
         const studentData = await GetStudentById(studentId);
-        if (studentData) {
+        const allClasses = await GetAllClasses();
+        if (studentData && allClasses) {
+          setAllClasses(allClasses);
           setData(studentData);
         }
       } catch (err: any) {
@@ -56,7 +60,7 @@ export default function StudentInfoPage({
     );
   }
 
-  if (!data) {
+  if (!data || !allClasses) {
     return (
       <div className="absolute w-full bg-[#414141] text-white font-bold min-h-screen flex justify-center items-center text-center gap-4">
         <h2>Data Not Found</h2>
@@ -67,6 +71,8 @@ export default function StudentInfoPage({
       </div>
     );
   }
+
+  console.log("allClasses: ", allClasses);
 
   const data1 = {
     ...data?.bank_details,
@@ -84,11 +90,14 @@ export default function StudentInfoPage({
     _id: data?._id,
   };
 
-  console.log(data1);
+  // console.log(data1);
 
   return (
     <div className="bg-gray-50 p-8 rounded-lg">
-      <EditStudentForm data={data1 ? data1 : []} />
+      <EditStudentForm
+        data={data1 ? data1 : []}
+        allClasses={allClasses ? allClasses : []}
+      />
     </div>
   );
 }

@@ -28,6 +28,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
+import { Group } from "lucide-react";
 
 type DistrictKey = keyof typeof districtsData;
 
@@ -65,13 +66,6 @@ const studentApproveFormScheam = z
     caste: z.string().min(1, { message: "Caste is required" }),
     caste_certificate_number: z.string().optional(),
     hobbies: z.string().optional(),
-
-    class: z.string().min(1, {
-      message: "Required class",
-    }),
-    academic_era: z.string().min(1, {
-      message: "Required academic era",
-    }),
 
     blood_group: z.string().optional(),
     height: z.string().optional(),
@@ -210,6 +204,20 @@ const studentApproveFormScheam = z
 
     is_specially_abled: z.enum(["true", "No"]).optional(),
     pwd_certificate_number: z.string().optional(),
+
+    // Assign Class, Section, Fees Group, Academic Era
+    class: z.string().min(1, {
+      message: "Required class",
+    }),
+    section: z.string().min(1, {
+      message: "Required section",
+    }),
+    fees_group: z.string().min(1, {
+      message: "Required fees group",
+    }),
+    academic_era: z.string().min(1, {
+      message: "Required academic era",
+    }),
   })
   .refine(
     (data) => {
@@ -241,7 +249,13 @@ const studentApproveFormScheam = z
 
 type FormValues = z.infer<typeof studentApproveFormScheam>;
 
-const EditStudentForm = ({ data }: { data: any }) => {
+const EditStudentForm = ({
+  data,
+  allClasses,
+}: {
+  data: any;
+  allClasses: any;
+}) => {
   const [age, setAge] = useState<number | null>(null);
   const [dateOfBirth, setDateOfBirth] = useState<string | null>(null);
   const [isEditable, setIsEditable] = useState(false);
@@ -619,7 +633,7 @@ const EditStudentForm = ({ data }: { data: any }) => {
       if (response.statusCode === 200) {
         // console.log("Successful");
         // console.log(response.data);
-        const studentId = response.data.data;
+        const studentId = response.data;
         window.location.href = `/student/upload-documents/${studentId}`;
       }
     } catch (error) {
@@ -1227,81 +1241,6 @@ const EditStudentForm = ({ data }: { data: any }) => {
                           className="w-full"
                         />
                       </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-            </div>
-
-            <div className="p-9 border-2 relative bg-[#fff]">
-              <h2 className="uppercase text-gray-700 font-bold text-[12.5px] tracking-wide absolute -top-[9px] left-[29px] bg-[#fff] px-1 rounded-full">
-                Admission Information
-              </h2>
-
-              <div className="pt-16 grid md:grid-cols-2 md:gap-x-3 gap-y-5 md:gap-y-10 rounded-lg">
-                <FormField
-                  control={form.control}
-                  name="class"
-                  render={({ field }) => (
-                    <FormItem
-                      className={cn("flex flex-col w-full text-[13px]")}>
-                      <FormLabel
-                        className={cn("text-gray-500 font-semibold mb-0.5")}>
-                        Class (want to join)
-                        <span className="text-red-500">*</span> :
-                      </FormLabel>
-                      <Select
-                        disabled={!isEditable}
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}>
-                        <FormControl>
-                          <SelectTrigger className="w-full">
-                            <SelectValue placeholder="Select Class" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          {classOptions.length > 0 &&
-                            classOptions.map((className) => (
-                              <SelectItem key={className} value={className}>
-                                {className}
-                              </SelectItem>
-                            ))}
-                        </SelectContent>
-                      </Select>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="academic_era"
-                  render={({ field }) => (
-                    <FormItem
-                      className={cn("flex flex-col w-full text-[13px]")}>
-                      <FormLabel
-                        className={cn("text-gray-500 font-semibold mb-0.5")}>
-                        Academic Era<span className="text-red-500">*</span> :
-                      </FormLabel>
-                      <Select
-                        disabled={!isEditable}
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}>
-                        <FormControl>
-                          <SelectTrigger className="w-full">
-                            <SelectValue placeholder="Select Academic Era" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          {academicEras.length > 0 &&
-                            academicEras.map((era) => (
-                              <SelectItem key={era} value={era}>
-                                {era}
-                              </SelectItem>
-                            ))}
-                        </SelectContent>
-                      </Select>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -3199,6 +3138,150 @@ const EditStudentForm = ({ data }: { data: any }) => {
               </div>
             </div>
 
+            {/* Assign Class, Section & Fees Group to Student Start */}
+            <div className="mt-16">
+              <div className="text-center py-3">
+                <h2 className="uppercase text-gray-700 font-bold text-[20px] tracking-wide mb-1">
+                  Admission Information
+                </h2>
+                <p className="text-gray-600 text-[16px]">
+                  Assign Class, Section & Fees Group to Student
+                </p>
+              </div>
+
+              <div className="p-9 mt-8 grid md:grid-cols-2 md:gap-x-3 lg:gap-x-8 gap-y-5 md:gap-y-10 bg-[#fff] border-2">
+                {/* Class Dropdown */}
+                <FormField
+                  control={form.control}
+                  name="class"
+                  render={({ field }) => (
+                    <FormItem
+                      className={cn("flex flex-col w-full text-[13px]")}>
+                      <FormLabel
+                        className={cn("text-gray-500 font-semibold mb-0.5")}>
+                        Class
+                        <span className="text-red-500">*</span> :
+                      </FormLabel>
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}>
+                        <FormControl>
+                          <SelectTrigger className="w-full">
+                            <SelectValue placeholder="Select Class" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {classOptions.length > 0 &&
+                            classOptions.map((className) => (
+                              <SelectItem key={className} value={className}>
+                                {className}
+                              </SelectItem>
+                            ))}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                {/* Academic Era Dropdown */}
+                <FormField
+                  control={form.control}
+                  name="academic_era"
+                  render={({ field }) => (
+                    <FormItem
+                      className={cn("flex flex-col w-full text-[13px]")}>
+                      <FormLabel
+                        className={cn("text-gray-500 font-semibold mb-0.5")}>
+                        Academic Era
+                        <span className="text-red-500">*</span> :
+                      </FormLabel>
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}>
+                        <FormControl>
+                          <SelectTrigger className="w-full">
+                            <SelectValue placeholder="Select Academic Era" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {academicEras.length > 0 &&
+                            academicEras.map((era) => (
+                              <SelectItem key={era} value={era}>
+                                {era}
+                              </SelectItem>
+                            ))}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                {/* Section Dropdown */}
+                <FormField
+                  control={form.control}
+                  name="section"
+                  render={({ field }) => (
+                    <FormItem
+                      className={cn("flex flex-col w-full text-[13px]")}>
+                      <FormLabel
+                        className={cn("text-gray-500 font-semibold mb-0.5")}>
+                        Section
+                        <span className="text-red-500">*</span> :
+                      </FormLabel>
+                      <Select onValueChange={field.onChange}>
+                        <FormControl>
+                          <SelectTrigger className="w-full">
+                            <SelectValue placeholder="Select Section" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem
+                            className="w-full flex"
+                            value="Section- A">
+                            Section- A
+                            <span className="text-red-500 ml-5 text-[10px] font-bold">{`Max ${"20"} Students`}</span>
+                          </SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                {/* Fees Group Dropdown */}
+                <FormField
+                  control={form.control}
+                  name="fees_group"
+                  render={({ field }) => (
+                    <FormItem
+                      className={cn("flex flex-col w-full text-[13px]")}>
+                      <FormLabel
+                        className={cn("text-gray-500 font-semibold mb-0.5")}>
+                        Fees Group
+                        <span className="text-red-500">*</span> :
+                      </FormLabel>
+                      <Select onValueChange={field.onChange}>
+                        <FormControl>
+                          <SelectTrigger className="w-full">
+                            <SelectValue placeholder="Select Fees Group" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem className="w-full" value="Group- 01">
+                            Group- 01
+                          </SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+            </div>
+            {/* Assign Class, Section & Fees Group to Student End */}
+
             <div className="mt-8 grid justify-end">
               <div className="flex items-center">
                 <Button
@@ -3220,7 +3303,7 @@ const EditStudentForm = ({ data }: { data: any }) => {
                 )}
                 {!isEditable && (
                   <Button type="submit" className={cn("w-fit h-12")}>
-                    Submit & Upload Documents
+                    Submit & Admit Student
                   </Button>
                 )}
               </div>

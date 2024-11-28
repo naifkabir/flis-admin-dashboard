@@ -87,10 +87,11 @@ export default function StudentInfoPage({
         dataToBeSubmitted,
         studentId // This is admission_id
       );
-      if (response.statusCode === 200) {
-        // const studentId = response.data.data;
-        console.log("response: ", response);
-        // window.location.href = `/student/upload-documents/${studentId}`; // This is student_id coming from response
+      console.log(response);
+      if (response) {
+        const studentId = response;
+        console.log("response: ", studentId);
+        window.location.href = `/student/upload-documents/${studentId}`; // This is student_id coming from response
       } else {
         toast.error("Failed to submit application!");
       }
@@ -210,19 +211,21 @@ export default function StudentInfoPage({
           </div>
 
           <div className="w-full flex justify-end gap-4">
-            {data?.application_status === "APPROVED" && (
-              <Link href={`/student/approve-student/${studentId}`}>
+            {data?.application_status === "UNDER-COUNSELLING" && (
+              <Link
+                href={`/student/approve-student/${studentId}`}
+                title="Edit Application Assign Class, Section & Fee">
                 <Button color="primary">Edit Application</Button>
               </Link>
             )}
-            {data?.application_status === "APPROVED" && (
-              <Link href={`/student/upload-documents/${studentId}`}>
-                <Button color="primary" onClick={handleWithoutEditApplication}>
-                  Submit & Upload Documents
-                </Button>
-              </Link>
-            )}
-            {data?.application_status === "UNDER-COUNSELLING" && (
+            {/* {data?.application_status === "APPROVED" && (
+              // <Link href={`/student/upload-documents/${studentId}`}>
+              <Button color="primary" onClick={handleWithoutEditApplication}>
+                Submit & Upload Documents
+              </Button>
+              // </Link>
+            )} */}
+            {/* {data?.application_status === "UNDER-COUNSELLING" && (
               <Button
                 color="primary"
                 onClick={handleCounselingDone}
@@ -251,7 +254,7 @@ export default function StudentInfoPage({
                   "Approve (Counseling done)"
                 )}
               </Button>
-            )}
+            )} */}
             {data?.application_status != "APPROVED" && (
               <ApproveDialog
                 docId={studentId}
