@@ -387,3 +387,23 @@ export async function AddHeaderInMaster(data: any) {
     return { error: error.message };
   }
 }
+
+export async function GetAllGroupsForDropDown() {
+  const cookieStore = cookies();
+  const accessToken = cookieStore.get("accessToken")?.value;
+
+  if (!accessToken) {
+    return null;
+  }
+
+  try {
+    const response = await apiClient.get(`/fees/group/get-all-for-dropdown`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    return response.data.data;
+  } catch (error: any) {
+    return { error: error.message };
+  }
+}

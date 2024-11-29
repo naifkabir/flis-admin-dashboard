@@ -1,11 +1,13 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
-import { GetStudentById } from "@/lib/actions/student.action";
-import PageLoader from "@/components/ui-components/PageLoading";
-import { Link } from "lucide-react";
-import EditStudentForm from "@/components/EditStudentForm";
-import { GetAllClasses } from "@/lib/actions/class.action";
+import { useEffect, useState } from 'react';
+import { GetStudentById } from '@/lib/actions/student.action';
+import PageLoader from '@/components/ui-components/PageLoading';
+import { Link } from 'lucide-react';
+import EditStudentForm from '@/components/EditStudentForm';
+import { GetAllClasses } from '@/lib/actions/class.action';
+import { GetAllGroupsForDropDown } from '@/lib/actions/finance.action';
+import { GetActiveSession } from '@/lib/actions/session.action';
 
 // Main Function Start -------------------------------------------------
 
@@ -19,6 +21,8 @@ export default function StudentInfoPage({
   // State -------------------------------------------------------------
   const [data, setData] = useState<any>({});
   const [allClasses, setAllClasses] = useState<any>({});
+  const [allGroups, setAllGroups] = useState<any>([]);
+  const [session, setSession] = useState<any>({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -28,9 +32,13 @@ export default function StudentInfoPage({
       try {
         const studentData = await GetStudentById(studentId);
         const allClasses = await GetAllClasses();
-        if (studentData && allClasses) {
+        const allGroups = await GetAllGroupsForDropDown();
+        const session = await GetActiveSession();
+        if (studentData && allClasses && allGroups) {
           setAllClasses(allClasses);
           setData(studentData);
+          setAllGroups(allGroups);
+          setSession([session]);
         }
       } catch (err: any) {
         setError(err);
@@ -72,7 +80,7 @@ export default function StudentInfoPage({
     );
   }
 
-  console.log("allClasses: ", allClasses);
+  console.log('allClasses: ', allClasses);
 
   const data1 = {
     ...data?.bank_details,
@@ -97,6 +105,8 @@ export default function StudentInfoPage({
       <EditStudentForm
         data={data1 ? data1 : []}
         allClasses={allClasses ? allClasses : []}
+        allGroups={allGroups ? allGroups : []}
+        session={session ? session : []}
       />
     </div>
   );
