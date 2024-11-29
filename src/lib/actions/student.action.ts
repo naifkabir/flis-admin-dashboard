@@ -116,6 +116,31 @@ export async function submitAfterEditApplication(data: any, id: string) {
   }
 }
 
+export async function GenerateAgreement(feesStructureId: string) {
+  const cookieStore = cookies();
+  const accessToken = cookieStore.get("accessToken")?.value;
+
+  if (!accessToken) {
+    console.error("Access token not found");
+    return null;
+  }
+
+  try {
+    const response = await apiClient.get(`/document/generate-agreement-pdf/${feesStructureId}`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+      responseType: "blob", // Important: Ensures the PDF is returned as a binary file
+    });
+
+    return response.data;
+  } catch (error: any) {
+    console.error("Error generating agreement:", error);
+    return { error: error.message };
+  }
+}
+
+
 export async function submitWithoutEditApplication(
   data: any,
   application_id: string
