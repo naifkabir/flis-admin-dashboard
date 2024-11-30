@@ -126,14 +126,16 @@ export async function GenerateAgreement(feesStructureId: string) {
   }
 
   try {
-    const response = await apiClient.get(`/document/generate-agreement-pdf/${feesStructureId}`, {
-      headers: {
-        Accept: "application/pdf",
-        Authorization: `Bearer ${accessToken}`,
-      },
-      responseType: "blob",
-    });
-
+    const response = await apiClient.get(
+      `/document/generate-agreement-pdf/${feesStructureId}`,
+      {
+        headers: {
+          Accept: "application/pdf",
+          Authorization: `Bearer ${accessToken}`,
+        },
+        responseType: "blob",
+      }
+    );
 
     return response.data;
   } catch (error: any) {
@@ -141,7 +143,6 @@ export async function GenerateAgreement(feesStructureId: string) {
     return { error: error.message };
   }
 }
-
 
 export async function submitWithoutEditApplication(
   data: any,
