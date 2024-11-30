@@ -639,28 +639,28 @@ const EditStudentForm = ({
     console.log('Id', data._id);
     try {
       const response = await submitAfterEditApplication(formData, data._id);
-      console.log(response);
 
       if (response.statusCode === 200) {
         toast.success('Student created successfully!');
-        const pdfResponse = await GenerateAgreement(response.data);
 
-        // Create a download link and simulate a click to download the file
-        const url = window.URL.createObjectURL(new Blob([pdfResponse]));
-        const link = document.createElement('a');
-        link.href = url;
-        link.setAttribute('download', 'flis_contract.pdf'); // Set the file name
-        document.body.appendChild(link);
-        link.click();
-        link.parentNode?.removeChild(link);
-        // if (pdfResponse?.success) {
-        //   console.log('Agreement downloaded successfully');
-        // } else {
-        //   console.error('Failed to generate agreement:', result?.error);
-        // }
-        // window.location.href = `/student/upload-documents/${studentId}`;
+        const feeStructureId = response.data;
+        const pdfResponse = await GenerateAgreement(feeStructureId);
+        if (pdfResponse) {
+          // const blob = new Blob([pdfResponse], { type: 'application/pdf' });
+          const url = window.URL.createObjectURL(new Blob([pdfResponse]));
+          const link = document.createElement('a');
+          link.href = url;
+          link.download = 'agreement.pdf'; // Suggested file name
+
+          // Trigger the download
+          link.click();
+
+          // Clean up the URL
+          window.URL.revokeObjectURL(url);
+        }
       }
     } catch (error) {
+      console.log(error);
       toast.error('Something went wrong. Please try again.');
     }
   };
