@@ -1,8 +1,11 @@
-"use client";
+'use client';
 
-import { Button } from "@/components/ui/button";
-import { useState } from "react";
-import Barcode from "react-barcode";
+import PageLoader from '@/components/ui-components/PageLoading';
+import { Button } from '@/components/ui/button';
+import { GetStudentDetails } from '@/lib/actions/student.action';
+import { useEffect, useState } from 'react';
+import Barcode from 'react-barcode';
+import { toast } from 'sonner';
 
 export default function StudentInfoPage({
   params,
@@ -10,9 +13,38 @@ export default function StudentInfoPage({
   params: { studentId: string };
 }) {
   const { studentId } = params;
-  const [activeTab, setActiveTab] = useState("basic-details");
 
-  console.log("studentId: ", studentId);
+  const [data, setData] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+
+  useEffect(() => {
+    if (studentId) {
+      setLoading(true);
+      setError(false);
+      const fetchData = async () => {
+        try {
+          const result = await GetStudentDetails(studentId);
+          console.log('result: ', result);
+
+          if (result) {
+            setData(result);
+          }
+        } catch (error: any) {
+          toast.error('Failed to fetch data', error);
+          setError(true);
+        } finally {
+          setLoading(false);
+        }
+      };
+
+      fetchData();
+    }
+  }, [studentId]);
+
+  const [activeTab, setActiveTab] = useState('basic-details');
+
+  console.log('studentId: ', studentId);
 
   const handleTabChange = (tab: string) => {
     setActiveTab(tab);
@@ -20,16 +52,34 @@ export default function StudentInfoPage({
 
   const documentData = [
     {
-      id: "FLIS001",
-      name: "Aadhaar Card",
-      attachment: "Aadhaar_Card",
+      id: 'FLIS001',
+      name: 'Aadhaar Card',
+      attachment: 'Aadhaar_Card',
     },
     {
-      id: "FLIS002",
-      name: "Birth Certificate",
-      attachment: "Birth_Certificate",
+      id: 'FLIS002',
+      name: 'Birth Certificate',
+      attachment: 'Birth_Certificate',
     },
   ];
+
+  if (loading) {
+    return (
+      <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+        <PageLoader />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+        <h2 className="text-red-600 text-lg">
+          Failed to load pending students. Please try again later.
+        </h2>
+      </div>
+    );
+  }
 
   return (
     <div className="w-full h-full px-3">
@@ -50,7 +100,7 @@ export default function StudentInfoPage({
           {/* Barcode for FLIS ID */}
           <div className="flex justify-center mb-2 px-10">
             <Barcode
-              value={"FLISGSE00001"}
+              value={'FLISGSE00001'}
               width={2}
               height={50}
               displayValue={false}
@@ -98,25 +148,26 @@ export default function StudentInfoPage({
           <div className="flex justify-between mb-10">
             <div className="flex space-x-4">
               {[
-                "Basic Details",
-                "Parents",
-                "Address",
-                "Admission",
-                "Exam",
-                "Board Exam",
-                "Attendance",
-                "Document",
+                'Basic Details',
+                'Parents',
+                'Address',
+                'Admission',
+                'Exam',
+                'Board Exam',
+                'Attendance',
+                'Document',
               ].map((tab) => (
                 <button
                   key={tab}
                   onClick={() =>
-                    handleTabChange(tab.toLowerCase().replace(/\s/g, "-"))
+                    handleTabChange(tab.toLowerCase().replace(/\s/g, '-'))
                   }
                   className={`py-2 px-4 rounded ${
-                    activeTab === tab.toLowerCase().replace(/\s/g, "-")
-                      ? "bg-red-600 text-white"
-                      : "bg-gray-200 text-black"
-                  }`}>
+                    activeTab === tab.toLowerCase().replace(/\s/g, '-')
+                      ? 'bg-red-600 text-white'
+                      : 'bg-gray-200 text-black'
+                  }`}
+                >
                   {tab}
                 </button>
               ))}
@@ -124,20 +175,22 @@ export default function StudentInfoPage({
 
             <Button
               onClick={() => window.history.back()}
-              className="justify-self-end">
+              className="justify-self-end"
+            >
               Go Back
             </Button>
           </div>
 
           {/* Tab Content */}
           <div className="">
-            {activeTab === "document" && (
+            {activeTab === 'document' && (
               <div className="bg-white p-4 rounded shadow">
                 <div className="space-y-4">
                   {documentData.map((doc) => (
                     <div
                       key={doc.id}
-                      className="flex items-center justify-between border p-4 rounded">
+                      className="flex items-center justify-between border p-4 rounded"
+                    >
                       <div>
                         <p>
                           <strong>Document ID:</strong> {doc.id}
@@ -166,7 +219,7 @@ export default function StudentInfoPage({
               </div>
             )}
 
-            {activeTab === "basic-details" && (
+            {activeTab === 'basic-details' && (
               <div className="grid gap-10">
                 <div className="bg-white rounded shadow border border-red-600">
                   <h2 className="text-lg font-semibold mb-5 text-center py-3 bg-red-600 text-white">
@@ -328,7 +381,7 @@ export default function StudentInfoPage({
               </div>
             )}
 
-            {activeTab === "parents" && (
+            {activeTab === 'parents' && (
               <div className="grid gap-10">
                 <div className="bg-white rounded shadow border border-red-600">
                   <h2 className="text-lg font-semibold mb-5 text-center py-3 bg-red-600 text-white">
@@ -484,7 +537,7 @@ export default function StudentInfoPage({
               </div>
             )}
 
-            {activeTab === "address" && (
+            {activeTab === 'address' && (
               <div className="grid gap-10">
                 <div className="bg-white rounded shadow border border-red-600">
                   <h2 className="text-lg font-semibold mb-5 text-center py-3 bg-red-600 text-white">
@@ -592,7 +645,7 @@ export default function StudentInfoPage({
               </div>
             )}
 
-            {activeTab === "admission" && (
+            {activeTab === 'admission' && (
               <div className="grid gap-10">
                 <div className="bg-white rounded shadow border border-red-600">
                   <h2 className="text-lg font-semibold mb-5 text-center py-3 bg-red-600 text-white">
@@ -766,7 +819,7 @@ export default function StudentInfoPage({
               </div>
             )}
 
-            {activeTab === "exam" && (
+            {activeTab === 'exam' && (
               <div className="grid gap-10">
                 <div className="bg-white rounded shadow border border-red-600">
                   <h2 className="text-lg font-semibold mb-5 text-center py-3 bg-red-600 text-white">
@@ -853,7 +906,7 @@ export default function StudentInfoPage({
               </div>
             )}
 
-            {activeTab === "board-exam" && (
+            {activeTab === 'board-exam' && (
               <div className="grid gap-10">
                 <div className="bg-white rounded shadow border border-red-600">
                   <h2 className="text-lg font-semibold mb-5 text-center py-3 bg-red-600 text-white">
@@ -926,7 +979,7 @@ export default function StudentInfoPage({
               </div>
             )}
 
-            {activeTab === "attendance" && (
+            {activeTab === 'attendance' && (
               <div className="grid gap-10">This is attendance section</div>
             )}
           </div>

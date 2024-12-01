@@ -249,13 +249,10 @@ export const studentTableFilter = (data: any) => {
       g_name: item.guardian_details.name,
       g_contact: item.guardian_details.phone,
       g_relation: item.guardian_details.relation,
-      address: `${address.village || ""}${
-        address.post_office ? `, ${address.post_office}` : ""
-      }${address.police_station ? `, ${address.police_station}` : ""}${
-        address.district ? `, ${address.district}` : ""
-      }${address.state ? `, ${address.state}` : ""}${
-        address.postal_code ? `, ${address.postal_code}` : ""
-      }`,
+      address: `${address.village || ""}${address.post_office ? `, ${address.post_office}` : ""
+        }${address.police_station ? `, ${address.police_station}` : ""}${address.district ? `, ${address.district}` : ""
+        }${address.state ? `, ${address.state}` : ""}${address.postal_code ? `, ${address.postal_code}` : ""
+        }`,
       status: item.status,
     };
   });
@@ -266,14 +263,14 @@ export const studentTableFilter = (data: any) => {
 export const admittedStudentTableFilter = (data: any) => {
   const result = data.map((item: any) => {
     return {
-      id: item.id,
-      name: item.student_details.name,
-      photo: item.student_details.photo,
-      admission_id: item.student_details.admission_id,
-      admission_date: item.student_details.admission_date,
-      dob: item.student_details.date_of_birth,
-      academic_era: item.student_details.academic_era,
-      gender: item.student_details.gender,
+      id: item._id,
+      name: item.name,
+      photo: item.photo,
+      admission_id: item.admission_id,
+      admission_date: item.admission_date,
+      dob: item.date_of_birth,
+      academic_era: item.academic_era,
+      gender: item.gender,
     };
   });
   return result;

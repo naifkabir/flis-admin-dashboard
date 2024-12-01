@@ -1,16 +1,16 @@
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
-import { admittedStudent } from "@/app/data-table-components/columns";
+import { useState, useEffect } from 'react';
+import { admittedStudent } from '@/app/data-table-components/columns';
 import {
-  GetAllApplication,
+  GetStudentsByStatus,
   RejectApplication,
-} from "@/lib/actions/student.action";
-import { admittedStudentTableFilter } from "@/constant";
-import PageLoader from "@/components/ui-components/PageLoading";
-import { Toaster, toast } from "sonner";
-import { AdmittedStudentDataTable } from "@/app/data-table-components/admitted-student-data-table";
-import { DynamicBreadcrumb } from "@/components/StudentBreadcrumb";
+} from '@/lib/actions/student.action';
+import { admittedStudentTableFilter } from '@/constant';
+import PageLoader from '@/components/ui-components/PageLoading';
+import { Toaster, toast } from 'sonner';
+import { AdmittedStudentDataTable } from '@/app/data-table-components/admitted-student-data-table';
+import { DynamicBreadcrumb } from '@/components/StudentBreadcrumb';
 
 export default function CounselingStudentPage() {
   const [data, setData] = useState([]);
@@ -22,13 +22,13 @@ export default function CounselingStudentPage() {
       setLoading(true);
       setError(false);
       try {
-        const result = await GetAllApplication("UNDER-COUNSELLING");
-        // console.log("Fetched data:", result);
+        const result = await GetStudentsByStatus('FEES');
+        console.log('Fetched data:', result);
         const filteredData = admittedStudentTableFilter(result);
         setData(filteredData);
       } catch (err: any) {
         // console.error("Error fetching data:", err);
-        toast.error("Failed to fetch data", err);
+        toast.error('Failed to fetch data', err);
         setError(true);
       } finally {
         setLoading(false);
@@ -106,7 +106,8 @@ export default function CounselingStudentPage() {
               <select
                 id="class-select"
                 className="border rounded px-2 py-1 outline-none w-44"
-                defaultValue="">
+                defaultValue=""
+              >
                 <option value="" disabled>
                   Select
                 </option>
@@ -121,7 +122,8 @@ export default function CounselingStudentPage() {
               <select
                 id="section-select"
                 className="border rounded px-2 py-1 outline-none w-44"
-                defaultValue="">
+                defaultValue=""
+              >
                 <option value="" disabled>
                   Section
                 </option>

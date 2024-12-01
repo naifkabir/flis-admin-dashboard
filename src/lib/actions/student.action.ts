@@ -26,6 +26,52 @@ export async function GetAllApplication(applicationStatus: string) {
   }
 }
 
+export async function GetStudentsByStatus(applicationStatus: string) {
+  const cookieStore = cookies();
+  const accessToken = cookieStore.get("accessToken")?.value;
+
+  if (!accessToken) {
+    return { error: "No access token found." };
+  }
+
+  try {
+    const response = await apiClient.get(
+      `/student/get-students/${applicationStatus}`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+    return response.data.data;
+  } catch (error: any) {
+    return { error: error.message };
+  }
+}
+
+export async function GetStudentDetails(id: string) {
+  const cookieStore = cookies();
+  const accessToken = cookieStore.get("accessToken")?.value;
+
+  if (!accessToken) {
+    return { error: "No access token found." };
+  }
+
+  try {
+    const response = await apiClient.get(
+      `/student/get/${id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+    return response.data.data;
+  } catch (error: any) {
+    return { error: error.message };
+  }
+}
+
 export async function GetStudentById(studentId: string) {
   const cookieStore = cookies();
   const accessToken = cookieStore.get("accessToken")?.value;
