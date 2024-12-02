@@ -39,7 +39,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import { Label } from '@/components/ui/label';
+import { baseURL } from '@/lib/axios';
 
 type DistrictKey = keyof typeof districtsData;
 
@@ -666,21 +666,7 @@ const EditStudentForm = ({
         toast.success('Student created successfully!');
 
         const feeStructureId = response.data;
-        const pdfResponse = await GenerateAgreement(feeStructureId);
-        console.log('PDF Response: ', pdfResponse);
-        if (pdfResponse) {
-          // const blob = new Blob(byteArrays, { type: "application/pdf" });
-          const url = window.URL.createObjectURL(new Blob([pdfResponse]));
-          const link = document.createElement('a');
-          link.href = url;
-          link.download = 'agreement.pdf'; // Suggested file name
-
-          // Trigger the download
-          link.click();
-
-          // Clean up the URL
-          window.URL.revokeObjectURL(url);
-        }
+        window.location.href = `${baseURL}/document/generate-agreement-pdf/${feeStructureId}`;
       }
     } catch (error) {
       console.log(error);
