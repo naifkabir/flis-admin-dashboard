@@ -3,6 +3,7 @@
 import PageLoader from '@/components/ui-components/PageLoading';
 import { Button } from '@/components/ui/button';
 import { GetStudentDetails } from '@/lib/actions/student.action';
+import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import Barcode from 'react-barcode';
 import { toast } from 'sonner';
@@ -135,7 +136,9 @@ export default function StudentInfoPage({
 
           <div className="grid gap-3 mt-10">
             <Button>SEND USER ID & PASSWORD</Button>
-            <Button>UPLOAD DOCUMENTS</Button>
+            <Link href={`/student/upload-documents/${studentId}`}>
+              <Button className="w-full">UPLOAD DOCUMENTS</Button>
+            </Link>
             <Button>COLLECT FEES</Button>
             <Button>ALLOCATE SUBJECT</Button>
             <Button>ADD HEALTH RECORD</Button>
