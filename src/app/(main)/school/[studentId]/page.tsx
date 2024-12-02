@@ -91,7 +91,7 @@ export default function StudentInfoPage({
         {/* Left Profile Card */}
         <div className="w-[20%] h-fit bg-white shadow rounded p-4 sticky top-24">
           <img
-            src="/assets/loaders/img.jpg"
+            src={data.basic_details.student_photo}
             alt="Student Profile"
             className="w-24 h-[108px] mx-auto object-cover object-center"
           />
@@ -258,25 +258,33 @@ export default function StudentInfoPage({
                         <td className="border px-4 py-2 font-semibold">
                           Religion
                         </td>
-                        <td className="border px-4 py-2">Muslim</td>
+                        <td className="border px-4 py-2">
+                          {data.basic_details.religion}
+                        </td>
                       </tr>
                       <tr>
                         <td className="border px-4 py-2 font-semibold">
                           Mother Tongue
                         </td>
-                        <td className="border px-4 py-2">Bengali</td>
+                        <td className="border px-4 py-2">
+                          {data.basic_details.mother_tongue}
+                        </td>
                       </tr>
                       <tr>
                         <td className="border px-4 py-2 font-semibold">
                           Language Spoken At Home
                         </td>
-                        <td className="border px-4 py-2">English</td>
+                        <td className="border px-4 py-2">
+                          {data.basic_details.language_spoken_at_home}
+                        </td>
                       </tr>
                       <tr>
                         <td className="border px-4 py-2 font-semibold">
                           Caste Certificate No
                         </td>
-                        <td className="border px-4 py-2">6445154</td>
+                        <td className="border px-4 py-2">
+                          {data.basic_details.caste_certificate_number}
+                        </td>
                       </tr>
                       <tr>
                         <td className="border px-4 py-2 font-semibold">
@@ -310,43 +318,57 @@ export default function StudentInfoPage({
                         <td className="border px-4 py-2 font-semibold">
                           Blood Group
                         </td>
-                        <td className="border px-4 py-2">A+</td>
+                        <td className="border px-4 py-2">
+                          {data.medical_details.blood_group}
+                        </td>
                       </tr>
                       <tr>
                         <td className="border px-4 py-2 font-semibold">
                           Special Medical Condition
                         </td>
-                        <td className="border px-4 py-2">N/A</td>
+                        <td className="border px-4 py-2">
+                          {data.medical_details.special_medical_conditions}
+                        </td>
                       </tr>
                       <tr>
                         <td className="border px-4 py-2 font-semibold">
                           Special Assistance
                         </td>
-                        <td className="border px-4 py-2">N/A</td>
+                        <td className="border px-4 py-2">
+                          {data.medical_details.special_assistance}
+                        </td>
                       </tr>
                       <tr>
                         <td className="border px-4 py-2 font-semibold">
                           Regular Medication
                         </td>
-                        <td className="border px-4 py-2">N/A</td>
+                        <td className="border px-4 py-2">
+                          {data.medical_details.regular_medication}
+                        </td>
                       </tr>
                       <tr>
                         <td className="border px-4 py-2 font-semibold">
                           Any Know Allergies
                         </td>
-                        <td className="border px-4 py-2">N/A</td>
+                        <td className="border px-4 py-2">
+                          {data.medical_details.allergies}
+                        </td>
                       </tr>
                       <tr>
                         <td className="border px-4 py-2 font-semibold">
                           Height
                         </td>
-                        <td className="border px-4 py-2">3 F 4In</td>
+                        <td className="border px-4 py-2">
+                          {data.medical_details.height}
+                        </td>
                       </tr>
                       <tr>
                         <td className="border px-4 py-2 font-semibold">
                           Weight
                         </td>
-                        <td className="border px-4 py-2">23 Kilogram</td>
+                        <td className="border px-4 py-2">
+                          {data.medical_details.weight}
+                        </td>
                       </tr>
                     </tbody>
                   </table>
@@ -362,27 +384,33 @@ export default function StudentInfoPage({
                         <td className="border px-4 py-2 font-semibold">
                           Account Holder Name
                         </td>
-                        <td className="border px-4 py-2">Mariha Hasan</td>
+                        <td className="border px-4 py-2">
+                          {data.bank_details.account_holder_name}
+                        </td>
                       </tr>
                       <tr>
                         <td className="border px-4 py-2 font-semibold">
                           Account Number
                         </td>
-                        <td className="border px-4 py-2">06754324511</td>
+                        <td className="border px-4 py-2">
+                          {data.bank_details.account_number}
+                        </td>
                       </tr>
                       <tr>
                         <td className="border px-4 py-2 font-semibold">
                           Bank Name
                         </td>
                         <td className="border px-4 py-2">
-                          ICICI Bank of India
+                          {data.bank_details.bank_name}
                         </td>
                       </tr>
                       <tr>
                         <td className="border px-4 py-2 font-semibold">
                           IFSC Code
                         </td>
-                        <td className="border px-4 py-2">ICICI034232</td>
+                        <td className="border px-4 py-2">
+                          {data.bank_details.ifsc_code}
+                        </td>
                       </tr>
                     </tbody>
                   </table>
@@ -402,37 +430,49 @@ export default function StudentInfoPage({
                         <td className="border px-4 py-2 font-semibold">
                           Father’s Name
                         </td>
-                        <td className="border px-4 py-2">Amirul Islam</td>
+                        <td className="border px-4 py-2">
+                          {data.father_details.name}
+                        </td>
                       </tr>
                       <tr>
                         <td className="border px-4 py-2 font-semibold">
                           Qualification
                         </td>
-                        <td className="border px-4 py-2">H.S Pass</td>
+                        <td className="border px-4 py-2">
+                          {data.father_details.qualification}
+                        </td>
                       </tr>
                       <tr>
                         <td className="border px-4 py-2 font-semibold">
                           Occupation
                         </td>
-                        <td className="border px-4 py-2">Government Job</td>
+                        <td className="border px-4 py-2">
+                          {data.father_details.occupation}
+                        </td>
                       </tr>
                       <tr>
                         <td className="border px-4 py-2 font-semibold">
                           Annual Income
                         </td>
-                        <td className="border px-4 py-2">480000</td>
+                        <td className="border px-4 py-2">
+                          {data.father_details.annual_income}
+                        </td>
                       </tr>
                       <tr>
                         <td className="border px-4 py-2 font-semibold">
                           Phone Number
                         </td>
-                        <td className="border px-4 py-2">9008908654</td>
+                        <td className="border px-4 py-2">
+                          {data.father_details.contact_no}
+                        </td>
                       </tr>
                       <tr>
                         <td className="border px-4 py-2 font-semibold">
                           WhatsApp Number
                         </td>
-                        <td className="border px-4 py-2">7654342321</td>
+                        <td className="border px-4 py-2">
+                          {data.father_details.whatsapp_no}
+                        </td>
                       </tr>
                     </tbody>
                   </table>
@@ -448,37 +488,49 @@ export default function StudentInfoPage({
                         <td className="border px-4 py-2 font-semibold">
                           Mother’s Name
                         </td>
-                        <td className="border px-4 py-2">Amirul Islam</td>
+                        <td className="border px-4 py-2">
+                          {data.mother_details.name}
+                        </td>
                       </tr>
                       <tr>
                         <td className="border px-4 py-2 font-semibold">
                           Qualification
                         </td>
-                        <td className="border px-4 py-2">H.S Pass</td>
+                        <td className="border px-4 py-2">
+                          {data.mother_details.qualification}
+                        </td>
                       </tr>
                       <tr>
                         <td className="border px-4 py-2 font-semibold">
                           Occupation
                         </td>
-                        <td className="border px-4 py-2">Government Job</td>
+                        <td className="border px-4 py-2">
+                          {data.mother_details.occupation}
+                        </td>
                       </tr>
                       <tr>
                         <td className="border px-4 py-2 font-semibold">
                           Annual Income
                         </td>
-                        <td className="border px-4 py-2">480000</td>
+                        <td className="border px-4 py-2">
+                          {data.mother_details.annual_income}
+                        </td>
                       </tr>
                       <tr>
                         <td className="border px-4 py-2 font-semibold">
                           Phone Number
                         </td>
-                        <td className="border px-4 py-2">9008908654</td>
+                        <td className="border px-4 py-2">
+                          {data.mother_details.contact_no}
+                        </td>
                       </tr>
                       <tr>
                         <td className="border px-4 py-2 font-semibold">
                           WhatsApp Number
                         </td>
-                        <td className="border px-4 py-2">7654342321</td>
+                        <td className="border px-4 py-2">
+                          {data.mother_details.whatsapp_no}
+                        </td>
                       </tr>
                     </tbody>
                   </table>
@@ -494,51 +546,65 @@ export default function StudentInfoPage({
                         <td className="border px-4 py-2 font-semibold">
                           Guardian’s Name
                         </td>
-                        <td className="border px-4 py-2">Amirul Islam</td>
+                        <td className="border px-4 py-2">
+                          {data.guardian_details.name}
+                        </td>
                       </tr>
                       <tr>
                         <td className="border px-4 py-2 font-semibold">
                           Qualification
                         </td>
-                        <td className="border px-4 py-2">H.S Pass</td>
+                        <td className="border px-4 py-2">
+                          {data.guardian_details.qualification}
+                        </td>
                       </tr>
                       <tr>
                         <td className="border px-4 py-2 font-semibold">
                           Occupation
                         </td>
-                        <td className="border px-4 py-2">Government Job</td>
+                        <td className="border px-4 py-2">
+                          {data.guardian_details.occupation}
+                        </td>
                       </tr>
                       <tr>
                         <td className="border px-4 py-2 font-semibold">
                           Annual Income
                         </td>
-                        <td className="border px-4 py-2">480000</td>
+                        <td className="border px-4 py-2">
+                          {data.guardian_details.annual_income}
+                        </td>
                       </tr>
                       <tr>
                         <td className="border px-4 py-2 font-semibold">
                           Phone Number
                         </td>
-                        <td className="border px-4 py-2">9008908654</td>
+                        <td className="border px-4 py-2">
+                          {data.guardian_details.contact_no}
+                        </td>
                       </tr>
                       <tr>
                         <td className="border px-4 py-2 font-semibold">
                           WhatsApp Number
                         </td>
-                        <td className="border px-4 py-2">7654342321</td>
+                        <td className="border px-4 py-2">
+                          {data.guardian_details.whatsapp_no}
+                        </td>
                       </tr>
                       <tr>
                         <td className="border px-4 py-2 font-semibold">
                           Email
                         </td>
                         <td className="border px-4 py-2">
-                          amirulislam@gmail.com
+                          {data.guardian_details.email}
                         </td>
                       </tr>
                       <tr>
                         <td className="border px-4 py-2 font-semibold">
                           Relation to Student
                         </td>
-                        <td className="border px-4 py-2">Father</td>
+                        <td className="border px-4 py-2">
+                          {data.guardian_details.relationship}
+                        </td>
                       </tr>
                     </tbody>
                   </table>
@@ -558,43 +624,57 @@ export default function StudentInfoPage({
                         <td className="border px-4 py-2 font-semibold">
                           Village
                         </td>
-                        <td className="border px-4 py-2">Bilbari</td>
+                        <td className="border px-4 py-2">
+                          {data.current_address.village}
+                        </td>
                       </tr>
                       <tr>
                         <td className="border px-4 py-2 font-semibold">
                           Post Office
                         </td>
-                        <td className="border px-4 py-2">Bhattabati</td>
+                        <td className="border px-4 py-2">
+                          {data.current_address.post_office}
+                        </td>
                       </tr>
                       <tr>
                         <td className="border px-4 py-2 font-semibold">
                           Police Station
                         </td>
-                        <td className="border px-4 py-2">Nabagram</td>
+                        <td className="border px-4 py-2">
+                          {data.current_address.police_station}
+                        </td>
                       </tr>
                       <tr>
                         <td className="border px-4 py-2 font-semibold">
                           District
                         </td>
-                        <td className="border px-4 py-2">Murshidabad</td>
+                        <td className="border px-4 py-2">
+                          {data.current_address.district}
+                        </td>
                       </tr>
                       <tr>
                         <td className="border px-4 py-2 font-semibold">
                           Pin Code
                         </td>
-                        <td className="border px-4 py-2">742149</td>
+                        <td className="border px-4 py-2">
+                          {data.current_address.postal_code}
+                        </td>
                       </tr>
                       <tr>
                         <td className="border px-4 py-2 font-semibold">
                           State
                         </td>
-                        <td className="border px-4 py-2">WB</td>
+                        <td className="border px-4 py-2">
+                          {data.current_address.state}
+                        </td>
                       </tr>
                       <tr>
                         <td className="border px-4 py-2 font-semibold">
                           Country
                         </td>
-                        <td className="border px-4 py-2">India</td>
+                        <td className="border px-4 py-2">
+                          {data.current_address.country}
+                        </td>
                       </tr>
                     </tbody>
                   </table>
@@ -610,43 +690,57 @@ export default function StudentInfoPage({
                         <td className="border px-4 py-2 font-semibold">
                           Village
                         </td>
-                        <td className="border px-4 py-2">Bilbari</td>
+                        <td className="border px-4 py-2">
+                          {data.permanent_address.village}
+                        </td>
                       </tr>
                       <tr>
                         <td className="border px-4 py-2 font-semibold">
                           Post Office
                         </td>
-                        <td className="border px-4 py-2">Bhattabati</td>
+                        <td className="border px-4 py-2">
+                          {data.permanent_address.post_office}
+                        </td>
                       </tr>
                       <tr>
                         <td className="border px-4 py-2 font-semibold">
                           Police Station
                         </td>
-                        <td className="border px-4 py-2">Nabagram</td>
+                        <td className="border px-4 py-2">
+                          {data.permanent_address.police_station}
+                        </td>
                       </tr>
                       <tr>
                         <td className="border px-4 py-2 font-semibold">
                           District
                         </td>
-                        <td className="border px-4 py-2">Murshidabad</td>
+                        <td className="border px-4 py-2">
+                          {data.permanent_address.district}
+                        </td>
                       </tr>
                       <tr>
                         <td className="border px-4 py-2 font-semibold">
                           Pin Code
                         </td>
-                        <td className="border px-4 py-2">742149</td>
+                        <td className="border px-4 py-2">
+                          {data.permanent_address.postal_code}
+                        </td>
                       </tr>
                       <tr>
                         <td className="border px-4 py-2 font-semibold">
                           State
                         </td>
-                        <td className="border px-4 py-2">WB</td>
+                        <td className="border px-4 py-2">
+                          {data.permanent_address.state}
+                        </td>
                       </tr>
                       <tr>
                         <td className="border px-4 py-2 font-semibold">
                           Country
                         </td>
-                        <td className="border px-4 py-2">India</td>
+                        <td className="border px-4 py-2">
+                          {data.permanent_address.country}
+                        </td>
                       </tr>
                     </tbody>
                   </table>
@@ -666,19 +760,19 @@ export default function StudentInfoPage({
                         <td className="border px-4 py-2 font-semibold">
                           Session
                         </td>
-                        <td className="border px-4 py-2">25-26</td>
+                        <td className="border px-4 py-2">{data.session}</td>
                       </tr>
                       <tr>
                         <td className="border px-4 py-2 font-semibold">
                           Section
                         </td>
-                        <td className="border px-4 py-2">A</td>
+                        <td className="border px-4 py-2">{data.section}</td>
                       </tr>
                       <tr>
                         <td className="border px-4 py-2 font-semibold">
                           Class
                         </td>
-                        <td className="border px-4 py-2">Nursery</td>
+                        <td className="border px-4 py-2">{data.class}</td>
                       </tr>
                       <tr>
                         <td className="border px-4 py-2 font-semibold">
@@ -708,66 +802,16 @@ export default function StudentInfoPage({
                   </h2>
                   <table className="table-auto w-full p-4">
                     <tbody>
-                      <tr>
-                        <td className="border px-4 py-2 font-semibold">
-                          Admission Fee
-                        </td>
-                        <td className="border px-4 py-2">Rs. 1000</td>
-                      </tr>
-                      <tr>
-                        <td className="border px-4 py-2 font-semibold">
-                          Academical Materials Package
-                        </td>
-                        <td className="border px-4 py-2">Rs. 1000</td>
-                      </tr>
-                      <tr>
-                        <td className="border px-4 py-2 font-semibold">
-                          Term Fee
-                        </td>
-                        <td className="border px-4 py-2">Rs. 1000</td>
-                      </tr>
-                      <tr>
-                        <td className="border px-4 py-2 font-semibold">
-                          Admission Renewal Fee
-                        </td>
-                        <td className="border px-4 py-2">Rs. 1000</td>
-                      </tr>
-                      <tr>
-                        <td className="border px-4 py-2 font-semibold">
-                          School Fee
-                        </td>
-                        <td className="border px-4 py-2">Rs. 1000</td>
-                      </tr>
-                      <tr>
-                        <td className="border px-4 py-2 font-semibold">
-                          Category of School Fees
-                        </td>
-                        <td className="border px-4 py-2">Rs. 1000</td>
-                      </tr>
-                      <tr>
-                        <td className="border px-4 py-2 font-semibold">
-                          Hostel Fee
-                        </td>
-                        <td className="border px-4 py-2">Rs. 1000</td>
-                      </tr>
-                      <tr>
-                        <td className="border px-4 py-2 font-semibold">
-                          Transport Fee
-                        </td>
-                        <td className="border px-4 py-2">Rs. 1000</td>
-                      </tr>
-                      <tr>
-                        <td className="border px-4 py-2 font-semibold">
-                          Exam Fee
-                        </td>
-                        <td className="border px-4 py-2">Rs. 1000</td>
-                      </tr>
-                      <tr>
-                        <td className="border px-4 py-2 font-semibold">
-                          Event Fee
-                        </td>
-                        <td className="border px-4 py-2">Rs. 1000</td>
-                      </tr>
+                      {data.fees.map((fee: any) => (
+                        <tr key={fee._id}>
+                          <td className="border px-4 py-2 font-semibold">
+                            {fee.name}
+                          </td>
+                          <td className="border px-4 py-2">
+                            Rs. {fee.finalAmount}
+                          </td>
+                        </tr>
+                      ))}
                     </tbody>
                   </table>
                 </div>
