@@ -275,3 +275,24 @@ export const admittedStudentTableFilter = (data: any) => {
   });
   return result;
 };
+
+export const admittedStudentDetails = (data: any) => {
+  const result = {
+    _id: data._id,
+    flisId: data.flisId,
+    basic_details: {
+      name: (data.student_details.first_name + " " + data.student_details.middle_name + " " + data.student_details.last_name) || "N/A",
+      gender: data.student_details.gender || "N/A",
+      date_of_birth: new Date(data.student_details.date_of_birth).toLocaleDateString() || "N/A",
+      religion: data.student_details.religion || "N/A",
+      mother_tongue: data.student_details.mother_tongue || "N/A",
+      language_spoken_at_home: data.student_details.language_spoken_at_home || "N/A",
+      caste_certificate_number: data.student_details.caste_certificate_number || "N/A",
+    },
+    class: data.class,
+    section: data.section,
+    session: data.session,
+    admission_date: new Date(data.admission_date).toLocaleDateString(),
+  };
+  return result;
+};

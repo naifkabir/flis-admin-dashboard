@@ -2,6 +2,7 @@
 
 import PageLoader from '@/components/ui-components/PageLoading';
 import { Button } from '@/components/ui/button';
+import { admittedStudentDetails } from '@/constant';
 import { GetStudentDetails } from '@/lib/actions/student.action';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
@@ -26,10 +27,9 @@ export default function StudentInfoPage({
       const fetchData = async () => {
         try {
           const result = await GetStudentDetails(studentId);
-          console.log('result: ', result);
-
           if (result) {
-            setData(result);
+            const filteredData = admittedStudentDetails(result);
+            setData(filteredData);
           }
         } catch (error: any) {
           toast.error('Failed to fetch data', error);
@@ -96,19 +96,19 @@ export default function StudentInfoPage({
             className="w-24 h-[108px] mx-auto object-cover object-center"
           />
           <h2 className="text-center text-2xl font-serif font-light mt-2">
-            Student Name
+            {data.basic_details.name}
           </h2>
           {/* Barcode for FLIS ID */}
           <div className="flex justify-center mb-2 px-10">
             <Barcode
-              value={'FLISGSE00001'}
+              value={data.flisId}
               width={2}
               height={50}
               displayValue={false}
             />
           </div>
           <div className="text-center text-base tracking-wider font-bold mt-1">
-            PRE-PRIMARY
+            {data.class}
           </div>
           <div className="mt-10 border-b-2"></div>
 
@@ -117,19 +117,19 @@ export default function StudentInfoPage({
             <tbody className="flex flex-col">
               <tr className="border-b-2 py-3 flex justify-between">
                 <td className="font-semibold">FLIS ID:</td>
-                <td>FLISGSE00001</td>
+                <td>{data.flisId}</td>
               </tr>
               <tr className="border-b-2 py-3 flex justify-between">
                 <td className="font-semibold">SECTION:</td>
-                <td>2025-2026</td>
+                <td>{data.section}</td>
               </tr>
               <tr className="border-b-2 py-3 flex justify-between">
                 <td className="font-semibold">CLASS:</td>
-                <td>Nursery</td>
+                <td>{data.class}</td>
               </tr>
               <tr className="py-3 flex justify-between">
                 <td className="font-semibold">SESSION:</td>
-                <td>(2024-25)</td>
+                <td>{data.session}</td>
               </tr>
             </tbody>
           </table>
@@ -234,19 +234,25 @@ export default function StudentInfoPage({
                         <td className="border px-4 py-2 font-semibold">
                           Admission Date
                         </td>
-                        <td className="border px-4 py-2">00.00.0000</td>
+                        <td className="border px-4 py-2">
+                          {data.admission_date}
+                        </td>
                       </tr>
                       <tr>
                         <td className="border px-4 py-2 font-semibold">
                           Gender
                         </td>
-                        <td className="border px-4 py-2">Female</td>
+                        <td className="border px-4 py-2">
+                          {data.basic_details.gender}
+                        </td>
                       </tr>
                       <tr>
                         <td className="border px-4 py-2 font-semibold">
                           Date of Birth
                         </td>
-                        <td className="border px-4 py-2">00.00.0000</td>
+                        <td className="border px-4 py-2">
+                          {data.basic_details.date_of_birth}
+                        </td>
                       </tr>
                       <tr>
                         <td className="border px-4 py-2 font-semibold">
