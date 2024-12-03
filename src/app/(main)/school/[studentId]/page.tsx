@@ -7,6 +7,7 @@ import {
   DeleteDocument,
   GetStudentDetails,
 } from '@/lib/actions/student.action';
+import axios from 'axios';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import Barcode from 'react-barcode';
@@ -65,7 +66,26 @@ export default function StudentInfoPage({
     }
   };
 
-  const handleDownloadDocument = (documentId: string) => {};
+  const handleDownload = async (fileUrl: string, fileName: string) => {
+    try {
+      const response = await axios.get(fileUrl, {
+        responseType: 'blob', // Important to handle the file as binary data
+      });
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = fileName; // Suggested filename for the download
+      document.body.appendChild(link);
+      link.click();
+
+      // Cleanup
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.log(error);
+      toast.error('Failed to download document!');
+    }
+  };
 
   if (loading) {
     return (
@@ -219,7 +239,9 @@ export default function StudentInfoPage({
                         </a>
                         <button
                           className="bg-blue-600 text-white px-4 py-2 rounded"
-                          onClick={() => handleDownloadDocument(doc._id)}
+                          onClick={() =>
+                            handleDownload(doc.fileUrl, doc.documentType)
+                          }
                         >
                           Download
                         </button>
