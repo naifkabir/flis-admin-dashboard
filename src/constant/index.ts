@@ -351,6 +351,12 @@ export const admittedStudentDetails = (data: any) => {
     },
     previous_institute_details: {
       institute_name: data.previous_institute_details.institute_name || "N/A",
+      previous_section: data.previous_institute_details.previous_section || "N/A",
+      previous_roll_no: data.previous_institute_details.previous_roll_no || "N/A",
+      reason_for_leaving: data.previous_institute_details.reason_for_leaving || "N/A",
+      board_affiliation: data.previous_institute_details.board_affiliation || "N/A",
+      previous_class: data.previous_institute_details.previous_class || "N/A",
+      previous_portal_id: data.previous_institute_details.previous_portal_id || "N/A",
     },
     fees: data.fees,
     class: data.class,

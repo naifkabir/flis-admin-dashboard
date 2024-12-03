@@ -841,44 +841,56 @@ export default function StudentInfoPage({
                           School Name
                         </td>
                         <td className="border px-4 py-2">
-                          Nimtala High School
+                          {data.previous_institute_details.institute_name}
                         </td>
                       </tr>
                       <tr>
                         <td className="border px-4 py-2 font-semibold">
                           Previous School Section
                         </td>
-                        <td className="border px-4 py-2">Tulip</td>
+                        <td className="border px-4 py-2">
+                          {data.previous_institute_details.previous_section}
+                        </td>
                       </tr>
                       <tr>
                         <td className="border px-4 py-2 font-semibold">
                           Roll No or Id Number
                         </td>
-                        <td className="border px-4 py-2">012524</td>
+                        <td className="border px-4 py-2">
+                          {data.previous_institute_details.previous_roll_no}
+                        </td>
                       </tr>
                       <tr>
                         <td className="border px-4 py-2 font-semibold">
                           Reason for Leaving
                         </td>
-                        <td className="border px-4 py-2">N/A</td>
+                        <td className="border px-4 py-2">
+                          {data.previous_institute_details.reason_for_leaving}
+                        </td>
                       </tr>
                       <tr>
                         <td className="border px-4 py-2 font-semibold">
                           Board
                         </td>
-                        <td className="border px-4 py-2">Rs. 1000</td>
+                        <td className="border px-4 py-2">
+                          {data.previous_institute_details.board_affiliation}
+                        </td>
                       </tr>
                       <tr>
                         <td className="border px-4 py-2 font-semibold">
                           Previous School Class
                         </td>
-                        <td className="border px-4 py-2">Kindergarten</td>
+                        <td className="border px-4 py-2">
+                          {data.previous_institute_details.previous_class}
+                        </td>
                       </tr>
                       <tr>
                         <td className="border px-4 py-2 font-semibold">
                           Portal Id
                         </td>
-                        <td className="border px-4 py-2">484568</td>
+                        <td className="border px-4 py-2">
+                          {data.previous_institute_details.previous_portal_id}
+                        </td>
                       </tr>
                     </tbody>
                   </table>
