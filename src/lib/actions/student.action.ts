@@ -214,3 +214,26 @@ export async function deleteAdmissionFromDatabase(id: string) {
     return { error: error.message };
   }
 }
+
+export async function DeleteDocument(id: string) {
+  const cookieStore = cookies();
+  const accessToken = cookieStore.get("accessToken")?.value;
+
+  // console.log("Data: ", id);
+
+  if (!accessToken) {
+    return null;
+  }
+
+  try {
+    const response = await apiClient.delete(`/document/delete/${id}`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    return response.data;
+  } catch (error: any) {
+    console.error("Error deleting document:", error);
+    return { error: error.message };
+  }
+}

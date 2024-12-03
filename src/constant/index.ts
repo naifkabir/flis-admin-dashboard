@@ -357,6 +357,7 @@ export const admittedStudentDetails = (data: any) => {
     section: data.section,
     session: data.session,
     admission_date: new Date(data.admission_date).toLocaleDateString(),
+    documents: data.documents,
   };
   return result;
-};
+}; 

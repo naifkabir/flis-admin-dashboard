@@ -3,7 +3,10 @@
 import PageLoader from '@/components/ui-components/PageLoading';
 import { Button } from '@/components/ui/button';
 import { admittedStudentDetails } from '@/constant';
-import { GetStudentDetails } from '@/lib/actions/student.action';
+import {
+  DeleteDocument,
+  GetStudentDetails,
+} from '@/lib/actions/student.action';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import Barcode from 'react-barcode';
@@ -51,18 +54,18 @@ export default function StudentInfoPage({
     setActiveTab(tab);
   };
 
-  const documentData = [
-    {
-      id: 'FLIS001',
-      name: 'Aadhaar Card',
-      attachment: 'Aadhaar_Card',
-    },
-    {
-      id: 'FLIS002',
-      name: 'Birth Certificate',
-      attachment: 'Birth_Certificate',
-    },
-  ];
+  const handleDeleteDocument = async (documentId: string) => {
+    const response = await DeleteDocument(documentId);
+
+    if (response.statusCode === 200) {
+      toast.success('Document deleted successfully!');
+      window.location.reload();
+    } else {
+      toast.error('Failed to delete document!');
+    }
+  };
+
+  const handleDownloadDocument = (documentId: string) => {};
 
   if (loading) {
     return (
@@ -189,30 +192,41 @@ export default function StudentInfoPage({
             {activeTab === 'document' && (
               <div className="bg-white p-4 rounded shadow">
                 <div className="space-y-4">
-                  {documentData.map((doc) => (
+                  {data.documents.map((doc: any) => (
                     <div
-                      key={doc.id}
+                      key={doc._id}
                       className="flex items-center justify-between border p-4 rounded"
                     >
                       <div>
                         <p>
-                          <strong>Document ID:</strong> {doc.id}
+                          <strong>Document ID:</strong> {doc._id}
                         </p>
                         <p>
-                          <strong>Document Name:</strong> {doc.name}
+                          <strong>Document Name:</strong> {doc.documentType}
                         </p>
                         <p>
-                          <strong>Attachment:</strong> {doc.attachment}
+                          <strong>Description:</strong> {doc.description}
                         </p>
                       </div>
                       <div className="flex space-x-2">
-                        <button className="bg-red-600 text-white px-4 py-2 rounded">
+                        <a
+                          className="bg-red-600 text-white px-4 py-2 rounded"
+                          href={doc.fileUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
                           View Document
-                        </button>
-                        <button className="bg-blue-600 text-white px-4 py-2 rounded">
+                        </a>
+                        <button
+                          className="bg-blue-600 text-white px-4 py-2 rounded"
+                          onClick={() => handleDownloadDocument(doc._id)}
+                        >
                           Download
                         </button>
-                        <button className="bg-gray-400 text-white px-4 py-2 rounded">
+                        <button
+                          className="bg-gray-400 text-white px-4 py-2 rounded"
+                          onClick={() => handleDeleteDocument(doc._id)}
+                        >
                           Delete
                         </button>
                       </div>
