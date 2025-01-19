@@ -1,21 +1,21 @@
-"use client";
+'use client';
 
-import PageLoader from "@/components/ui-components/PageLoading";
-import { Button } from "@/components/ui/button";
-import { UploadStudentDocs } from "@/lib/actions/uploadStudentDocs.action";
-import { useEffect, useState } from "react";
-import { Toaster, toast } from "sonner";
-import { z } from "zod";
-import { FaFileImport } from "react-icons/fa6";
-import { FaFilePdf } from "react-icons/fa";
+import PageLoader from '@/components/ui-components/PageLoading';
+import { Button } from '@/components/ui/button';
+import { UploadStudentDocs } from '@/lib/actions/uploadStudentDocs.action';
+import { useEffect, useState } from 'react';
+import { Toaster, toast } from 'sonner';
+import { z } from 'zod';
+import { FaFileImport } from 'react-icons/fa6';
+import { FaFilePdf } from 'react-icons/fa';
 
 // Zod schema
 const documentSchema = z.object({
   file: z.instanceof(File).refine((file) => file.size <= 500 * 1024, {
-    message: "File size must be 500KB or less.",
+    message: 'File size must be 500KB or less.',
   }),
-  title: z.string().min(1, "Title is required."),
-  description: z.string().min(1, "Description is required."),
+  title: z.string().min(1, 'Title is required.'),
+  description: z.string().min(1, 'Description is required.'),
 });
 
 export default function StudentInfoPage({
@@ -27,8 +27,8 @@ export default function StudentInfoPage({
   // console.log(studentId);
 
   const [file, setFile] = useState<File | null>(null);
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
   const [documents, setDocuments] = useState<
     { file: File; title: string; description: string; url: string }[]
   >([]);
@@ -52,7 +52,7 @@ export default function StudentInfoPage({
       if (selectedFile.size > 500 * 1024) {
         setValidationErrors((prev) => ({
           ...prev,
-          file: "File size must be 500KB or less.",
+          file: 'File size must be 500KB or less.',
         }));
         setFile(null);
         setPdfPreviewUrl(null); // Reset the preview URL if validation fails
@@ -69,7 +69,7 @@ export default function StudentInfoPage({
       setPdfPreviewUrl(null); // Reset the preview URL if no file is selected
       setValidationErrors((prev) => ({
         ...prev,
-        file: "File is required.",
+        file: 'File is required.',
       }));
     }
   };
@@ -80,13 +80,13 @@ export default function StudentInfoPage({
     // Check for empty fields and set validation errors
     const newValidationErrors: { [key: string]: string } = {};
     if (!file) {
-      newValidationErrors.file = "File is required.";
+      newValidationErrors.file = 'File is required.';
     }
     if (!title) {
-      newValidationErrors.title = "Title is required.";
+      newValidationErrors.title = 'Title is required.';
     }
     if (!description) {
-      newValidationErrors.description = "Description is required.";
+      newValidationErrors.description = 'Description is required.';
     }
 
     if (Object.keys(newValidationErrors).length > 0) {
@@ -110,8 +110,8 @@ export default function StudentInfoPage({
 
       // Reset form fields
       setFile(null);
-      setTitle("");
-      setDescription("");
+      setTitle('');
+      setDescription('');
       setValidationErrors({});
     }
   };
@@ -124,12 +124,12 @@ export default function StudentInfoPage({
 
         for (const doc of documents) {
           const formData = new FormData();
-          formData.append("document", doc.file);
-          formData.append("documentType", doc.title);
-          formData.append("description", doc.description);
-          formData.append("student", studentId);
+          formData.append('document', doc.file);
+          formData.append('documentType', doc.title);
+          formData.append('description', doc.description);
+          formData.append('student', studentId);
 
-          // console.log("Form Data: ", formData);
+          // console.log("Form Data: ", formData.get("document"));
 
           // Upload each document to the backend
           const response = await UploadStudentDocs(formData);
@@ -145,16 +145,16 @@ export default function StudentInfoPage({
         }
 
         if (uploadSuccess) {
-          toast.success("All documents uploaded successfully!");
+          toast.success('All documents uploaded successfully!');
           setDocuments([]);
         }
       } else {
-        toast.warning("No documents found to upload!");
+        toast.warning('No documents found to upload!');
       }
     } catch (error) {
       // console.error("Error uploading documents:", error);
       toast.error(
-        "An error occurred while uploading documents. Please try again."
+        'An error occurred while uploading documents. Please try again.'
       );
     } finally {
       setIsUploading(false);
@@ -204,20 +204,23 @@ export default function StudentInfoPage({
             </thead>
             <tbody
               className={`${
-                documents?.length > 0 ? "min-h-fit" : "h-16 border"
-              }`}>
+                documents?.length > 0 ? 'min-h-fit' : 'h-16 border'
+              }`}
+            >
               {documents?.length > 0 ? (
                 documents?.map((doc, index) => (
                   <tr
                     key={index}
-                    className="border-b hover:bg-gray-50 text-center text-[12.5px] font-normal">
+                    className="border-b hover:bg-gray-50 text-center text-[12.5px] font-normal"
+                  >
                     <td className="border px-4 py-3">{index + 1}</td>
                     <td className="border px-4 py-3">
                       <a
                         href={doc?.url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-blue-600 hover:underline">
+                        className="text-blue-600 hover:underline"
+                      >
                         {doc?.file?.name}
                       </a>
                     </td>
@@ -229,7 +232,8 @@ export default function StudentInfoPage({
                 <tr>
                   <td
                     colSpan={4}
-                    className="border text-center py-2 text-sm text-red-500">
+                    className="border text-center py-2 text-sm text-red-500"
+                  >
                     No documents uploaded
                   </td>
                 </tr>
@@ -241,29 +245,33 @@ export default function StudentInfoPage({
             <Button
               onClick={handleFinalSubmit}
               disabled={isUploading}
-              className={`mt-4 w-full py-2 rounded-lg transition text-white`}>
+              className={`mt-4 w-full py-2 rounded-lg transition text-white`}
+            >
               {isUploading ? (
                 <span className="flex justify-center items-center">
                   <svg
                     className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
                     xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24">
+                    viewBox="0 0 24 24"
+                  >
                     <circle
                       className="opacity-25"
                       cx="12"
                       cy="12"
                       r="10"
                       stroke="currentColor"
-                      strokeWidth="4"></circle>
+                      strokeWidth="4"
+                    ></circle>
                     <path
                       className="opacity-75"
                       fill="currentColor"
-                      d="M4 12c0-4.418 3.582-8 8-8 1.75 0 3.375.5 4.748 1.355l-1.304 1.304C13.697 6.032 12.0 6 12 6c-3.313 0-6 2.687-6 6s2.687 6 6 6c0 0 .697-.032 1.444-.659l1.304 1.304C15.375 21.5 13.75 22 12 22c-4.418 0-8-3.582-8-8z"></path>
+                      d="M4 12c0-4.418 3.582-8 8-8 1.75 0 3.375.5 4.748 1.355l-1.304 1.304C13.697 6.032 12.0 6 12 6c-3.313 0-6 2.687-6 6s2.687 6 6 6c0 0 .697-.032 1.444-.659l1.304 1.304C15.375 21.5 13.75 22 12 22c-4.418 0-8-3.582-8-8z"
+                    ></path>
                   </svg>
                   Uploading...
                 </span>
               ) : (
-                "Submit All Documents"
+                'Submit All Documents'
               )}
             </Button>
           )}
@@ -280,7 +288,8 @@ export default function StudentInfoPage({
               <div className="flex flex-col w-full text-[13.5px]">
                 <label
                   className="text-gray-800 font-semibold w-fit mb-2"
-                  htmlFor="file">
+                  htmlFor="file"
+                >
                   Upload Document (.pdf)
                   <span className="text-red-500">*</span> :
                 </label>
@@ -303,7 +312,8 @@ export default function StudentInfoPage({
               <div className="flex flex-col w-full text-[13.5px]">
                 <label
                   className="text-gray-800 font-semibold w-fit mb-2"
-                  htmlFor="title">
+                  htmlFor="title"
+                >
                   Document Title
                   <span className="text-red-500">*</span> :
                 </label>
@@ -312,7 +322,8 @@ export default function StudentInfoPage({
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
                   className={`border
-      px-[10px] text-black py-[10px] rounded-[5px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] bg-transparent`}>
+      px-[10px] text-black py-[10px] rounded-[5px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] bg-transparent`}
+                >
                   <option value="" disabled>
                     Select Document
                   </option>
@@ -346,7 +357,8 @@ export default function StudentInfoPage({
             <div className="flex flex-col w-full text-[13.5px]">
               <label
                 className="text-gray-800 font-semibold w-fit mb-2"
-                htmlFor="description">
+                htmlFor="description"
+              >
                 Document Description
                 <span className="text-red-500">*</span> :
               </label>
@@ -382,7 +394,8 @@ export default function StudentInfoPage({
 
             <Button
               type="submit"
-              className="w-full py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
+              className="w-full py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
               Upload
             </Button>
           </form>

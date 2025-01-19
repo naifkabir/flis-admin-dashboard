@@ -164,7 +164,9 @@ export default function StudentInfoPage({
             </Link>
             <Button>COLLECT FEES</Button>
             <Button>ALLOCATE SUBJECT</Button>
-            <Button>ADD HEALTH RECORD</Button>
+            <Link href={`/student/health-records/${studentId}`}>
+              <Button className="w-full">ADD HEALTH RECORD</Button>
+            </Link>
           </div>
         </div>
 
