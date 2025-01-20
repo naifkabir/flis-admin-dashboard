@@ -359,9 +359,11 @@ export const admittedStudentDetails = (data: any) => {
       previous_portal_id: data.previous_institute_details.previous_portal_id || "N/A",
     },
     fees: data.fees,
-    class: data.class,
+    class: data.class.name,
+    classId: data.class._id,
     section: data.section,
-    session: data.session,
+    session: data.session.name,
+    sessionId: data.session._id,
     admission_date: new Date(data.admission_date).toLocaleDateString(),
     documents: data.documents,
   };

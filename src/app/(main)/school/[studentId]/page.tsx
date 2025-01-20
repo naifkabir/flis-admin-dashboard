@@ -162,7 +162,11 @@ export default function StudentInfoPage({
             <Link href={`/student/upload-documents/${studentId}`}>
               <Button className="w-full">UPLOAD DOCUMENTS</Button>
             </Link>
-            <Button>COLLECT FEES</Button>
+            <Link
+              href={`/student/collect-fees/${studentId}/${data.sessionId}/${data.classId}`}
+            >
+              <Button className="w-full">COLLECT FEES</Button>
+            </Link>
             <Button>ALLOCATE SUBJECT</Button>
             <Link href={`/student/health-records/${studentId}`}>
               <Button className="w-full">ADD HEALTH RECORD</Button>
