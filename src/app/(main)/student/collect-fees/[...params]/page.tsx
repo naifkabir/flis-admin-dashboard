@@ -1,21 +1,59 @@
 'use client';
 
+import AddPaymentHistoryDialog from '@/components/AddPaymentHistoryDialog';
+import PageLoader from '@/components/ui-components/PageLoading';
+import { Button } from '@/components/ui/button';
+import { GetStudentFee } from '@/lib/actions/studentFees.action';
+import Link from 'next/link';
 import { useParams } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { toast } from 'sonner';
 
 function CollectFeesPage() {
   const params = useParams();
   const { params: dynamicParams } = params || {}; // Access [...params]
   const [data, setData] = useState<any | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
 
-  if (Array.isArray(dynamicParams) && dynamicParams.length >= 3) {
-    const [studentId, sessionId, classId] = dynamicParams;
+  useEffect(() => {
+    if (Array.isArray(dynamicParams) && dynamicParams.length >= 3) {
+      const [studentId, sessionId, classId] = dynamicParams;
 
-    // Do something with the dynamic parameters
-    console.log(studentId, sessionId, classId);
-  } else {
-    // handle the case where dynamicParams is not an array or has less than 3 elements
-    return <div>Invalid URL or missing parameters</div>;
+      const fetchData = async () => {
+        setLoading(true);
+        setError(false);
+        try {
+          const result = await GetStudentFee(studentId, sessionId, classId);
+
+          if (result) {
+            setData(result);
+          }
+        } catch (error: any) {
+          toast.error('Failed to fetch data', error);
+          setError(true);
+        } finally {
+          setLoading(false);
+        }
+      };
+
+      fetchData();
+    } else {
+      setError(true);
+      setLoading(false);
+    }
+  }, [dynamicParams]);
+
+  if (loading) {
+    return (
+      <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+        <PageLoader />
+      </div>
+    );
+  }
+
+  if (error || !data) {
+    return <div>Invalid URL or failed to fetch data</div>;
   }
 
   return (
@@ -24,59 +62,60 @@ function CollectFeesPage() {
         <h2 className="text-lg font-semibold mb-5 text-center py-3 bg-red-600 text-white">
           Fees Details
         </h2>
-        <table className="table-auto w-full p-4">
-          <thead>
-            <tr className="bg-gray-200">
-              <th className="border px-4 py-3">Fees Type</th>
-              <th className="border px-4 py-3">Occurrence</th>
-              <th className="border px-4 py-3">Amount</th>
-              <th className="border px-4 py-3">Discount Amount</th>
-              <th className="border px-4 py-3">Final Amount</th>
-              <th className="border px-4 py-3">Paid Amount</th>
-              <th className="border px-4 py-3">Payment Status</th>
-            </tr>
-          </thead>
-          <tbody className="text-center">
-            <tr>
-              <td className="border px-4 py-3">01/10/2024</td>
-              <td className="border px-4 py-3">Mathematics</td>
-              <td className="border px-4 py-3">100</td>
-              <td className="border px-4 py-3">35</td>
-              <td className="border px-4 py-3">85</td>
-            </tr>
-            <tr>
-              <td className="border px-4 py-3">02/10/2024</td>
-              <td className="border px-4 py-3">Science</td>
-              <td className="border px-4 py-3">100</td>
-              <td className="border px-4 py-3">35</td>
-              <td className="border px-4 py-3">70</td>
-            </tr>
-          </tbody>
-        </table>
-
+        {data?.fees.map((fee: any, index: string) => (
+          <div
+            key={fee._id}
+            className="flex flex-col border border-red-500 m-2 rounded-sm"
+          >
+            <div className="flex flex-row justify-around items-center">
+              <h3>Fee Type: {fee.name}</h3>
+              <h3>Occurrence: {fee.occurrence}</h3>
+              <h3>Amount: {fee.amount}</h3>
+              <h3>Discount Amount: {fee.discountAmount}</h3>
+              <h3>Final Amount: {fee.finalAmount}</h3>
+              <h3>Due Date: {fee.dueDate}</h3>
+              <h3>Paid Amount: {fee.paidAmount}</h3>
+              <h3>Payment Status: {fee.paymentStatus}</h3>
+              <AddPaymentHistoryDialog
+                feesStructureId={data._id}
+                feeId={fee._id}
+              />
+            </div>
+            {fee?.paymentHistory.map((pay: any, index: string) => (
+              <div
+                key={index}
+                className="flex flex-row border justify-around items-center border-red-500 m-2 rounded-sm"
+              >
+                <h3>Paid Amount: {pay.amountPaid}</h3>
+                <h3>Payment Method: {pay.paymentMethod}</h3>
+                <h3>Transaction Id: {pay.transactionId}</h3>
+                <h3>Payment Date: {pay.paymentDate}</h3>
+                <Button className="my-2">Get Receipt</Button>
+              </div>
+            ))}
+          </div>
+        ))}
         {/* Overall Results Section */}
         <div className="mt-8">
           <table className="table-auto w-full text-sm border-collapse">
             <tbody>
               <tr>
                 <td className="border px-4 py-2 font-semibold">Total Amount</td>
-                <td className="border px-4 py-2">200/500</td>
+                <td className="border px-4 py-2">{data?.totalFinalAmount}</td>
               </tr>
               <tr>
                 <td className="border px-4 py-2 font-semibold">
                   Total Paid Amount
                 </td>
-                <td className="border px-4 py-2">80%</td>
+                <td className="border px-4 py-2">{data?.totalPaidAmount}</td>
               </tr>
               <tr>
                 <td className="border px-4 py-2 font-semibold">
                   Overall Payment Status
                 </td>
-                <td className="border px-4 py-2">A</td>
-              </tr>
-              <tr>
-                <td className="border px-4 py-2 font-semibold">Rank</td>
-                <td className="border px-4 py-2">01</td>
+                <td className="border px-4 py-2">
+                  {data?.overallPaymentStatus}
+                </td>
               </tr>
             </tbody>
           </table>
