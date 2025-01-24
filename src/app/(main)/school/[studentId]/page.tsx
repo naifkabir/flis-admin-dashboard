@@ -1,17 +1,19 @@
-'use client';
+"use client";
 
-import PageLoader from '@/components/ui-components/PageLoading';
-import { Button } from '@/components/ui/button';
-import { admittedStudentDetails } from '@/constant';
+import PageLoader from "@/components/ui-components/PageLoading";
+import { Button } from "@/components/ui/button";
+import { UploadHealthReportDialog } from "@/components/UploadHealthReportDialog";
+import { admittedStudentDetails } from "@/constant";
 import {
   DeleteDocument,
   GetStudentDetails,
-} from '@/lib/actions/student.action';
-import axios from 'axios';
-import Link from 'next/link';
-import { useEffect, useState } from 'react';
-import Barcode from 'react-barcode';
-import { toast } from 'sonner';
+} from "@/lib/actions/student.action";
+import axios from "axios";
+import Image from "next/image";
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import Barcode from "react-barcode";
+import { toast } from "sonner";
 
 export default function StudentInfoPage({
   params,
@@ -36,7 +38,7 @@ export default function StudentInfoPage({
             setData(filteredData);
           }
         } catch (error: any) {
-          toast.error('Failed to fetch data', error);
+          toast.error("Failed to fetch data", error);
           setError(true);
         } finally {
           setLoading(false);
@@ -47,9 +49,9 @@ export default function StudentInfoPage({
     }
   }, [studentId]);
 
-  const [activeTab, setActiveTab] = useState('basic-details');
+  const [activeTab, setActiveTab] = useState("basic-details");
 
-  console.log('studentId: ', studentId);
+  console.log("studentId: ", studentId);
 
   const handleTabChange = (tab: string) => {
     setActiveTab(tab);
@@ -59,20 +61,20 @@ export default function StudentInfoPage({
     const response = await DeleteDocument(documentId);
 
     if (response.statusCode === 200) {
-      toast.success('Document deleted successfully!');
+      toast.success("Document deleted successfully!");
       window.location.reload();
     } else {
-      toast.error('Failed to delete document!');
+      toast.error("Failed to delete document!");
     }
   };
 
   const handleDownload = async (fileUrl: string, fileName: string) => {
     try {
       const response = await axios.get(fileUrl, {
-        responseType: 'blob', // Important to handle the file as binary data
+        responseType: "blob", // Important to handle the file as binary data
       });
       const url = window.URL.createObjectURL(new Blob([response.data]));
-      const link = document.createElement('a');
+      const link = document.createElement("a");
       link.href = url;
       link.download = fileName; // Suggested filename for the download
       document.body.appendChild(link);
@@ -83,7 +85,7 @@ export default function StudentInfoPage({
       window.URL.revokeObjectURL(url);
     } catch (error) {
       console.log(error);
-      toast.error('Failed to download document!');
+      toast.error("Failed to download document!");
     }
   };
 
@@ -113,7 +115,9 @@ export default function StudentInfoPage({
       <div className="flex mt-4 gap-6 relative">
         {/* Left Profile Card */}
         <div className="w-[20%] h-fit bg-white shadow rounded p-4 sticky top-24">
-          <img
+          <Image
+            width={500}
+            height={500}
             src={data.basic_details.student_photo}
             alt="Student Profile"
             className="w-24 h-[108px] mx-auto object-cover object-center"
@@ -163,14 +167,16 @@ export default function StudentInfoPage({
               <Button className="w-full">UPLOAD DOCUMENTS</Button>
             </Link>
             <Link
-              href={`/student/collect-fees/${studentId}/${data.sessionId}/${data.classId}`}
-            >
+              href={`/student/collect-fees/${studentId}/${data.sessionId}/${data.classId}`}>
               <Button className="w-full">COLLECT FEES</Button>
             </Link>
             <Button>ALLOCATE SUBJECT</Button>
-            <Link href={`/student/health-records/${studentId}`}>
+            {/* <Link href={`/student/health-records/${studentId}`}>
               <Button className="w-full">ADD HEALTH RECORD</Button>
-            </Link>
+            </Link> */}
+            <UploadHealthReportDialog studentId={studentId}>
+              <Button className="w-full">ADD HEALTH RECORD</Button>
+            </UploadHealthReportDialog>
           </div>
         </div>
 
@@ -180,26 +186,25 @@ export default function StudentInfoPage({
           <div className="flex justify-between mb-10">
             <div className="flex space-x-4">
               {[
-                'Basic Details',
-                'Parents',
-                'Address',
-                'Admission',
-                'Exam',
-                'Board Exam',
-                'Attendance',
-                'Document',
+                "Basic Details",
+                "Parents",
+                "Address",
+                "Admission",
+                "Exam",
+                "Board Exam",
+                "Attendance",
+                "Document",
               ].map((tab) => (
                 <button
                   key={tab}
                   onClick={() =>
-                    handleTabChange(tab.toLowerCase().replace(/\s/g, '-'))
+                    handleTabChange(tab.toLowerCase().replace(/\s/g, "-"))
                   }
                   className={`py-2 px-4 rounded ${
-                    activeTab === tab.toLowerCase().replace(/\s/g, '-')
-                      ? 'bg-red-600 text-white'
-                      : 'bg-gray-200 text-black'
-                  }`}
-                >
+                    activeTab === tab.toLowerCase().replace(/\s/g, "-")
+                      ? "bg-red-600 text-white"
+                      : "bg-gray-200 text-black"
+                  }`}>
                   {tab}
                 </button>
               ))}
@@ -207,22 +212,20 @@ export default function StudentInfoPage({
 
             <Button
               onClick={() => window.history.back()}
-              className="justify-self-end"
-            >
+              className="justify-self-end">
               Go Back
             </Button>
           </div>
 
           {/* Tab Content */}
           <div className="">
-            {activeTab === 'document' && (
+            {activeTab === "document" && (
               <div className="bg-white p-4 rounded shadow">
                 <div className="space-y-4">
                   {data.documents.map((doc: any) => (
                     <div
                       key={doc._id}
-                      className="flex items-center justify-between border p-4 rounded"
-                    >
+                      className="flex items-center justify-between border p-4 rounded">
                       <div>
                         <p>
                           <strong>Document ID:</strong> {doc._id}
@@ -239,22 +242,19 @@ export default function StudentInfoPage({
                           className="bg-red-600 text-white px-4 py-2 rounded"
                           href={doc.fileUrl}
                           target="_blank"
-                          rel="noopener noreferrer"
-                        >
+                          rel="noopener noreferrer">
                           View Document
                         </a>
                         <button
                           className="bg-blue-600 text-white px-4 py-2 rounded"
                           onClick={() =>
                             handleDownload(doc.fileUrl, doc.documentType)
-                          }
-                        >
+                          }>
                           Download
                         </button>
                         <button
                           className="bg-gray-400 text-white px-4 py-2 rounded"
-                          onClick={() => handleDeleteDocument(doc._id)}
-                        >
+                          onClick={() => handleDeleteDocument(doc._id)}>
                           Delete
                         </button>
                       </div>
@@ -264,7 +264,7 @@ export default function StudentInfoPage({
               </div>
             )}
 
-            {activeTab === 'basic-details' && (
+            {activeTab === "basic-details" && (
               <div className="grid gap-10">
                 <div className="bg-white rounded shadow border border-red-600">
                   <h2 className="text-lg font-semibold mb-5 text-center py-3 bg-red-600 text-white">
@@ -460,7 +460,7 @@ export default function StudentInfoPage({
               </div>
             )}
 
-            {activeTab === 'parents' && (
+            {activeTab === "parents" && (
               <div className="grid gap-10">
                 <div className="bg-white rounded shadow border border-red-600">
                   <h2 className="text-lg font-semibold mb-5 text-center py-3 bg-red-600 text-white">
@@ -654,7 +654,7 @@ export default function StudentInfoPage({
               </div>
             )}
 
-            {activeTab === 'address' && (
+            {activeTab === "address" && (
               <div className="grid gap-10">
                 <div className="bg-white rounded shadow border border-red-600">
                   <h2 className="text-lg font-semibold mb-5 text-center py-3 bg-red-600 text-white">
@@ -790,7 +790,7 @@ export default function StudentInfoPage({
               </div>
             )}
 
-            {activeTab === 'admission' && (
+            {activeTab === "admission" && (
               <div className="grid gap-10">
                 <div className="bg-white rounded shadow border border-red-600">
                   <h2 className="text-lg font-semibold mb-5 text-center py-3 bg-red-600 text-white">
@@ -926,7 +926,7 @@ export default function StudentInfoPage({
               </div>
             )}
 
-            {activeTab === 'exam' && (
+            {activeTab === "exam" && (
               <div className="grid gap-10">
                 <div className="bg-white rounded shadow border border-red-600">
                   <h2 className="text-lg font-semibold mb-5 text-center py-3 bg-red-600 text-white">
@@ -1013,7 +1013,7 @@ export default function StudentInfoPage({
               </div>
             )}
 
-            {activeTab === 'board-exam' && (
+            {activeTab === "board-exam" && (
               <div className="grid gap-10">
                 <div className="bg-white rounded shadow border border-red-600">
                   <h2 className="text-lg font-semibold mb-5 text-center py-3 bg-red-600 text-white">
@@ -1086,7 +1086,7 @@ export default function StudentInfoPage({
               </div>
             )}
 
-            {activeTab === 'attendance' && (
+            {activeTab === "attendance" && (
               <div className="grid gap-10">This is attendance section</div>
             )}
           </div>

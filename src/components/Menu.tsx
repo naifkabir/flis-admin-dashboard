@@ -34,18 +34,13 @@ const Navbar = () => {
 
   // Logout function
   const handleLogout = async () => {
-    // console.log("Before Call");
-    const response = await Logout(); // Call Logout API
-    // console.log("After Call");
-    // console.log("Response: ", response);
+    const response = await Logout();
 
-    // Check the status code and success state
     if (response.statusCode === 200 && response.success) {
       toast.success("Logged out successfully!");
       window.location.href = "/";
     } else {
       toast.error("Logout failed. Please try again.");
-      // console.error("Logout Error:", response.statusCode);
     }
   };
 

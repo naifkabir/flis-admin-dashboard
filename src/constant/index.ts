@@ -90,7 +90,7 @@ export const menuItems = [
     subItems: [
       {
         label: "Batch/Sections",
-        href: "/academics/batch-sections",
+        href: "/academics/batch-and-section",
         description: "Manage batches and sections for classes.",
       },
       {
@@ -249,10 +249,13 @@ export const studentTableFilter = (data: any) => {
       g_name: item.guardian_details.name,
       g_contact: item.guardian_details.phone,
       g_relation: item.guardian_details.relation,
-      address: `${address.village || ""}${address.post_office ? `, ${address.post_office}` : ""
-        }${address.police_station ? `, ${address.police_station}` : ""}${address.district ? `, ${address.district}` : ""
-        }${address.state ? `, ${address.state}` : ""}${address.postal_code ? `, ${address.postal_code}` : ""
-        }`,
+      address: `${address.village || ""}${
+        address.post_office ? `, ${address.post_office}` : ""
+      }${address.police_station ? `, ${address.police_station}` : ""}${
+        address.district ? `, ${address.district}` : ""
+      }${address.state ? `, ${address.state}` : ""}${
+        address.postal_code ? `, ${address.postal_code}` : ""
+      }`,
       status: item.status,
     };
   });
@@ -283,20 +286,32 @@ export const admittedStudentDetails = (data: any) => {
     _id: data._id,
     flisId: data.flisId,
     basic_details: {
-      name: (data.student_details.first_name + " " + data.student_details.middle_name + " " + data.student_details.last_name) || "N/A",
+      name:
+        data.student_details.first_name +
+          " " +
+          data.student_details.middle_name +
+          " " +
+          data.student_details.last_name || "N/A",
       gender: data.student_details.gender || "N/A",
-      date_of_birth: new Date(data.student_details.date_of_birth).toLocaleDateString() || "N/A",
+      date_of_birth:
+        new Date(data.student_details.date_of_birth).toLocaleDateString() ||
+        "N/A",
       religion: data.student_details.religion || "N/A",
       mother_tongue: data.student_details.mother_tongue || "N/A",
-      language_spoken_at_home: data.student_details.language_spoken_at_home || "N/A",
-      caste_certificate_number: data.student_details.caste_certificate_number || "N/A",
-      student_photo: data.student_details.student_photo
+      language_spoken_at_home:
+        data.student_details.language_spoken_at_home || "N/A",
+      caste_certificate_number:
+        data.student_details.caste_certificate_number || "N/A",
+      student_photo: data.student_details.student_photo,
     },
     medical_details: {
       blood_group: data.medical_details.blood_group || "N/A",
-      special_medical_conditions: data.medical_details.special_medical_conditions.details || "N/A",
-      special_assistance: data.medical_details.special_assistance.details || "N/A",
-      regular_medication: data.medical_details.regular_medication.details || "N/A",
+      special_medical_conditions:
+        data.medical_details.special_medical_conditions.details || "N/A",
+      special_assistance:
+        data.medical_details.special_assistance.details || "N/A",
+      regular_medication:
+        data.medical_details.regular_medication.details || "N/A",
       allergies: data.medical_details.allergies.details || "N/A",
       height: data.medical_details.height || "N/A",
       weight: data.medical_details.weight || "N/A",
@@ -309,56 +324,85 @@ export const admittedStudentDetails = (data: any) => {
     },
     father_details: {
       name: data.parent_guardian_details.father_information.name || "N/A",
-      qualification: data.parent_guardian_details.father_information.qualification || "N/A",
-      occupation: data.parent_guardian_details.father_information.occupation || "N/A",
-      annual_income: data.parent_guardian_details.father_information.annual_income || "N/A",
-      contact_no: data.parent_guardian_details.father_information.contact_no || "N/A",
-      whatsapp_no: data.parent_guardian_details.father_information.whatsapp_no || "N/A",
+      qualification:
+        data.parent_guardian_details.father_information.qualification || "N/A",
+      occupation:
+        data.parent_guardian_details.father_information.occupation || "N/A",
+      annual_income:
+        data.parent_guardian_details.father_information.annual_income || "N/A",
+      contact_no:
+        data.parent_guardian_details.father_information.contact_no || "N/A",
+      whatsapp_no:
+        data.parent_guardian_details.father_information.whatsapp_no || "N/A",
     },
     mother_details: {
       name: data.parent_guardian_details.mother_information.name || "N/A",
-      qualification: data.parent_guardian_details.mother_information.qualification || "N/A",
-      occupation: data.parent_guardian_details.mother_information.occupation || "N/A",
-      annual_income: data.parent_guardian_details.mother_information.annual_income || "N/A",
-      contact_no: data.parent_guardian_details.mother_information.contact_no || "N/A",
-      whatsapp_no: data.parent_guardian_details.mother_information.whatsapp_no || "N/A",
+      qualification:
+        data.parent_guardian_details.mother_information.qualification || "N/A",
+      occupation:
+        data.parent_guardian_details.mother_information.occupation || "N/A",
+      annual_income:
+        data.parent_guardian_details.mother_information.annual_income || "N/A",
+      contact_no:
+        data.parent_guardian_details.mother_information.contact_no || "N/A",
+      whatsapp_no:
+        data.parent_guardian_details.mother_information.whatsapp_no || "N/A",
     },
     guardian_details: {
       name: data.parent_guardian_details.guardian_information.name || "N/A",
-      qualification: data.parent_guardian_details.guardian_information.qualification || "N/A",
-      occupation: data.parent_guardian_details.guardian_information.occupation || "N/A",
-      annual_income: data.parent_guardian_details.guardian_information.annual_income || "N/A",
-      contact_no: data.parent_guardian_details.guardian_information.contact_no || "N/A",
-      whatsapp_no: data.parent_guardian_details.guardian_information.whatsapp_no || "N/A",
+      qualification:
+        data.parent_guardian_details.guardian_information.qualification ||
+        "N/A",
+      occupation:
+        data.parent_guardian_details.guardian_information.occupation || "N/A",
+      annual_income:
+        data.parent_guardian_details.guardian_information.annual_income ||
+        "N/A",
+      contact_no:
+        data.parent_guardian_details.guardian_information.contact_no || "N/A",
+      whatsapp_no:
+        data.parent_guardian_details.guardian_information.whatsapp_no || "N/A",
       email: data.parent_guardian_details.guardian_information.email || "N/A",
-      relationship: data.parent_guardian_details.guardian_information.relationship || "N/A",
+      relationship:
+        data.parent_guardian_details.guardian_information.relationship || "N/A",
     },
     current_address: {
       village: data.communication_address.current_address.village || "N/A",
-      post_office: data.communication_address.current_address.post_office || "N/A",
-      police_station: data.communication_address.current_address.police_station || "N/A",
+      post_office:
+        data.communication_address.current_address.post_office || "N/A",
+      police_station:
+        data.communication_address.current_address.police_station || "N/A",
       district: data.communication_address.current_address.district || "N/A",
-      postal_code: data.communication_address.current_address.postal_code || "N/A",
+      postal_code:
+        data.communication_address.current_address.postal_code || "N/A",
       state: data.communication_address.current_address.state || "N/A",
       country: data.communication_address.current_address.country || "N/A",
     },
     permanent_address: {
       village: data.communication_address.permanent_address.village || "N/A",
-      post_office: data.communication_address.permanent_address.post_office || "N/A",
-      police_station: data.communication_address.permanent_address.police_station || "N/A",
+      post_office:
+        data.communication_address.permanent_address.post_office || "N/A",
+      police_station:
+        data.communication_address.permanent_address.police_station || "N/A",
       district: data.communication_address.permanent_address.district || "N/A",
-      postal_code: data.communication_address.permanent_address.postal_code || "N/A",
+      postal_code:
+        data.communication_address.permanent_address.postal_code || "N/A",
       state: data.communication_address.permanent_address.state || "N/A",
       country: data.communication_address.permanent_address.country || "N/A",
     },
     previous_institute_details: {
       institute_name: data.previous_institute_details.institute_name || "N/A",
-      previous_section: data.previous_institute_details.previous_section || "N/A",
-      previous_roll_no: data.previous_institute_details.previous_roll_no || "N/A",
-      reason_for_leaving: data.previous_institute_details.reason_for_leaving || "N/A",
-      board_affiliation: data.previous_institute_details.board_affiliation || "N/A",
+      previous_section:
+        data.previous_institute_details.previous_section || "N/A",
+      previous_roll_no:
+        data.previous_institute_details.previous_roll_no || "N/A",
+      reason_for_leaving:
+        data.previous_institute_details.reason_for_leaving || "N/A",
+      board_affiliation:
+        data.previous_institute_details.board_affiliation || "N/A",
       previous_class: data.previous_institute_details.previous_class || "N/A",
-      previous_portal_id: data.previous_institute_details.previous_portal_id || "N/A",
+      previous_portal_id:
+        data.previous_institute_details.previous_portal_id || "N/A",
     },
     fees: data.fees,
     class: data.class.name,
@@ -370,4 +414,4 @@ export const admittedStudentDetails = (data: any) => {
     documents: data.documents,
   };
   return result;
-}; 
+};

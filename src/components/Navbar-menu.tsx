@@ -13,20 +13,19 @@ import {
 import {
   NavigationMenu,
   NavigationMenuContent,
-  NavigationMenuIndicator,
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
   NavigationMenuTrigger,
-  NavigationMenuViewport,
 } from "@/components/ui/navigation-menu";
 import { useState, useEffect } from "react";
-import { HoveredLink, Menu, MenuItem } from "./ui/navbar-menu";
+import { Menu, MenuItem } from "./ui/navbar-menu";
 import { menuItems } from "@/constant";
 import { cn } from "@/lib/utils";
 import { Logout } from "@/lib/actions/logout.action";
 import { GetCurrentAdminApi } from "@/lib/actions/adminAuth.action";
 import HamburgerMenu from "./Ham-menu";
+import { toast } from "sonner";
 
 interface SubItem {
   id: string; // or number, depending on your implementation
@@ -66,18 +65,13 @@ const Navbar = () => {
 
   // Logout function
   const handleLogout = async () => {
-    // console.log("Before Call");
-    const response = await Logout(); // Call Logout API
-    // console.log("After Call");
-    // console.log("Response: ", response);
+    const response = await Logout();
 
-    // Check the status code and success state
     if (response.statusCode === 200 && response.success) {
-      alert("Logged out successfully!");
+      toast.success("Logged out successfully!");
       window.location.href = "/";
     } else {
-      alert("Logout failed. Please try again.");
-      console.error("Logout Error:", response.statusCode);
+      toast.error("Logout failed. Please try again.");
     }
   };
 

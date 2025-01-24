@@ -268,18 +268,7 @@ export default function StudentInfoPage({
   );
 }
 
-// TODO: # Show Documents Of Admitted Students Start
-const showAdmittedStudentDocs = (data: any) => {
-  return (
-    <div>
-      <h3 className="font-semibold text-gray-600 mb-5 text-lg"> Documents </h3>
-    </div>
-  );
-};
-// TODO: # Show Documents Of Admitted Students End
-
 const basicSection = (data: any) => {
-  // console.log("Data: ", data);
   const student = data?.student_details;
 
   const addressData = data?.communication_address?.current_address;
@@ -343,9 +332,8 @@ const basicSection = (data: any) => {
           <tr className="">
             <td className="pr-4 py-1 font-semibold">Date of Birth:</td>
             <td className="md:px-4 py-1 text-xs sm:text-[14px] font-[700]">
-              {new Date(student?.date_of_birth).toLocaleDateString("gb-IN") ||
+              {new Date(student?.date_of_birth).toISOString().split("T")[0] ||
                 "n/a"}{" "}
-              <span className="font-normal text-xs ml-2">(dd/mm/yyyy)</span>
             </td>
           </tr>
           <tr className="">

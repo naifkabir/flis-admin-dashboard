@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { FinanceColumnFeeMasters } from '@/app/data-table-components/columns';
-import PageLoader from '@/components/ui-components/PageLoading';
+import { FinanceColumnFeeMasters } from "@/app/data-table-components/columns";
+import PageLoader from "@/components/ui-components/PageLoading";
 import {
   CreateNewFinanceMaster,
   DeleteHeaderInMaster,
@@ -9,13 +9,11 @@ import {
   GetAllFinanceGroups,
   GetAllFinanceHeaders,
   GetAllFinanceMaster,
-  GetGroupById,
-  GetHeaderById,
-} from '@/lib/actions/finance.action';
-import React, { useEffect, useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Toaster, toast } from 'sonner';
-import { EditAmountInMasterDialog } from '@/components/EditAmountInMaster';
+} from "@/lib/actions/finance.action";
+import React, { useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Toaster, toast } from "sonner";
+import { EditAmountInMasterDialog } from "@/components/EditAmountInMaster";
 import {
   Dialog,
   DialogContent,
@@ -24,15 +22,15 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/dialog';
-import { Label } from '@/components/ui/label';
-import { MasterPageDataTable } from '@/app/data-table-components/finance-table-components/mastar-page-data-table';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import AddHeaderInMasterComponent from '@/components/AddHeaderInMaster';
-import { Input } from '@/components/ui/input';
-import { MdOutlineArrowOutward } from 'react-icons/md';
-import AlertDialogComponent from '@/components/Alart';
-import AlertDialogComponentHeaderInMaster from '@/components/DeleteHeaderInMasterAlart';
+} from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import { MasterPageDataTable } from "@/app/data-table-components/finance-table-components/mastar-page-data-table";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import AddHeaderInMasterComponent from "@/components/AddHeaderInMaster";
+import { Input } from "@/components/ui/input";
+import { MdOutlineArrowOutward } from "react-icons/md";
+import AlertDialogComponent from "@/components/Alart";
+import AlertDialogComponentHeaderInMaster from "@/components/DeleteHeaderInMasterAlart";
 
 interface FinanceHeader {
   header: string;
@@ -69,20 +67,22 @@ interface FormData {
 
 const FinancePageMaster = () => {
   const [master, setAllMaster] = useState<FinanceMaster[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
   const [isModalOpen, setModalOpen] = useState(false);
   const [isModalOpenHeader, setModalOpenHeader] = useState(false);
   const [amountData, setAmountData] = useState<any>(null);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState<string>("");
+  const [isDeleteDialogOpen, setDeleteDialogOpen] = useState<boolean>(false);
+  const [isDeleteMasterDialogOpen, setDeleteMasterDialogOpen] =
+    useState<boolean>(false);
   const [masterId, setMasterId] = useState<string | null>(null);
   const [deleteHeaderInMasterData, setDeleteHeaderInMasterData] = useState<
     string | null
   >(null);
-  const [deleteMasterId, setDeleteMasterId] = useState<string>('');
+  const [deleteMasterId, setDeleteMasterId] = useState<string>("");
   const [formData, setFormData] = useState<FormData>({
-    selectedGroup: '',
+    selectedGroup: "",
     selectedHeaders: [], // Make sure this is initialized as an empty array
   });
   const [groups, setGroups] = useState<FinanceGroup[]>([]); // State to hold groups
@@ -115,16 +115,19 @@ const FinancePageMaster = () => {
   };
 
   const confirmDeleteHeaderInMaster = async () => {
-    const result = await DeleteHeaderInMaster(deleteHeaderInMasterData);
-    // console.log("result: ", result);
+    try {
+      const result = await DeleteHeaderInMaster(deleteHeaderInMasterData);
 
-    if (result.statusCode === 200) {
-      toast.success('Header was successfully deleted');
-      setTimeout(() => {
-        window.location.reload();
-      }, 2000);
-    } else {
-      toast.error('Failed to delete the header');
+      if (result.statusCode === 200) {
+        toast.success("Header was successfully deleted");
+        setTimeout(() => {
+          window.location.reload();
+        }, 2000);
+      } else {
+        toast.error("Failed to delete the header");
+      }
+    } catch (error: any) {
+      toast.error(error.message);
     }
   };
 
@@ -136,24 +139,30 @@ const FinancePageMaster = () => {
   };
 
   const confirmDeleteMaster = async () => {
-    const result = await DeleteMaster(deleteMasterId);
+    try {
+      const result = await DeleteMaster(deleteMasterId);
 
-    if (result.success) {
-      setDeleteDialogOpen(false);
-      toast.success('Master was successfully deleted');
-      setTimeout(() => {
-        window.location.reload();
-      }, 1000);
-    } else {
-      toast.error('Failed to delete the Master!');
-      setDeleteDialogOpen(false);
+      console.log(result);
+
+      if (result.success) {
+        setDeleteDialogOpen(false);
+        toast.success("Master was successfully deleted");
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000);
+      } else {
+        toast.error("Failed to delete the Master!");
+        setDeleteDialogOpen(false);
+      }
+    } catch (error: any) {
+      toast.error(error.message);
     }
   };
 
   const handleDeleteMaster = async (master_id: string) => {
     // console.log("Master Delete: ", master_id);
     setDeleteMasterId(master_id);
-    setDeleteDialogOpen(true);
+    setDeleteMasterDialogOpen(true);
   };
 
   // ------------------------------------------------------------------------------
@@ -210,7 +219,7 @@ const FinancePageMaster = () => {
 
     const { selectedGroup, selectedHeaders } = formData;
     if (!selectedGroup || selectedHeaders.length === 0) {
-      alert('Please select a group and at least one header.');
+      toast.warning("Please select a group and at least one header.");
       return;
     }
 
@@ -219,27 +228,34 @@ const FinancePageMaster = () => {
       header: headerId,
     }));
 
-    const result = await CreateNewFinanceMaster({
-      group: selectedGroup,
-      headers: headersArray, // Pass the array of objects here
-    });
+    try {
+      const result = await CreateNewFinanceMaster({
+        group: selectedGroup,
+        headers: headersArray, // Pass the array of objects here
+      });
 
-    if (result.error) {
-      setError(result.error);
-      toast.error('Error creating new master: ' + result.error);
-      setTimeout(() => {
+      console.log("Result: ", result);
+
+      if (result.error) {
+        setError(result.error);
+        toast.error("Error creating new master: " + result.error);
+        setTimeout(() => {
+          window.location.reload();
+        }, 2000);
+      } else {
+        setAllMaster((prev) => [...prev, result]); // Update state with the new master
+        setModalOpen(false);
+        toast.success("Master created successfully");
         window.location.reload();
-      }, 2000);
-    } else {
-      setAllMaster((prev) => [...prev, result]); // Update state with the new master
-      setModalOpen(false);
-      toast.success('Master created successfully');
-      window.location.reload();
+      }
+    } catch (error: any) {
+      setError(error.message);
+      toast.error("Error creating new master: " + error.message);
     }
 
     // Reset form data
     setFormData({
-      selectedGroup: '',
+      selectedGroup: "",
       selectedHeaders: [],
     });
   };
@@ -307,9 +323,8 @@ const FinancePageMaster = () => {
                             name="selectedGroup"
                             value={formData.selectedGroup}
                             onChange={handleGroupChange}
-                            className="w-full py-2 bg-transparent border-2 rounded-lg px-3 text-sm"
-                            required
-                          >
+                            className="w-full py-2 bg-transparent border px-3 text-sm"
+                            required>
                             <option value="">Select a group</option>
                             {groups.map((group) => (
                               <option key={group._id} value={group._id}>
@@ -337,8 +352,7 @@ const FinancePageMaster = () => {
                             {filteredHeaders.map((header) => (
                               <div
                                 key={header._id}
-                                className="flex items-center p-2 cursor-default hover:bg-gray-200 "
-                              >
+                                className="flex items-center p-2 cursor-default hover:bg-gray-200 ">
                                 <input
                                   type="checkbox"
                                   className="cursor-pointer"
@@ -357,7 +371,9 @@ const FinancePageMaster = () => {
                       </div>
 
                       <DialogFooter>
-                        <Button className="group py-7 w-48 flex justify-center items-center">
+                        <Button
+                          type="submit"
+                          className="group py-7 w-48 flex justify-center items-center">
                           <span>Create Master</span>
                           <MdOutlineArrowOutward className="ml-2 duration-300 group-hover:rotate-45 group-hover:translate-x-3" />
                         </Button>
@@ -389,14 +405,14 @@ const FinancePageMaster = () => {
       )}
       <Toaster richColors />
       <EditAmountInMasterDialog
-        amountData={amountData} // Pass the current amountData state
+        amountData={amountData}
         onClose={() => {
           setAmountData(null);
         }}
       />
       <div className="hidden">
         <AlertDialogComponent
-          open={isDeleteDialogOpen}
+          open={isDeleteMasterDialogOpen}
           onOpenChange={setDeleteDialogOpen}
           onConfirm={confirmDeleteMaster}
           title="Are you sure?"
@@ -410,7 +426,7 @@ const FinancePageMaster = () => {
           onOpenChange={setDeleteDialogOpen}
           onConfirm={confirmDeleteHeaderInMaster}
           title="Are you sure?"
-          description="This action cannot be undone. This will delete this header from the header."
+          description="This action cannot be undone. This will delete this header from the master."
         />
       </div>
     </div>
