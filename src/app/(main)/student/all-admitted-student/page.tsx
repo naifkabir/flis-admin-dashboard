@@ -11,11 +11,17 @@ import PageLoader from '@/components/ui-components/PageLoading';
 import { Toaster, toast } from 'sonner';
 import { AdmittedStudentDataTable } from '@/app/data-table-components/admitted-student-data-table';
 import { DynamicBreadcrumb } from '@/components/StudentBreadcrumb';
+import { GetAllClasses } from '@/lib/actions/class.action';
 
 export default function CounselingStudentPage() {
   const [data, setData] = useState([]);
+  const [originalData, setOriginalData] = useState([]); // Original dataset
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+  const [classData, setClassData] = useState([]);
+  const [sectionData, setSectionData] = useState([]);
+  const [selectedClass, setSelectedClass] = useState('');
+  const [selectedSection, setSelectedSection] = useState('');
 
   useEffect(() => {
     const fetchData = async () => {
@@ -23,9 +29,13 @@ export default function CounselingStudentPage() {
       setError(false);
       try {
         const result = await GetStudentsByStatus('FEES');
-        console.log('Fetched data:', result);
         const filteredData = admittedStudentTableFilter(result);
+
         setData(filteredData);
+        setOriginalData(filteredData); // Save the original dataset
+
+        const classResult = await GetAllClasses();
+        setClassData(classResult);
       } catch (err: any) {
         // console.error("Error fetching data:", err);
         toast.error('Failed to fetch data', err);
@@ -37,6 +47,49 @@ export default function CounselingStudentPage() {
 
     fetchData();
   }, []);
+
+  const handleClassChange = (e) => {
+    const classId = e.target.value;
+    setSelectedClass(classId);
+    const selectedClassObj = classData.find(
+      (cls: any) => cls._id === classId
+    ) as { sections: any } | undefined;
+    setSectionData(selectedClassObj?.sections ?? []);
+    setSelectedSection(''); // Reset section selection
+  };
+
+  const handleSectionChange = (e) => {
+    setSelectedSection(e.target.value);
+  };
+
+  const filterStudents = async () => {
+    if (!selectedClass || !selectedSection) {
+      toast.error('Please select both class and section');
+      return;
+    }
+    setLoading(true);
+    const filtered = originalData.filter(
+      (student: any) =>
+        student.class === selectedClass && student.section === selectedSection
+    );
+
+    if (filtered.length) {
+      setData(filtered);
+    } else {
+      setData([]);
+      toast.error('No data found');
+    }
+
+    setLoading(false);
+  };
+
+  const clearFilters = () => {
+    setSelectedClass('');
+    setSelectedSection('');
+    setSectionData([]);
+    setData(originalData); // Reset data to the original dataset
+    toast.success('Filters cleared');
+  };
 
   //   const handleReject = async (studentId: string) => {
   //     try {
@@ -106,13 +159,17 @@ export default function CounselingStudentPage() {
               <select
                 id="class-select"
                 className="border rounded px-2 py-1 outline-none w-44"
-                defaultValue=""
+                value={selectedClass}
+                onChange={handleClassChange}
               >
                 <option value="" disabled>
                   Select
                 </option>
-                <option value="class1">Class 1</option>
-                <option value="class2">Class 2</option>
+                {classData?.map((cls: any) => (
+                  <option key={cls._id} value={cls._id}>
+                    {cls.name}
+                  </option>
+                ))}
               </select>
             </div>
             <div className="flex flex-col gap-2">
@@ -122,18 +179,32 @@ export default function CounselingStudentPage() {
               <select
                 id="section-select"
                 className="border rounded px-2 py-1 outline-none w-44"
-                defaultValue=""
+                value={selectedSection}
+                onChange={handleSectionChange}
+                disabled={!sectionData.length}
               >
                 <option value="" disabled>
                   Section
                 </option>
-                <option value="sectionA">Section A</option>
-                <option value="sectionB">Section B</option>
+                {sectionData?.map((section: any) => (
+                  <option key={section._id} value={section._id}>
+                    {section.name}
+                  </option>
+                ))}
               </select>
             </div>
-            <div className="self-end">
-              <button className="bg-red-600 text-white px-3 py-[3px] rounded">
+            <div className="self-end flex flex-row gap-2">
+              <button
+                className="bg-red-600 text-white px-3 py-[3px] rounded"
+                onClick={filterStudents}
+              >
                 GO
+              </button>
+              <button
+                onClick={clearFilters}
+                className="bg-gray-500 text-white px-3 py-[3px] rounded"
+              >
+                Clear
               </button>
             </div>
           </div>

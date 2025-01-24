@@ -271,6 +271,8 @@ export const admittedStudentTableFilter = (data: any) => {
       dob: item.date_of_birth,
       academic_era: item.academic_era,
       gender: item.gender,
+      class: item.class,
+      section: item.section,
     };
   });
   return result;
