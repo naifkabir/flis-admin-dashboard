@@ -321,6 +321,8 @@ export async function DeleteMaster(masterId: string) {
   const cookieStore = cookies();
   const accessToken = cookieStore.get("accessToken")?.value;
 
+  console.log("masterId: ", masterId);
+
   if (!accessToken) {
     return { error: "No access token found." };
   }

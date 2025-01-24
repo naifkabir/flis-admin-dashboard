@@ -517,13 +517,13 @@ export const FinanceColumnFeeMasters = (
             <span className="text-[11px] justify-self-start">
               Group Name :{' '}
               <strong className="text-[13px] font-bold tracking-wider">
-                {data?.groupData?.name}
+                {data?.group?.name}
               </strong>
             </span>
           </p>
           <p>
             <span className="text-[11px] justify-self-start">
-              Group Code : {data?.groupData?.groupCode}
+              Group Code : {data?.group?.groupCode}
             </span>
           </p>
         </div>

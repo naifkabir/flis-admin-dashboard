@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { FinanceColumnFeeMasters } from "@/app/data-table-components/columns";
-import PageLoader from "@/components/ui-components/PageLoading";
+import { FinanceColumnFeeMasters } from '@/app/data-table-components/columns';
+import PageLoader from '@/components/ui-components/PageLoading';
 import {
   CreateNewFinanceMaster,
   DeleteHeaderInMaster,
@@ -11,11 +11,11 @@ import {
   GetAllFinanceMaster,
   GetGroupById,
   GetHeaderById,
-} from "@/lib/actions/finance.action";
-import React, { useEffect, useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Toaster, toast } from "sonner";
-import { EditAmountInMasterDialog } from "@/components/EditAmountInMaster";
+} from '@/lib/actions/finance.action';
+import React, { useEffect, useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Toaster, toast } from 'sonner';
+import { EditAmountInMasterDialog } from '@/components/EditAmountInMaster';
 import {
   Dialog,
   DialogContent,
@@ -24,15 +24,15 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
-import { Label } from "@/components/ui/label";
-import { MasterPageDataTable } from "@/app/data-table-components/finance-table-components/mastar-page-data-table";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import AddHeaderInMasterComponent from "@/components/AddHeaderInMaster";
-import { Input } from "@/components/ui/input";
-import { MdOutlineArrowOutward } from "react-icons/md";
-import AlertDialogComponent from "@/components/Alart";
-import AlertDialogComponentHeaderInMaster from "@/components/DeleteHeaderInMasterAlart";
+} from '@/components/ui/dialog';
+import { Label } from '@/components/ui/label';
+import { MasterPageDataTable } from '@/app/data-table-components/finance-table-components/mastar-page-data-table';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import AddHeaderInMasterComponent from '@/components/AddHeaderInMaster';
+import { Input } from '@/components/ui/input';
+import { MdOutlineArrowOutward } from 'react-icons/md';
+import AlertDialogComponent from '@/components/Alart';
+import AlertDialogComponentHeaderInMaster from '@/components/DeleteHeaderInMasterAlart';
 
 interface FinanceHeader {
   header: string;
@@ -70,19 +70,19 @@ interface FormData {
 const FinancePageMaster = () => {
   const [master, setAllMaster] = useState<FinanceMaster[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+  const [error, setError] = useState('');
   const [isModalOpen, setModalOpen] = useState(false);
   const [isModalOpenHeader, setModalOpenHeader] = useState(false);
   const [amountData, setAmountData] = useState<any>(null);
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState('');
   const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [masterId, setMasterId] = useState<string | null>(null);
   const [deleteHeaderInMasterData, setDeleteHeaderInMasterData] = useState<
     string | null
   >(null);
-  const [deleteMasterId, setDeleteMasterId] = useState<string>("");
+  const [deleteMasterId, setDeleteMasterId] = useState<string>('');
   const [formData, setFormData] = useState<FormData>({
-    selectedGroup: "",
+    selectedGroup: '',
     selectedHeaders: [], // Make sure this is initialized as an empty array
   });
   const [groups, setGroups] = useState<FinanceGroup[]>([]); // State to hold groups
@@ -94,6 +94,7 @@ const FinancePageMaster = () => {
   useEffect(() => {
     const fetchData = async () => {
       const result = await GetAllFinanceMaster();
+      console.log(result);
 
       if (result.error) {
         setError(result.error);
@@ -101,44 +102,7 @@ const FinancePageMaster = () => {
         return;
       }
 
-      const headerPromises: Promise<any>[] = [];
-      const groupPromises: Promise<any>[] = [];
-
-      result.forEach((master: any) => {
-        master.headers.forEach((header: any) => {
-          headerPromises.push(
-            GetHeaderById(header.header).then((data) => ({
-              ...data,
-              amount: header.amount, // Add amount to the header data
-              _id: header._id, // Add ID
-            }))
-          );
-        });
-
-        // Fetch group data for each master
-        groupPromises.push(
-          GetGroupById(master.group).then((groupData) => ({
-            groupId: master.group,
-            groupData,
-          }))
-        );
-      });
-
-      // All header data to be fetched
-      const headersData = await Promise.all(headerPromises);
-      const groupDataArray = await Promise.all(groupPromises);
-
-      // Build updated masters with valid headers including amount and group data
-      const updatedMasters = result.map((item: any, index: any) => ({
-        ...item,
-        headers: headersData.slice(
-          index * item.headers.length,
-          (index + 1) * item.headers.length
-        ),
-        groupData: groupDataArray[index].groupData, // Add group data to the master
-      }));
-
-      setAllMaster(updatedMasters);
+      setAllMaster(result);
       setLoading(false);
     };
 
@@ -155,12 +119,12 @@ const FinancePageMaster = () => {
     // console.log("result: ", result);
 
     if (result.statusCode === 200) {
-      toast.success("Header was successfully deleted");
+      toast.success('Header was successfully deleted');
       setTimeout(() => {
         window.location.reload();
       }, 2000);
     } else {
-      toast.error("Failed to delete the header");
+      toast.error('Failed to delete the header');
     }
   };
 
@@ -176,12 +140,12 @@ const FinancePageMaster = () => {
 
     if (result.success) {
       setDeleteDialogOpen(false);
-      toast.success("Master was successfully deleted");
+      toast.success('Master was successfully deleted');
       setTimeout(() => {
         window.location.reload();
       }, 1000);
     } else {
-      toast.error("Failed to delete the Master!");
+      toast.error('Failed to delete the Master!');
       setDeleteDialogOpen(false);
     }
   };
@@ -246,7 +210,7 @@ const FinancePageMaster = () => {
 
     const { selectedGroup, selectedHeaders } = formData;
     if (!selectedGroup || selectedHeaders.length === 0) {
-      alert("Please select a group and at least one header.");
+      alert('Please select a group and at least one header.');
       return;
     }
 
@@ -262,20 +226,20 @@ const FinancePageMaster = () => {
 
     if (result.error) {
       setError(result.error);
-      toast.error("Error creating new master: " + result.error);
+      toast.error('Error creating new master: ' + result.error);
       setTimeout(() => {
         window.location.reload();
       }, 2000);
     } else {
       setAllMaster((prev) => [...prev, result]); // Update state with the new master
       setModalOpen(false);
-      toast.success("Master created successfully");
+      toast.success('Master created successfully');
       window.location.reload();
     }
 
     // Reset form data
     setFormData({
-      selectedGroup: "",
+      selectedGroup: '',
       selectedHeaders: [],
     });
   };
@@ -344,7 +308,8 @@ const FinancePageMaster = () => {
                             value={formData.selectedGroup}
                             onChange={handleGroupChange}
                             className="w-full py-2 bg-transparent border-2 rounded-lg px-3 text-sm"
-                            required>
+                            required
+                          >
                             <option value="">Select a group</option>
                             {groups.map((group) => (
                               <option key={group._id} value={group._id}>
@@ -372,7 +337,8 @@ const FinancePageMaster = () => {
                             {filteredHeaders.map((header) => (
                               <div
                                 key={header._id}
-                                className="flex items-center p-2 cursor-default hover:bg-gray-200 ">
+                                className="flex items-center p-2 cursor-default hover:bg-gray-200 "
+                              >
                                 <input
                                   type="checkbox"
                                   className="cursor-pointer"
