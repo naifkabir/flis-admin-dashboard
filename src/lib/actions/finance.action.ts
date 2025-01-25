@@ -348,8 +348,6 @@ export async function CreateNewFinanceMaster(data: any) {
   const cookieStore = cookies();
   const accessToken = cookieStore.get("accessToken")?.value;
 
-  console.log("data: ", data);
-
   if (!accessToken) {
     return null;
   }
