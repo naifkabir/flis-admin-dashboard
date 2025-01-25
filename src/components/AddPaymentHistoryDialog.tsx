@@ -40,6 +40,11 @@ interface AddPaymentHistoryProps {
 // Define the zod schema
 const paymentRecordSchema = z
   .object({
+    discountAmount: z
+      .string()
+      .refine((val) => !isNaN(Number(val)) && Number(val) >= 0, {
+        message: 'Discount must be zero or a positive number',
+      }),
     amountPaid: z
       .string()
       .refine((val) => !isNaN(Number(val)) && Number(val) > 0, {
@@ -73,6 +78,7 @@ const AddPaymentHistoryDialog = ({
   const form = useForm<z.infer<typeof paymentRecordSchema>>({
     resolver: zodResolver(paymentRecordSchema),
     defaultValues: {
+      discountAmount: '0',
       amountPaid: '',
       paymentMethod: 'CASH',
       transactionId: 'N/A',
@@ -86,6 +92,7 @@ const AddPaymentHistoryDialog = ({
     setLoading(true);
 
     const data = {
+      discountAmount: Number(values.discountAmount),
       amountPaid: Number(values.amountPaid),
       paymentMethod: values.paymentMethod,
       transactionId: values.transactionId,
@@ -124,6 +131,19 @@ const AddPaymentHistoryDialog = ({
 
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+            <FormField
+              control={form.control}
+              name="discountAmount"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Discount</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Enter discount" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
             <FormField
               control={form.control}
               name="amountPaid"
