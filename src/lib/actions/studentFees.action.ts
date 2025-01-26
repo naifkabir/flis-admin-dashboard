@@ -43,6 +43,6 @@ export async function AddPaymentRecord(feesStructureId: string, feeId: string, d
         });
         return response.data.data;
     } catch (error: any) {
-        return { error: error.response.data.message };
+        return { error: error.response.data.message || error.message };
     }
 }

@@ -19,7 +19,7 @@ export async function GetAllFinanceHeaders() {
     });
     return response.data.data;
   } catch (error: any) {
-    return { error: error.message };
+    return { error: error.response.data.message || error.message };
   }
 }
 
@@ -40,7 +40,7 @@ export async function CreateNewFinanceHeader(data: any) {
     return response.data.data;
   } catch (error: any) {
     console.error("Error approving application:", error);
-    return { error: error.message };
+    return { error: error.response.data.message || error.message };
   }
 }
 
@@ -68,7 +68,7 @@ export async function DeleteHeader(feeHeaderId: string) {
       return { error: `Failed to delete header: ${response.statusText}` };
     }
   } catch (error: any) {
-    return { error: error.message };
+    return { error: error.response.data.message || error.message };
   }
 }
 
@@ -101,7 +101,7 @@ export async function GetHeaderById(financeId: string) {
       console.error("Response data:", error.response.data);
       return { error: error.response.data.message || error.message };
     }
-    return { error: error.message };
+    return { error: error.response.data.message || error.message };
   }
 }
 
@@ -122,7 +122,7 @@ export async function UpdateFeeHeader(data: any) {
     return response.data.data;
   } catch (error: any) {
     console.error("Error approving application:", error);
-    return { error: error.message };
+    return { error: error.response.data.message || error.message };
   }
 }
 
@@ -144,7 +144,7 @@ export async function GetAllFinanceGroups() {
     });
     return response.data.data;
   } catch (error: any) {
-    return { error: error.message };
+    return { error: error.response.data.message || error.message };
   }
 }
 
@@ -166,8 +166,8 @@ export async function CreateNewFinanceGroup(data: any) {
     });
     return response.data;
   } catch (error: any) {
-    console.error("Error approving application:", error);
-    return { error: error.message };
+    console.error("Error creating group:", error);
+    return { error: error.response.data.message || error.message };
   }
 }
 
@@ -195,7 +195,7 @@ export async function DeleteGroup(feeGroupId: string) {
       return { error: `Failed to delete group: ${response.statusText}` };
     }
   } catch (error: any) {
-    return { error: error.message };
+    return { error: error.response.data.message || error.message };
   }
 }
 
@@ -228,7 +228,7 @@ export async function GetGroupById(id: string) {
       console.error("Response data:", error.response.data);
       return { error: error.response.data.message || error.message };
     }
-    return { error: error.message };
+    return { error: error.response.data.message || error.message };
   }
 }
 
@@ -249,7 +249,7 @@ export async function UpdateFeeGroup(data: any) {
     return response.data;
   } catch (error: any) {
     console.error("Error approving application:", error);
-    return { error: error.message };
+    return { error: error.response.data.message || error.message };
   }
 }
 
@@ -271,7 +271,7 @@ export async function GetAllFinanceMaster() {
     });
     return response.data.data;
   } catch (error: any) {
-    return { error: error.message };
+    return { error: error.response.data.message || error.message };
   }
 }
 
@@ -292,7 +292,7 @@ export async function SetAmountInMaster(data: any) {
     return response.data;
   } catch (error: any) {
     console.error("Error updating amount:", error);
-    return { error: error.message };
+    return { error: error.response.data.message || error.message };
   }
 }
 
@@ -313,7 +313,7 @@ export async function DeleteHeaderInMaster(data: any) {
 
     return response.data;
   } catch (error: any) {
-    return { error: error.message };
+    return { error: error.response.data.message || error.message };
   }
 }
 
@@ -340,7 +340,7 @@ export async function DeleteMaster(masterId: string) {
       return { error: `Failed to delete group: ${response.statusText}` };
     }
   } catch (error: any) {
-    return { error: error.message };
+    return { error: error.response.data.message || error.message };
   }
 }
 
@@ -361,7 +361,7 @@ export async function CreateNewFinanceMaster(data: any) {
     return response.data;
   } catch (error: any) {
     console.error("Error approving application:", error);
-    return { error: error.message };
+    return { error: error.response.data.message || error.message };
   }
 }
 
@@ -384,7 +384,7 @@ export async function AddHeaderInMaster(data: any) {
 
     return response.data;
   } catch (error: any) {
-    return { error: error.message };
+    return { error: error.response.data.message || error.message };
   }
 }
 
@@ -404,6 +404,6 @@ export async function GetAllGroupsForDropDown() {
     });
     return response.data.data;
   } catch (error: any) {
-    return { error: error.message };
+    return { error: error.response.data.message || error.message };
   }
 }

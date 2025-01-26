@@ -288,18 +288,18 @@
 
 // export default FinancePage;
 
-"use client";
+'use client';
 
-import { FinanceColumnFeeHeaders } from "@/app/data-table-components/columns";
-import { FinanceDataTable } from "@/app/data-table-components/finance-table-components/data-table";
-import PageLoader from "@/components/ui-components/PageLoading";
+import { FinanceColumnFeeHeaders } from '@/app/data-table-components/columns';
+import { FinanceDataTable } from '@/app/data-table-components/finance-table-components/data-table';
+import PageLoader from '@/components/ui-components/PageLoading';
 import {
   GetAllFinanceHeaders,
   CreateNewFinanceHeader,
   DeleteHeader,
-} from "@/lib/actions/finance.action";
-import React, { useEffect, useState } from "react";
-import { Button } from "@/components/ui/button";
+} from '@/lib/actions/finance.action';
+import React, { useEffect, useState } from 'react';
+import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
@@ -308,12 +308,12 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Toaster, toast } from "sonner";
-import AlertDialogComponent from "@/components/Alart";
-import { IoIosArrowRoundForward } from "react-icons/io";
+} from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Toaster, toast } from 'sonner';
+import AlertDialogComponent from '@/components/Alart';
+import { IoIosArrowRoundForward } from 'react-icons/io';
 
 interface FinanceHeader {
   id: string;
@@ -322,6 +322,7 @@ interface FinanceHeader {
   occurrence: string;
   dueDate: string;
   description?: string;
+  createdAt: string;
 }
 
 interface FormData {
@@ -334,18 +335,21 @@ interface FormData {
 
 const FinancePage = () => {
   const [data, setData] = useState<FinanceHeader[]>([]);
+  const [filteredData, setFilteredData] = useState<FinanceHeader[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+  const [error, setError] = useState('');
   const [isModalOpen, setModalOpen] = useState(false);
   const [formData, setFormData] = useState<FormData>({
-    name: "",
-    feesCode: "",
-    occurrence: "",
-    dueDate: "",
-    description: "",
+    name: '',
+    feesCode: '',
+    occurrence: '',
+    dueDate: '',
+    description: '',
   });
   const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [headerIdToDelete, setHeaderIdToDelete] = useState<string>("");
+  const [headerIdToDelete, setHeaderIdToDelete] = useState<string>('');
+  const [years, setYears] = useState<number[]>([]);
+  const [selectedYear, setSelectedYear] = useState<number | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -354,12 +358,37 @@ const FinancePage = () => {
         setError(result.error);
       } else {
         setData(result);
+        extractUniqueYears(result);
       }
       setLoading(false);
     };
 
     fetchData();
   }, []);
+
+  const extractUniqueYears = (headers: FinanceHeader[]) => {
+    const years = Array.from(
+      new Set(headers.map((header) => new Date(header.createdAt).getFullYear()))
+    );
+    setYears(years.sort((a, b) => b - a)); // Sort years in descending order
+  };
+
+  const filterByYear = (year: number | null) => {
+    setSelectedYear(year);
+    if (year) {
+      setFilteredData(
+        data.filter(
+          (header) => new Date(header.createdAt).getFullYear() === year
+        )
+      );
+    } else {
+      setFilteredData(data); // Show all if no year selected
+    }
+  };
+
+  useEffect(() => {
+    setFilteredData(data);
+  }, [data]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -381,26 +410,26 @@ const FinancePage = () => {
 
     const { name, feesCode, occurrence, dueDate } = formData;
     if (!name || !feesCode || !occurrence || !dueDate) {
-      toast.error("Please fill in all required fields.");
+      toast.error('Please fill in all required fields.');
       return;
     }
 
     const result = await CreateNewFinanceHeader(formData);
     if (result.error) {
       setError(result.error);
-      toast.error("Error creating new header: " + result.error);
+      toast.error('Error creating new header: ' + result.error);
     } else {
       setData((prevData) => [...prevData, result]);
       setModalOpen(false);
-      toast.success("Header created successfully!");
+      toast.success('Header created successfully!');
     }
 
     setFormData({
-      name: "",
-      feesCode: "",
-      occurrence: "",
-      dueDate: "",
-      description: "",
+      name: '',
+      feesCode: '',
+      occurrence: '',
+      dueDate: '',
+      description: '',
     });
   };
 
@@ -418,13 +447,13 @@ const FinancePage = () => {
 
     if (result.error) {
       setError(result.error);
-      toast.error("Error deleting header: " + result.error);
+      toast.error('Error deleting header: ' + result.error);
       setDeleteDialogOpen(false);
     } else {
       setData((prevData) =>
         prevData.filter((header) => header.id !== headerIdToDelete)
       );
-      toast.success("Header deleted successfully!");
+      toast.success('Header deleted successfully!');
       setDeleteDialogOpen(false);
       window.location.reload();
     }
@@ -504,7 +533,8 @@ const FinancePage = () => {
                           value={formData.occurrence}
                           onChange={handleOccurrenceChange}
                           className="w-full py-2 bg-transparent border-2 rounded-lg px-3 text-sm"
-                          required>
+                          required
+                        >
                           <option value="" disabled>
                             Select Occurrence
                           </option>
@@ -543,7 +573,7 @@ const FinancePage = () => {
                     </div>
                     <DialogFooter>
                       <Button type="submit">
-                        Create Header{" "}
+                        Create Header{' '}
                         <span className="-rotate-45">
                           <IoIosArrowRoundForward />
                         </span>
@@ -554,9 +584,26 @@ const FinancePage = () => {
               </Dialog>
             </div>
           </div>
+          <div className="flex gap-2 mb-4">
+            <Button
+              variant={selectedYear === null ? 'default' : 'outline'}
+              onClick={() => filterByYear(null)}
+            >
+              All Years
+            </Button>
+            {years.map((year) => (
+              <Button
+                key={year}
+                variant={selectedYear === year ? 'default' : 'outline'}
+                onClick={() => filterByYear(year)}
+              >
+                {year}
+              </Button>
+            ))}
+          </div>
           <FinanceDataTable
             columns={FinanceColumnFeeHeaders(handleEdit, handleDeleteHeader)}
-            data={data ? data : []}
+            data={filteredData ? filteredData : []}
           />
         </div>
       </div>

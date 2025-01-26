@@ -19,6 +19,6 @@ export async function GetActiveSession() {
         });
         return response.data.data;
     } catch (error: any) {
-        return { error: error.message };
+        return { error: error.response.data.message || error.message };
     }
 }

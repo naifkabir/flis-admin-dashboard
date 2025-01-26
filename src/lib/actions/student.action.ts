@@ -22,7 +22,7 @@ export async function GetAllApplication(applicationStatus: string) {
     );
     return response.data.data;
   } catch (error: any) {
-    return { error: error.message };
+    return { error: error.response.data.message || error.message };
   }
 }
 
@@ -45,7 +45,7 @@ export async function GetStudentsByStatus(applicationStatus: string) {
     );
     return response.data.data;
   } catch (error: any) {
-    return { error: error.message };
+    return { error: error.response.data.message || error.message };
   }
 }
 
@@ -68,7 +68,7 @@ export async function GetStudentDetails(id: string) {
     );
     return response.data.data;
   } catch (error: any) {
-    return { error: error.message };
+    return { error: error.response.data.message || error.message };
   }
 }
 
@@ -91,7 +91,7 @@ export async function GetStudentById(studentId: string) {
     );
     return response.data.data;
   } catch (error: any) {
-    return { error: error.message };
+    return { error: error.response.data.message || error.message };
   }
 }
 
@@ -114,7 +114,7 @@ export async function RejectApplication(studentId: string) {
     );
     return response.data;
   } catch (error: any) {
-    return { error: error.message };
+    return { error: error.response.data.message || error.message };
   }
 }
 
@@ -135,7 +135,7 @@ export async function ApproveApplicationForCounselling(data: any) {
     return response.data;
   } catch (error: any) {
     console.error("Error approving application:", error);
-    return { error: error.message };
+    return { error: error.response.data.message || error.message };
   }
 }
 
@@ -158,7 +158,7 @@ export async function submitAfterEditApplication(data: any, id: string) {
     return response.data;
   } catch (error: any) {
     console.error("Error approving application:", error);
-    return { error: error.message };
+    return { error: error.response.data.message || error.message };
   }
 }
 
@@ -188,7 +188,7 @@ export async function submitWithoutEditApplication(
     return response.data.data;
   } catch (error: any) {
     console.error("Error approving application:", error);
-    return { error: error.message };
+    return { error: error.response.data.message || error.message };
   }
 }
 
@@ -211,7 +211,7 @@ export async function deleteAdmissionFromDatabase(id: string) {
     return response.data;
   } catch (error: any) {
     console.error("Error approving application:", error);
-    return { error: error.message };
+    return { error: error.response.data.message || error.message };
   }
 }
 
@@ -234,6 +234,6 @@ export async function DeleteDocument(id: string) {
     return response.data;
   } catch (error: any) {
     console.error("Error deleting document:", error);
-    return { error: error.message };
+    return { error: error.response.data.message || error.message };
   }
 }

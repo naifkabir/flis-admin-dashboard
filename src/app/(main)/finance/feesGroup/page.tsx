@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 // import { FinanceColumnFeeGroups } from "@/app/data-table-components/columns";
 // import { FinanceDataTable } from "@/app/data-table-components/finance-table-components/data-table";
@@ -229,16 +229,16 @@
 
 // export default FinancePageGroups;
 
-import React, { useEffect, useState } from "react";
-import { FinanceColumnFeeGroups } from "@/app/data-table-components/columns";
-import { FinanceDataTable } from "@/app/data-table-components/finance-table-components/data-table";
-import PageLoader from "@/components/ui-components/PageLoading";
+import React, { useEffect, useState } from 'react';
+import { FinanceColumnFeeGroups } from '@/app/data-table-components/columns';
+import { FinanceDataTable } from '@/app/data-table-components/finance-table-components/data-table';
+import PageLoader from '@/components/ui-components/PageLoading';
 import {
   CreateNewFinanceGroup,
   DeleteGroup,
   GetAllFinanceGroups,
-} from "@/lib/actions/finance.action";
-import { Button } from "@/components/ui/button";
+} from '@/lib/actions/finance.action';
+import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
@@ -247,33 +247,37 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Toaster, toast } from "sonner";
-import AlertDialogComponent from "@/components/Alart";
-import { GetAllClasses } from "@/lib/actions/class.action";
+} from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Toaster, toast } from 'sonner';
+import AlertDialogComponent from '@/components/Alart';
+import { GetAllClasses } from '@/lib/actions/class.action';
 
 interface FinanceGroup {
   id: string;
   name: string;
   groupCode: string;
   description?: string;
+  createdAt: string;
 }
 
 const FinancePageGroups = () => {
   const [data, setData] = useState<FinanceGroup[]>([]);
+  const [filteredData, setFilteredData] = useState<FinanceGroup[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+  const [error, setError] = useState('');
   const [isModalOpen, setModalOpen] = useState(false);
   const [formData, setFormData] = useState({
-    name: "",
-    groupCode: "",
-    description: "",
+    name: '',
+    groupCode: '',
+    description: '',
   });
   const [classes, setClasses] = useState<{ id: string; name: string }[]>([]); // To store classes
   const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [headerIdToDelete, setHeaderIdToDelete] = useState<string>("");
+  const [headerIdToDelete, setHeaderIdToDelete] = useState<string>('');
+  const [years, setYears] = useState<number[]>([]);
+  const [selectedYear, setSelectedYear] = useState<number | null>(null);
 
   // Fetch all finance groups and classes
   useEffect(() => {
@@ -285,9 +289,10 @@ const FinancePageGroups = () => {
         ]);
 
         if (financeGroups.error) throw new Error(financeGroups.error);
-        if (!classList) throw new Error("Failed to fetch classes.");
+        if (!classList) throw new Error('Failed to fetch classes.');
 
         setData(financeGroups);
+        extractUniqueYears(financeGroups);
         setClasses(
           classList.map((cls: any) => ({ id: cls._id, name: cls.name }))
         );
@@ -300,6 +305,28 @@ const FinancePageGroups = () => {
 
     fetchData();
   }, []);
+
+  const extractUniqueYears = (groups: FinanceGroup[]) => {
+    const years = Array.from(
+      new Set(groups.map((header) => new Date(header.createdAt).getFullYear()))
+    );
+    setYears(years.sort((a, b) => b - a)); // Sort years in descending order
+  };
+
+  const filterByYear = (year: number | null) => {
+    setSelectedYear(year);
+    if (year) {
+      setFilteredData(
+        data.filter((group) => new Date(group.createdAt).getFullYear() === year)
+      );
+    } else {
+      setFilteredData(data); // Show all if no year selected
+    }
+  };
+
+  useEffect(() => {
+    setFilteredData(data);
+  }, [data]);
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -316,7 +343,7 @@ const FinancePageGroups = () => {
 
     const { name, groupCode } = formData;
     if (!name || !groupCode) {
-      toast.warning("Please fill in all required fields.");
+      toast.warning('Please fill in all required fields.');
       return;
     }
 
@@ -324,13 +351,13 @@ const FinancePageGroups = () => {
       const result = await CreateNewFinanceGroup(formData);
       if (result.error) throw new Error(result.error);
 
-      toast.success("Group created successfully!");
+      toast.success('Group created successfully!');
       setData(result);
       setModalOpen(false);
     } catch (err: any) {
-      toast.error("Error creating group: " + err.message);
+      toast.error(err.message);
     } finally {
-      setFormData({ name: "", groupCode: "", description: "" });
+      setFormData({ name: '', groupCode: '', description: '' });
       window.location.reload();
     }
   };
@@ -345,10 +372,10 @@ const FinancePageGroups = () => {
 
     if (result.error) {
       setError(result.error);
-      alert("Error deleting group: " + result.error);
+      alert('Error deleting group: ' + result.error);
       setDeleteDialogOpen(false);
     } else {
-      toast.success("Group deleted successfully!");
+      toast.success('Group deleted successfully!');
       setDeleteDialogOpen(false);
       window.location.reload();
     }
@@ -415,7 +442,8 @@ const FinancePageGroups = () => {
                         value={formData.groupCode}
                         onChange={handleInputChange}
                         className="col-span-3 border-2 p-2"
-                        required>
+                        required
+                      >
                         <option value="" disabled>
                           Select Class
                         </option>
@@ -446,9 +474,26 @@ const FinancePageGroups = () => {
               </Dialog>
             </div>
           </div>
+          <div className="flex gap-2 mb-4">
+            <Button
+              variant={selectedYear === null ? 'default' : 'outline'}
+              onClick={() => filterByYear(null)}
+            >
+              All Years
+            </Button>
+            {years.map((year) => (
+              <Button
+                key={year}
+                variant={selectedYear === year ? 'default' : 'outline'}
+                onClick={() => filterByYear(year)}
+              >
+                {year}
+              </Button>
+            ))}
+          </div>
           <FinanceDataTable
             columns={FinanceColumnFeeGroups(handleDeleteGroup)}
-            data={data}
+            data={filteredData ? filteredData : []}
           />
         </div>
       </div>

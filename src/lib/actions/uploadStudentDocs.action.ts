@@ -22,7 +22,7 @@ export async function UploadStudentDocs(data: any) {
 
     return response.data;
   } catch (error: any) {
-    return { error: error.message };
+    return { error: error.response.data.message || error.message };
   }
 }
 
@@ -46,6 +46,6 @@ export async function UploadDietChart(studentId: string, data: any) {
 
     return response.data;
   } catch (error: any) {
-    return { error: error.message };
+    return { error: error.response.data.message || error.message };
   }
 }

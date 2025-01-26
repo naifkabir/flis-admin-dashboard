@@ -45,6 +45,7 @@ interface FinanceMaster {
   header: string;
   group: string;
   headers: FinanceHeader[];
+  createdAt: string;
 }
 
 // FinanceHeader
@@ -67,6 +68,7 @@ interface FormData {
 
 const FinancePageMaster = () => {
   const [master, setAllMaster] = useState<FinanceMaster[]>([]);
+  const [filteredMaster, setFilteredMaster] = useState<FinanceMaster[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [isModalOpen, setModalOpen] = useState(false);
@@ -87,6 +89,8 @@ const FinancePageMaster = () => {
   });
   const [groups, setGroups] = useState<FinanceGroup[]>([]); // State to hold groups
   const [headers, setHeaders] = useState<FinanceHeader[]>([]); // State to hold headers
+  const [years, setYears] = useState<number[]>([]);
+  const [selectedYear, setSelectedYear] = useState<number | null>(null);
 
   // --------------------------------------------------------------
   // # Create Table
@@ -103,11 +107,36 @@ const FinancePageMaster = () => {
       }
 
       setAllMaster(result);
+      extractUniqueYears(result);
       setLoading(false);
     };
 
     fetchData();
   }, []);
+
+  const extractUniqueYears = (masters: FinanceMaster[]) => {
+    const years = Array.from(
+      new Set(masters.map((master) => new Date(master.createdAt).getFullYear()))
+    );
+    setYears(years.sort((a, b) => b - a)); // Sort years in descending order
+  };
+
+  const filterByYear = (year: number | null) => {
+    setSelectedYear(year);
+    if (year) {
+      setFilteredMaster(
+        master.filter(
+          (master) => new Date(master.createdAt).getFullYear() === year
+        )
+      );
+    } else {
+      setFilteredMaster(master); // Show all if no year selected
+    }
+  };
+
+  useEffect(() => {
+    setFilteredMaster(master);
+  }, [master]);
 
   const handleEditAmount = (amountData: any) => {
     // console.log("Edit header with id:", amountData);
@@ -385,6 +414,23 @@ const FinancePageMaster = () => {
               </div>
             </div>
           </div>
+          <div className="flex gap-2 mb-4">
+            <Button
+              variant={selectedYear === null ? 'default' : 'outline'}
+              onClick={() => filterByYear(null)}
+            >
+              All Years
+            </Button>
+            {years.map((year) => (
+              <Button
+                key={year}
+                variant={selectedYear === year ? 'default' : 'outline'}
+                onClick={() => filterByYear(year)}
+              >
+                {year}
+              </Button>
+            ))}
+          </div>
           <MasterPageDataTable
             columns={FinanceColumnFeeMasters(
               handleEditAmount,
@@ -392,7 +438,7 @@ const FinancePageMaster = () => {
               handleAddHeader,
               handleDeleteMaster
             )}
-            data={master}
+            data={filteredMaster}
           />
         </div>
       </div>

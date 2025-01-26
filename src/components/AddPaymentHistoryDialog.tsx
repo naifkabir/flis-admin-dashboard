@@ -102,6 +102,11 @@ const AddPaymentHistoryDialog = ({
       const response = await AddPaymentRecord(feesStructureId, feeId, data);
 
       console.log(response);
+
+      if (response?.error) {
+        toast.error(response.error);
+        return;
+      }
       toast.success('Payment record added successfully!');
       setIsModalOpen(false);
       setTimeout(() => {
