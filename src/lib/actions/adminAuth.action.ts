@@ -40,7 +40,7 @@ export async function LoginUser(
       data
     );
 
-    revalidatePath("/dashboard/admin");
+    revalidatePath("/dashboard");
     cookies().set({
       name: "accessToken",
       value: response.data.data?.accessToken || "",

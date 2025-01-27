@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import {
   Dialog,
@@ -8,26 +8,25 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/dialog';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { set, z } from 'zod';
+} from "@/components/ui/dialog";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
 import {
   Form,
   FormControl,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
-} from '@/components/ui/form';
-import { cn } from '@/lib/utils';
-import { toast, Toaster } from 'sonner';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { UploadDietChart } from '@/lib/actions/uploadStudentDocs.action';
-import { useState } from 'react';
-import { DialogClose } from '@radix-ui/react-dialog';
-import Image from 'next/image';
+} from "@/components/ui/form";
+import { cn } from "@/lib/utils";
+import { toast, Toaster } from "sonner";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { UploadDietChart } from "@/lib/actions/uploadStudentDocs.action";
+import { useState } from "react";
+import { DialogClose } from "@radix-ui/react-dialog";
+import Image from "next/image";
 
 const healthRecordFormSchema = z.object({
   special_medical_conditions: z.object({
@@ -35,8 +34,8 @@ const healthRecordFormSchema = z.object({
       .string()
       .optional()
       .refine(
-        (val) => !val || val.trim() !== '',
-        'Cannot be blank or whitespace'
+        (val) => !val || val.trim() !== "",
+        "Cannot be blank or whitespace"
       ),
   }),
   special_assistance: z.object({
@@ -44,8 +43,8 @@ const healthRecordFormSchema = z.object({
       .string()
       .optional()
       .refine(
-        (val) => !val || val.trim() !== '',
-        'Cannot be blank or whitespace'
+        (val) => !val || val.trim() !== "",
+        "Cannot be blank or whitespace"
       ),
   }),
   regular_medication: z.object({
@@ -53,8 +52,8 @@ const healthRecordFormSchema = z.object({
       .string()
       .optional()
       .refine(
-        (val) => !val || val.trim() !== '',
-        'Cannot be blank or whitespace'
+        (val) => !val || val.trim() !== "",
+        "Cannot be blank or whitespace"
       ),
   }),
   allergies: z.object({
@@ -62,29 +61,29 @@ const healthRecordFormSchema = z.object({
       .string()
       .optional()
       .refine(
-        (val) => !val || val.trim() !== '',
-        'Cannot be blank or whitespace'
+        (val) => !val || val.trim() !== "",
+        "Cannot be blank or whitespace"
       ),
   }),
   height: z
     .string()
     .optional()
     .refine(
-      (val) => !val || val.trim() !== '',
-      'Cannot be blank or whitespace'
+      (val) => !val || val.trim() !== "",
+      "Cannot be blank or whitespace"
     ),
   weight: z
     .string()
     .optional()
     .refine(
-      (val) => !val || val.trim() !== '',
-      'Cannot be blank or whitespace'
+      (val) => !val || val.trim() !== "",
+      "Cannot be blank or whitespace"
     ),
   dietchart: z
     .any()
     .refine(
       (files) => files instanceof FileList && files.length > 0,
-      'Please select a file'
+      "Please select a file"
     ),
 });
 
@@ -140,11 +139,11 @@ export function UploadHealthReportDialog({
     };
 
     if (values.dietchart[0]) {
-      formData.append('dietchart', values.dietchart[0]);
+      formData.append("dietchart", values.dietchart[0]);
     }
 
     formData.append(
-      'medical_details',
+      "medical_details",
       JSON.stringify(dataToSend.medical_details)
     );
 
@@ -160,20 +159,20 @@ export function UploadHealthReportDialog({
         form.reset();
       }
     } catch (error) {
-      toast.error('Something went wrong. Please try again.');
+      toast.error("Something went wrong. Please try again.");
     }
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files ? e.target.files[0] : null;
-    setFileName(file ? file.name : '');
+    setFileName(file ? file.name : "");
 
     if (file) {
-      if (file.type.startsWith('image')) {
+      if (file.type.startsWith("image")) {
         const previewUrl = URL.createObjectURL(file);
         setImagePreview(previewUrl);
         setPdfPreview(null);
-      } else if (file.type === 'application/pdf') {
+      } else if (file.type === "application/pdf") {
         const previewUrl = URL.createObjectURL(file);
         setPdfPreview(previewUrl);
         setImagePreview(null);
@@ -188,7 +187,7 @@ export function UploadHealthReportDialog({
     setFileName(null);
     setPdfPreview(null);
     setImagePreview(null);
-    form.setValue('dietchart', null);
+    form.setValue("dietchart", null);
   };
 
   return (
@@ -204,19 +203,17 @@ export function UploadHealthReportDialog({
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(handleSubmit)}
-            className="w-full text-black"
-          >
+            className="w-full text-black">
             <div className="grid lg:grid-cols-2 gap-4 py-6">
               <FormField
                 control={form.control}
                 name="allergies.details"
                 render={({ field }) => (
-                  <FormItem className={cn('flex flex-col w-full text-[13px]')}>
+                  <FormItem className={cn("flex flex-col w-full text-[13px]")}>
                     <FormControl
                       className={cn(
-                        'border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll'
-                      )}
-                    >
+                        "border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
+                      )}>
                       <Input
                         placeholder="Allergy Details"
                         {...field}
@@ -232,12 +229,11 @@ export function UploadHealthReportDialog({
                 control={form.control}
                 name="special_medical_conditions.details"
                 render={({ field }) => (
-                  <FormItem className={cn('flex flex-col w-full text-[13px]')}>
+                  <FormItem className={cn("flex flex-col w-full text-[13px]")}>
                     <FormControl
                       className={cn(
-                        'border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll'
-                      )}
-                    >
+                        "border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
+                      )}>
                       <Input
                         placeholder="Special Medical Condition Details"
                         {...field}
@@ -253,12 +249,11 @@ export function UploadHealthReportDialog({
                 control={form.control}
                 name="regular_medication.details"
                 render={({ field }) => (
-                  <FormItem className={cn('flex flex-col w-full text-[13px]')}>
+                  <FormItem className={cn("flex flex-col w-full text-[13px]")}>
                     <FormControl
                       className={cn(
-                        'border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll'
-                      )}
-                    >
+                        "border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
+                      )}>
                       <Input
                         placeholder="Regular Medication Details"
                         {...field}
@@ -274,12 +269,11 @@ export function UploadHealthReportDialog({
                 control={form.control}
                 name="special_assistance.details"
                 render={({ field }) => (
-                  <FormItem className={cn('flex flex-col w-full text-[13px]')}>
+                  <FormItem className={cn("flex flex-col w-full text-[13px]")}>
                     <FormControl
                       className={cn(
-                        'border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll'
-                      )}
-                    >
+                        "border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
+                      )}>
                       <Input
                         placeholder="Special Assistance Details"
                         {...field}
@@ -295,12 +289,11 @@ export function UploadHealthReportDialog({
                 control={form.control}
                 name="height"
                 render={({ field }) => (
-                  <FormItem className={cn('flex flex-col w-full text-[13px]')}>
+                  <FormItem className={cn("flex flex-col w-full text-[13px]")}>
                     <FormControl
                       className={cn(
-                        'border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll'
-                      )}
-                    >
+                        "border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
+                      )}>
                       <Input
                         placeholder="Height"
                         {...field}
@@ -316,12 +309,11 @@ export function UploadHealthReportDialog({
                 control={form.control}
                 name="weight"
                 render={({ field }) => (
-                  <FormItem className={cn('flex flex-col w-full text-[13px]')}>
+                  <FormItem className={cn("flex flex-col w-full text-[13px]")}>
                     <FormControl
                       className={cn(
-                        'border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll'
-                      )}
-                    >
+                        "border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
+                      )}>
                       <Input
                         placeholder="Weight"
                         {...field}
@@ -382,8 +374,7 @@ export function UploadHealthReportDialog({
                     data={pdfPreview}
                     type="application/pdf"
                     width="100%"
-                    height="300px"
-                  >
+                    height="300px">
                     <p>
                       Your browser does not support PDFs. Download the PDF to
                       view it: <a href={pdfPreview}>Download PDF</a>.
@@ -401,8 +392,7 @@ export function UploadHealthReportDialog({
                 <Button
                   variant="outline"
                   onClick={handleRemoveFile}
-                  className="ml-2"
-                >
+                  className="ml-2">
                   Remove Image
                 </Button>
               </div>

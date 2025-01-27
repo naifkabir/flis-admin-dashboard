@@ -33,8 +33,8 @@ import { z } from "zod";
 import { useEffect, useState } from "react";
 import { GetAllClasses } from "@/lib/actions/class.action";
 import { toast } from "sonner";
-import { Input } from "../ui/input";
 import { AddNewSection } from "@/lib/actions/addNewSection.action";
+import { Input } from "@/components/ui/input";
 
 const addNewSectionSchema = z.object({
   classId: z.string().min(1, {

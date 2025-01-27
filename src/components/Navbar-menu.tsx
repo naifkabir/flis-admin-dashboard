@@ -26,6 +26,7 @@ import { Logout } from "@/lib/actions/logout.action";
 import { GetCurrentAdminApi } from "@/lib/actions/adminAuth.action";
 import HamburgerMenu from "./Ham-menu";
 import { toast } from "sonner";
+import DevAlertDialogComponent from "./development-alart/DevAlart";
 
 interface SubItem {
   id: string; // or number, depending on your implementation
@@ -33,21 +34,10 @@ interface SubItem {
   href: string;
 }
 
-interface MenuItem {
-  id: string; // or number
-  name: string;
-  subItems: SubItem[];
-}
-
-// Define props for the MenuComponent
-interface MenuComponentProps {
-  menuItems: MenuItem[];
-}
-
 const Navbar = () => {
   const [user, setUser] = useState<{ name: string; role: string } | null>(null);
 
-  const [activeItem, setActiveItem] = useState<string | null>(null);
+  const [_, setActiveItem] = useState<string | null>(null);
 
   const handleItemClick = (itemName: string) => {
     setActiveItem(itemName); // Set the active item on click
@@ -72,6 +62,25 @@ const Navbar = () => {
       window.location.href = "/";
     } else {
       toast.error("Logout failed. Please try again.");
+    }
+  };
+
+  const [isDialogOpen, setDialogOpen] = useState(false);
+
+  // Handle link click
+  const handleLinkClick = (
+    e: React.MouseEvent<HTMLAnchorElement>,
+    subItem: any
+  ) => {
+    e.preventDefault();
+    // console.log("Button Clicked: ", subItem);
+    if (subItem.shouldShowAlert) {
+      // console.log("Alert needed for link: ", subItem.href);
+      setDialogOpen(true); // Open the dev alert dialog
+      return;
+    } else {
+      // Navigate to the link if alert is false
+      window.location.href = subItem.href;
     }
   };
 
@@ -127,6 +136,7 @@ const Navbar = () => {
                         <NavigationMenuLink
                           key={i || subItem.label}
                           href={subItem.href}
+                          onClick={(e: any) => handleLinkClick(e, subItem)}
                           className="py-1 hover:bg-gray-700 px-2 rounded-sm">
                           <div className="flex flex-col items-start justify-center py-1 px-2 text-[13px]">
                             <span className="text-base">{subItem.label}</span>
@@ -143,6 +153,10 @@ const Navbar = () => {
             </NavigationMenuList>
           </NavigationMenu>
         </Menu>
+        <DevAlertDialogComponent
+          isOpen={isDialogOpen}
+          onOpenChange={setDialogOpen}
+        />
       </div>
 
       {/* Profile */}

@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
+import React, { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
 import {
   Form,
   FormControl,
@@ -9,24 +9,24 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form';
-import { Input } from './ui/input';
-import { Button } from './ui/button';
-import { cn } from '@/lib/utils';
-import Image from 'next/image';
-import { submitAfterEditApplication } from '@/lib/actions/student.action';
-import { MdOutlinePhotoSizeSelectActual } from 'react-icons/md';
-import { IoArrowRedoOutline } from 'react-icons/io5';
-import { Country, IState, State } from 'country-state-city';
-import { districtsData } from '@/data/districtsData';
-import { Toaster, toast } from 'sonner';
+} from "@/components/ui/form";
+import { Input } from "./ui/input";
+import { Button } from "./ui/button";
+import { cn } from "@/lib/utils";
+import Image from "next/image";
+import { submitAfterEditApplication } from "@/lib/actions/student.action";
+import { MdOutlinePhotoSizeSelectActual } from "react-icons/md";
+import { IoArrowRedoOutline } from "react-icons/io5";
+import { Country, IState, State } from "country-state-city";
+import { districtsData } from "@/data/districtsData";
+import { Toaster, toast } from "sonner";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from './ui/select';
+} from "./ui/select";
 import {
   Dialog,
   DialogContent,
@@ -35,43 +35,43 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/dialog';
-import { baseURL } from '@/lib/axios';
+} from "@/components/ui/dialog";
+import { baseURL } from "@/lib/axios";
 
 type DistrictKey = keyof typeof districtsData;
 
 const studentApproveFormScheam = z
   .object({
     first_name: z.string().min(1, {
-      message: 'Required first name',
+      message: "Required first name",
     }),
     middle_name: z.string().optional(),
     last_name: z.string().min(1, {
-      message: 'Required last name',
+      message: "Required last name",
     }),
     gender: z.string().min(1, {
-      message: 'Required gender',
+      message: "Required gender",
     }),
     date_of_birth: z.string().min(1, {
-      message: 'Required date of birth',
+      message: "Required date of birth",
     }),
     birth_certificate_number: z.string().min(1, {
-      message: 'Required birth certificate number',
+      message: "Required birth certificate number",
     }),
     birth_place: z.string().min(1, {
-      message: 'Required birth place',
+      message: "Required birth place",
     }),
     mother_tongue: z.string().min(1, {
-      message: 'Required mother tongue',
+      message: "Required mother tongue",
     }),
     language_spoken_at_home: z.string().min(1, {
-      message: 'Required language spoken at home',
+      message: "Required language spoken at home",
     }),
     religion: z.string().min(1, {
-      message: 'Required religion',
+      message: "Required religion",
     }),
     aadhaar_number: z.string().optional(),
-    caste: z.string().min(1, { message: 'Caste is required' }),
+    caste: z.string().min(1, { message: "Caste is required" }),
     caste_certificate_number: z.string().optional(),
     hobbies: z.string().optional(),
 
@@ -80,13 +80,13 @@ const studentApproveFormScheam = z
     weight: z.string().optional(),
 
     father_name: z.string().min(1, {
-      message: 'Required father name',
+      message: "Required father name",
     }),
     father_occupation: z.string().min(1, {
-      message: 'Required father occupation',
+      message: "Required father occupation",
     }),
     father_contact: z.string().min(1, {
-      message: 'Required father contact',
+      message: "Required father contact",
     }),
 
     father_whatsapp_no: z.string().optional(),
@@ -96,89 +96,83 @@ const studentApproveFormScheam = z
     mother_email: z.string().optional(),
 
     father_qualification: z.string().min(1, {
-      message: 'Required father qualification',
+      message: "Required father qualification",
     }),
-    // father_annual_income: z.string().min(1, {
-    //   message: "Required father annual income",
-    // }),
 
     father_annual_income: z
       .string()
-      .min(1, { message: 'Father annual income is required' })
-      .regex(/^\d+$/, { message: 'Father annual income must be a number' }) // Ensure it's a number
+      .min(1, { message: "Father annual income is required" })
+      .regex(/^\d+$/, { message: "Father annual income must be a number" }) // Ensure it's a number
       .transform((val) => Number(val)), // Transform to a number
 
     mother_qualification: z.string().min(1, {
-      message: 'Required mother qualification',
+      message: "Required mother qualification",
     }),
-    // mother_annual_income: z.string().min(1, {
-    //   message: "Required mother annual income",
-    // }),
 
     mother_annual_income: z
       .string()
-      .min(1, { message: 'Mother annual income is required' })
-      .regex(/^\d+$/, { message: 'Mother annual income must be a number' }) // Ensure it's a number
+      .min(1, { message: "Mother annual income is required" })
+      .regex(/^\d+$/, { message: "Mother annual income must be a number" }) // Ensure it's a number
       .transform((val) => Number(val)), // Transform to a number
 
     mother_name: z.string().min(1, {
-      message: 'Required mother name',
+      message: "Required mother name",
     }),
     mother_occupation: z.string().min(1, {
-      message: 'Required mother occupation',
+      message: "Required mother occupation",
     }),
     mother_contact: z.string().min(1, {
-      message: 'Required mother contact',
+      message: "Required mother contact",
     }),
 
-    guardian_name: z.string().min(1, { message: 'Required guardian name' }),
+    guardian_name: z.string().min(1, { message: "Required guardian name" }),
     guardian_relationship: z
       .string()
-      .min(1, { message: 'Required relationship' }),
-    guardian_occupation: z.string().min(1, { message: 'Required occupation' }),
+      .min(1, { message: "Required relationship" }),
+    guardian_occupation: z.string().min(1, { message: "Required occupation" }),
     guardian_contact_no: z
       .string()
-      .min(1, { message: 'Required contact number' }),
+      .min(1, { message: "Required contact number" }),
     guardian_whatsapp_no: z
       .string()
-      .min(1, { message: 'Required WhatsApp number' }),
+      .min(1, { message: "Required WhatsApp number" }),
     guardian_email: z
       .string()
-      .email({ message: 'Invalid e-mail' })
-      .min(1, { message: 'Required email' }),
+      .email({ message: "Invalid e-mail" })
+      .min(1, { message: "Required email" }),
     guardian_qualification: z
       .string()
-      .min(1, { message: 'Required qualification' }),
+      .min(1, { message: "Required qualification" }),
     // guardian_annual_income: z
     //   .string()
     //   .min(1, { message: "Required annual income" }),
 
     guardian_annual_income: z
       .string()
-      .min(1, { message: 'Guardian annual income is required' })
-      .regex(/^\d+$/, { message: 'Guardian annual income must be a number' }) // Ensure it's a number
+      .min(1, { message: "Guardian annual income is required" })
+      .regex(/^\d+$/, { message: "Guardian annual income must be a number" }) // Ensure it's a number
       .transform((val) => Number(val)), // Transform to a number
 
-    village: z.string().min(1, { message: 'Required village' }),
-    post_office: z.string().min(1, { message: 'Required post office' }),
-    police_station: z.string().min(1, { message: 'Required police station' }),
-    district: z.string().min(1, { message: 'Required district' }),
-    state: z.string().min(1, { message: 'Required state' }),
-    country: z.string().min(1, { message: 'Required country' }),
-    postal_code: z.string().min(1, { message: 'Required postal code' }),
-    permanent_village: z.string().min(1, { message: 'Required village' }),
+    village: z.string().min(1, { message: "Required village" }),
+    post_office: z.string().min(1, { message: "Required post office" }),
+    police_station: z.string().min(1, { message: "Required police station" }),
+    district: z.string().min(1, { message: "Required district" }),
+    state: z.string().min(1, { message: "Required state" }),
+    country: z.string().min(1, { message: "Required country" }),
+    postal_code: z.string().min(1, { message: "Required postal code" }),
+    permanent_village: z.string().min(1, { message: "Required village" }),
     permanent_post_office: z
       .string()
-      .min(1, { message: 'Required post office' }),
+      .min(1, { message: "Required post office" }),
     permanent_police_station: z
       .string()
-      .min(1, { message: 'Required police station' }),
-    permanent_district: z.string().min(1, { message: 'Required district' }),
-    permanent_state: z.string().min(1, { message: 'Required state' }),
-    permanent_country: z.string().min(1, { message: 'Required country' }),
+      .min(1, { message: "Required police station" }),
+    permanent_district: z.string().min(1, { message: "Required district" }),
+    permanent_state: z.string().min(1, { message: "Required state" }),
+    permanent_country: z.string().min(1, { message: "Required country" }),
     permanent_postal_code: z
       .string()
-      .min(1, { message: 'Required postal code' }),
+      .min(1, { message: "Required postal code" }),
 
     institute_name: z.string().optional(),
     board_affiliation: z.string().optional(),
@@ -210,51 +204,51 @@ const studentApproveFormScheam = z
     ifsc_code: z.string().optional(),
     changed_image: z.instanceof(File).optional(),
 
-    is_specially_abled: z.enum(['true', 'No']).optional(),
+    is_specially_abled: z.enum(["true", "No"]).optional(),
     pwd_certificate_number: z.string().optional(),
 
     // Assign Class, Section, Fees Group, Academic Era
     class_info: z.string().min(1, {
-      message: 'Required class',
+      message: "Required class",
     }),
     section_info: z.string().min(1, {
-      message: 'Required section',
+      message: "Required section",
     }),
     fees_info: z.array(z.string()).min(1, {
-      message: 'Required fees group',
+      message: "Required fees group",
     }),
     academic_era: z.string().min(1, {
-      message: 'Required academic era',
+      message: "Required academic era",
     }),
     boardingStatus: z.string().min(1, {
-      message: 'Required boarding status',
+      message: "Required boarding status",
     }),
   })
   .refine(
     (data) => {
       // Conditionally validate caste_certificate_number based on caste
-      if (data.caste !== 'General' && !data.caste_certificate_number) {
+      if (data.caste !== "General" && !data.caste_certificate_number) {
         return false; // Invalid if `caste_certificate_number` is missing for non-General caste
       }
       return true;
     },
     {
-      message: 'Caste Certificate Number is required for non-General caste.',
-      path: ['caste_certificate_number'], // Error will appear under this field
+      message: "Caste Certificate Number is required for non-General caste.",
+      path: ["caste_certificate_number"], // Error will appear under this field
     }
   )
   .refine(
     (data) => {
       // If the student is specially abled, the PWD Certificate Number required
-      if (data.is_specially_abled === 'true' && !data.pwd_certificate_number) {
+      if (data.is_specially_abled === "true" && !data.pwd_certificate_number) {
         return false;
       }
       return true;
     },
     {
       message:
-        'PWD Certificate Number is required for specially abled students.',
-      path: ['pwd_certificate_number'],
+        "PWD Certificate Number is required for specially abled students.",
+      path: ["pwd_certificate_number"],
     }
   );
 
@@ -293,11 +287,11 @@ const EditStudentForm = ({
     resolver: zodResolver(studentApproveFormScheam),
   });
 
-  const boardingStatus = ['REGULAR', 'BOARDER', 'HOSTELLER'];
+  const boardingStatus = ["REGULAR", "BOARDER", "HOSTELLER"];
 
   // ----------------------------------------------------------------------------------
   const [selectedGroups, setSelectedGroups] = useState<string[]>([]);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
 
   const handleGroupSelection = (groupId: string) => {
     if (selectedGroups.includes(groupId)) {
@@ -309,7 +303,7 @@ const EditStudentForm = ({
     }
   };
 
-  console.log('allGroups', allGroups);
+  console.log("allGroups", allGroups);
 
   const filteredGroups = Array.isArray(allGroups)
     ? allGroups.filter((group: any) =>
@@ -321,7 +315,7 @@ const EditStudentForm = ({
   const selectedGroupNames = filteredGroups
     .filter((group) => selectedGroups.includes(group._id))
     .map((group) => group.name)
-    .join(', ');
+    .join(", ");
 
   const handleAddGroups = () => {
     setDialogOpen(false); // Close the dialog
@@ -336,10 +330,10 @@ const EditStudentForm = ({
         normalizedDate.getMonth() + 1
       )
         .toString()
-        .padStart(2, '0')}-${normalizedDate
+        .padStart(2, "0")}-${normalizedDate
         .getDate()
         .toString()
-        .padStart(2, '0')}`;
+        .padStart(2, "0")}`;
       setDateOfBirth(formattedDate); // Set initial state
     }
   }, [data.date_of_birth]);
@@ -435,27 +429,27 @@ const EditStudentForm = ({
     },
   });
 
-  const watchCurrentCountry = form.watch('country');
-  const watchCurrentState = form.watch('state');
-  const watchPermanentCountry = form.watch('permanent_country');
-  const watchPermanentState = form.watch('permanent_state');
+  const watchCurrentCountry = form.watch("country");
+  const watchCurrentState = form.watch("state");
+  const watchPermanentCountry = form.watch("permanent_country");
+  const watchPermanentState = form.watch("permanent_state");
 
   useEffect(() => {
     if (watchCurrentCountry) {
       const states = State.getStatesOfCountry(watchCurrentCountry) || [];
       setCurrentStatesList(states);
-      setValue('state', '');
+      setValue("state", "");
     }
   }, [watchCurrentCountry, setValue]);
 
   useEffect(() => {
-    if (watchCurrentCountry === 'IN') {
+    if (watchCurrentCountry === "IN") {
       const districts = districtsData[watchCurrentState as DistrictKey] || [];
       setCurrentDistrictsList(districts);
-      setValue('district', '');
+      setValue("district", "");
     } else {
       setCurrentDistrictsList([]);
-      setValue('district', '');
+      setValue("district", "");
     }
   }, [watchCurrentState, watchCurrentCountry, setValue]);
 
@@ -463,31 +457,31 @@ const EditStudentForm = ({
     if (watchPermanentCountry) {
       const states = State.getStatesOfCountry(watchPermanentCountry) || [];
       setPermanentStatesList(states);
-      setValue('state', '');
+      setValue("state", "");
     }
   }, [watchPermanentCountry, setValue]);
 
   useEffect(() => {
-    if (watchPermanentCountry === 'IN') {
+    if (watchPermanentCountry === "IN") {
       const districts = districtsData[watchPermanentState as DistrictKey] || [];
       setPermanentDistrictsList(districts);
-      setValue('district', '');
+      setValue("district", "");
     } else {
       setPermanentDistrictsList([]);
-      setValue('district', '');
+      setValue("district", "");
     }
   }, [watchPermanentState, watchPermanentCountry, setValue]);
 
-  const watchClass = form.watch('class_info');
+  const watchClass = form.watch("class_info");
 
   useEffect(() => {
     if (watchClass) {
-      console.log('watchClass: ', watchClass);
+      console.log("watchClass: ", watchClass);
       const sectionOptions = allClasses.find(
         (item: any) => item._id === watchClass
       )?.sections;
       setSectionOptions(sectionOptions);
-      setValue('section_info', '');
+      setValue("section_info", "");
     }
   }, [watchClass, allClasses, setValue, getValues]);
 
@@ -553,34 +547,34 @@ const EditStudentForm = ({
         medical_details: {
           allergies: {
             details:
-              typeof values.allergies === 'object'
+              typeof values.allergies === "object"
                 ? values.allergies.details
                 : values.allergies,
-            status: values.allergies.details === 'N/A' ? false : true,
+            status: values.allergies.details === "N/A" ? false : true,
           },
           special_medical_conditions: {
             details:
-              typeof values.special_medical_conditions === 'object'
+              typeof values.special_medical_conditions === "object"
                 ? values.special_medical_conditions.details
                 : values.special_medical_conditions,
             status:
-              values.special_medical_conditions.details === 'N/A'
+              values.special_medical_conditions.details === "N/A"
                 ? false
                 : true,
           },
           special_assistance: {
             details:
-              typeof values.special_assistance === 'object'
+              typeof values.special_assistance === "object"
                 ? values.special_assistance.details
                 : values.special_assistance,
-            status: values.special_assistance.details === 'N/A' ? false : true,
+            status: values.special_assistance.details === "N/A" ? false : true,
           },
           regular_medication: {
             details:
-              typeof values.regular_medication === 'object'
+              typeof values.regular_medication === "object"
                 ? values.regular_medication.details
                 : values.regular_medication,
-            status: values.regular_medication.details === 'N/A' ? false : true,
+            status: values.regular_medication.details === "N/A" ? false : true,
           },
           blood_group: values.blood_group,
           height: values.height,
@@ -641,15 +635,15 @@ const EditStudentForm = ({
 
     // Append new image if a file is selected
     if (values.changed_image instanceof File) {
-      formData.append('changed_image', values.changed_image); // New image file
+      formData.append("changed_image", values.changed_image); // New image file
     }
 
-    const appendFormData = (formData: FormData, data: any, parentKey = '') => {
+    const appendFormData = (formData: FormData, data: any, parentKey = "") => {
       Object.keys(data).forEach((key) => {
         const newKey = parentKey ? `${parentKey}[${key}]` : key;
         if (
           data[key] !== null &&
-          typeof data[key] === 'object' &&
+          typeof data[key] === "object" &&
           !Array.isArray(data[key])
         ) {
           appendFormData(formData, data[key], newKey);
@@ -662,13 +656,13 @@ const EditStudentForm = ({
     // Append data1 to formData
     appendFormData(formData, data1);
 
-    console.log('Form data: ', data1);
-    console.log('Id', data._id);
+    console.log("Form data: ", data1);
+    console.log("Id", data._id);
     try {
       const response = await submitAfterEditApplication(formData, data._id);
 
       if (response.statusCode === 200) {
-        toast.success('Student created successfully!');
+        toast.success("Student created successfully!");
 
         const feeStructureId = response.data;
         window.location.href = `${baseURL}/document/generate-agreement-pdf/${feeStructureId}`;
@@ -679,7 +673,7 @@ const EditStudentForm = ({
       }
     } catch (error) {
       console.log(error);
-      toast.error('Something went wrong. Please try again.');
+      toast.error("Something went wrong. Please try again.");
     }
   };
 
@@ -688,11 +682,10 @@ const EditStudentForm = ({
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(handleSubmit)}
-          className="w-full text-black"
-        >
+          className="w-full text-black">
           <div className="mb-8 grid grid-cols-2">
             <h1 className="text-2xl font-semibold mb-16 text-gray-600 uppercase">
-              Showing All Details of {data.first_name} {data?.middle_name || ''}{' '}
+              Showing All Details of {data.first_name} {data?.middle_name || ""}{" "}
               {data.last_name}
             </h1>
 
@@ -709,12 +702,11 @@ const EditStudentForm = ({
                         New Photo
                       </p>
                       <Image
-                        src={previewImage || ''}
+                        src={previewImage || ""}
                         width={500}
                         height={500}
                         alt="Student Photo"
-                        className="w-[1.7in] h-[2in] object-cover object-center border-2 border-[#303030] justify-self-end"
-                      ></Image>
+                        className="w-[1.7in] h-[2in] object-cover object-center border-2 border-[#303030] justify-self-end"></Image>
                     </div>
                   </div>
                 )}
@@ -725,8 +717,7 @@ const EditStudentForm = ({
                     width={500}
                     height={500}
                     alt="Student Photo"
-                    className="w-[1.7in] h-[2in] object-cover object-center border-2 border-[#303030]"
-                  ></Image>
+                    className="w-[1.7in] h-[2in] object-cover object-center border-2 border-[#303030]"></Image>
                   <FormField
                     control={form.control}
                     name="changed_image"
@@ -777,20 +768,17 @@ const EditStudentForm = ({
                   name="first_name"
                   render={({ field }) => (
                     <FormItem
-                      className={cn('flex flex-col w-full text-[13px]')}
-                    >
+                      className={cn("flex flex-col w-full text-[13px]")}>
                       <FormLabel
                         className={cn(
-                          'text-gray-500 font-semibold w-fit mb-0.5'
-                        )}
-                      >
+                          "text-gray-500 font-semibold w-fit mb-0.5"
+                        )}>
                         First Name<span className="text-red-500">*</span> :
                       </FormLabel>
                       <FormControl
                         className={cn(
-                          'border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll'
-                        )}
-                      >
+                          "border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
+                        )}>
                         <Input
                           placeholder="First name"
                           {...field}
@@ -808,20 +796,17 @@ const EditStudentForm = ({
                   name="middle_name"
                   render={({ field }) => (
                     <FormItem
-                      className={cn('flex flex-col w-full text-[13px]')}
-                    >
+                      className={cn("flex flex-col w-full text-[13px]")}>
                       <FormLabel
                         className={cn(
-                          'text-gray-500 font-semibold w-fit mb-0.5'
-                        )}
-                      >
+                          "text-gray-500 font-semibold w-fit mb-0.5"
+                        )}>
                         Middle Name :
                       </FormLabel>
                       <FormControl
                         className={cn(
-                          'border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll'
-                        )}
-                      >
+                          "border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
+                        )}>
                         <Input
                           placeholder="Middle name"
                           {...field}
@@ -839,20 +824,17 @@ const EditStudentForm = ({
                   name="last_name"
                   render={({ field }) => (
                     <FormItem
-                      className={cn('flex flex-col w-full text-[13px]')}
-                    >
+                      className={cn("flex flex-col w-full text-[13px]")}>
                       <FormLabel
                         className={cn(
-                          'text-gray-500 font-semibold w-fit mb-0.5'
-                        )}
-                      >
+                          "text-gray-500 font-semibold w-fit mb-0.5"
+                        )}>
                         Last Name<span className="text-red-500">*</span> :
                       </FormLabel>
                       <FormControl
                         className={cn(
-                          'border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll'
-                        )}
-                      >
+                          "border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
+                        )}>
                         <Input
                           placeholder="Last name"
                           {...field}
@@ -870,27 +852,23 @@ const EditStudentForm = ({
                   name="gender"
                   render={({ field }) => (
                     <FormItem
-                      className={cn('flex flex-col w-full text-[13px]')}
-                    >
+                      className={cn("flex flex-col w-full text-[13px]")}>
                       <FormLabel
                         className={cn(
-                          'text-gray-500 font-semibold w-fit mb-0.5'
-                        )}
-                      >
+                          "text-gray-500 font-semibold w-fit mb-0.5"
+                        )}>
                         Gender<span className="text-red-500">*</span> :
                       </FormLabel>
                       <FormControl
                         className={cn(
-                          'px-[10px] text-gray-700 bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll'
-                        )}
-                      >
+                          "px-[10px] text-gray-700 bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
+                        )}>
                         <select
                           {...field}
                           className="w-full bg-transparent focus:outline-none border-2 py-[10px] bg-[#fff]"
                           disabled={!isEditable}
-                          value={field.value || ''} // Controlled approach
-                          onChange={field.onChange}
-                        >
+                          value={field.value || ""} // Controlled approach
+                          onChange={field.onChange}>
                           <option value="" disabled>
                             Select gender
                           </option>
@@ -909,32 +887,29 @@ const EditStudentForm = ({
                   name="date_of_birth"
                   render={({ field }) => (
                     <FormItem
-                      className={cn('flex flex-col w-full text-[13px]')}
-                    >
+                      className={cn("flex flex-col w-full text-[13px]")}>
                       <FormLabel
                         className={cn(
-                          'text-gray-500 font-semibold w-fit mb-0.5'
-                        )}
-                      >
-                        Date of Birth{' '}
+                          "text-gray-500 font-semibold w-fit mb-0.5"
+                        )}>
+                        Date of Birth{" "}
                         <span className="text-[12.8px]">(MM/DD/YYYY)</span>
                         <span className="text-red-500">*</span> :
                       </FormLabel>
                       <FormControl
                         className={cn(
-                          'text-gray-700 bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll'
-                        )}
-                      >
+                          "text-gray-700 bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
+                        )}>
                         <div className="border-2 py-[1px]">
                           <Input
                             type="date"
                             disabled={!isEditable}
                             {...field}
-                            value={dateOfBirth || ''}
+                            value={dateOfBirth || ""}
                             onChange={(e) => {
                               const selectedDate = e.target.value; // Get selected date
                               setDateOfBirth(selectedDate); // Update state with the new date
-                              form.setValue('date_of_birth', selectedDate); // Update react-hook-form value
+                              form.setValue("date_of_birth", selectedDate); // Update react-hook-form value
                             }}
                             className="w-full border-none outline-none"
                           />
@@ -955,21 +930,18 @@ const EditStudentForm = ({
                   name="birth_certificate_number"
                   render={({ field }) => (
                     <FormItem
-                      className={cn('flex flex-col w-full text-[13px]')}
-                    >
+                      className={cn("flex flex-col w-full text-[13px]")}>
                       <FormLabel
                         className={cn(
-                          'text-gray-500 font-semibold w-fit mb-0.5'
-                        )}
-                      >
+                          "text-gray-500 font-semibold w-fit mb-0.5"
+                        )}>
                         Birth Certificate Number
                         <span className="text-red-500">*</span> :
                       </FormLabel>
                       <FormControl
                         className={cn(
-                          'border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll'
-                        )}
-                      >
+                          "border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
+                        )}>
                         <Input
                           placeholder="Birth Certificate Number"
                           disabled={!isEditable}
@@ -987,20 +959,17 @@ const EditStudentForm = ({
                   name="birth_place"
                   render={({ field }) => (
                     <FormItem
-                      className={cn('flex flex-col w-full text-[13px]')}
-                    >
+                      className={cn("flex flex-col w-full text-[13px]")}>
                       <FormLabel
                         className={cn(
-                          'text-gray-500 font-semibold w-fit mb-0.5'
-                        )}
-                      >
+                          "text-gray-500 font-semibold w-fit mb-0.5"
+                        )}>
                         Birth Place<span className="text-red-500">*</span> :
                       </FormLabel>
                       <FormControl
                         className={cn(
-                          'border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll'
-                        )}
-                      >
+                          "border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
+                        )}>
                         <Input
                           placeholder="Birth Place"
                           disabled={!isEditable}
@@ -1018,27 +987,23 @@ const EditStudentForm = ({
                   name="mother_tongue"
                   render={({ field }) => (
                     <FormItem
-                      className={cn('flex flex-col w-full text-[13px]')}
-                    >
+                      className={cn("flex flex-col w-full text-[13px]")}>
                       <FormLabel
                         className={cn(
-                          'text-gray-500 font-semibold w-fit mb-0.5'
-                        )}
-                      >
+                          "text-gray-500 font-semibold w-fit mb-0.5"
+                        )}>
                         Mother Tongue<span className="text-red-500">*</span> :
                       </FormLabel>
                       <FormControl
                         className={cn(
-                          'border-2 px-[6px] text-gray-700 py-[10px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll'
-                        )}
-                      >
+                          "border-2 px-[6px] text-gray-700 py-[10px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
+                        )}>
                         <select
                           {...field}
                           className="w-full bg-transparent focus:outline-none border-2 bg-[#fff]"
                           disabled={!isEditable}
-                          value={field.value || ''} // Controlled approach
-                          onChange={field.onChange}
-                        >
+                          value={field.value || ""} // Controlled approach
+                          onChange={field.onChange}>
                           <option value="" disabled>
                             Select Mother Tongue
                           </option>
@@ -1058,28 +1023,24 @@ const EditStudentForm = ({
                   name="language_spoken_at_home"
                   render={({ field }) => (
                     <FormItem
-                      className={cn('flex flex-col w-full text-[13px]')}
-                    >
+                      className={cn("flex flex-col w-full text-[13px]")}>
                       <FormLabel
                         className={cn(
-                          'text-gray-500 font-semibold w-fit mb-0.5'
-                        )}
-                      >
+                          "text-gray-500 font-semibold w-fit mb-0.5"
+                        )}>
                         Language Spoken at Home
                         <span className="text-red-500">*</span> :
                       </FormLabel>
                       <FormControl
                         className={cn(
-                          'border-2 px-[6px] text-gray-700 py-[10px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll'
-                        )}
-                      >
+                          "border-2 px-[6px] text-gray-700 py-[10px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
+                        )}>
                         <select
                           {...field}
                           className="w-full bg-transparent focus:outline-none border-2 bg-[#fff]"
                           disabled={!isEditable}
-                          value={field.value || ''} // Controlled approach
-                          onChange={field.onChange}
-                        >
+                          value={field.value || ""} // Controlled approach
+                          onChange={field.onChange}>
                           <option value="" disabled>
                             Select Language Spoken at Home
                           </option>
@@ -1099,27 +1060,23 @@ const EditStudentForm = ({
                   name="religion"
                   render={({ field }) => (
                     <FormItem
-                      className={cn('flex flex-col w-full text-[13px]')}
-                    >
+                      className={cn("flex flex-col w-full text-[13px]")}>
                       <FormLabel
                         className={cn(
-                          'text-gray-500 font-semibold w-fit mb-0.5'
-                        )}
-                      >
+                          "text-gray-500 font-semibold w-fit mb-0.5"
+                        )}>
                         Religion<span className="text-red-500">*</span> :
                       </FormLabel>
                       <FormControl
                         className={cn(
-                          'border-2 px-[10px] text-gray-700 py-[10px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll'
-                        )}
-                      >
+                          "border-2 px-[10px] text-gray-700 py-[10px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
+                        )}>
                         <select
                           {...field}
                           className="w-full bg-transparent focus:outline-none border-2 bg-[#fff]"
                           disabled={!isEditable}
-                          value={field.value || ''} // Controlled approach
-                          onChange={field.onChange}
-                        >
+                          value={field.value || ""} // Controlled approach
+                          onChange={field.onChange}>
                           <option value="" disabled selected>
                             Select Religion
                           </option>
@@ -1143,20 +1100,17 @@ const EditStudentForm = ({
                   name="aadhaar_number"
                   render={({ field }) => (
                     <FormItem
-                      className={cn('flex flex-col w-full text-[13px]')}
-                    >
+                      className={cn("flex flex-col w-full text-[13px]")}>
                       <FormLabel
                         className={cn(
-                          'text-gray-500 font-semibold w-fit mb-0.5'
-                        )}
-                      >
+                          "text-gray-500 font-semibold w-fit mb-0.5"
+                        )}>
                         Aadhaar Number :
                       </FormLabel>
                       <FormControl
                         className={cn(
-                          'border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll'
-                        )}
-                      >
+                          "border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
+                        )}>
                         <Input
                           placeholder="aadhaar_number"
                           disabled={!isEditable}
@@ -1174,27 +1128,23 @@ const EditStudentForm = ({
                   name="caste"
                   render={({ field }) => (
                     <FormItem
-                      className={cn('flex flex-col w-full text-[13px]')}
-                    >
+                      className={cn("flex flex-col w-full text-[13px]")}>
                       <FormLabel
                         className={cn(
-                          'text-gray-500 font-semibold w-fit mb-0.5'
-                        )}
-                      >
+                          "text-gray-500 font-semibold w-fit mb-0.5"
+                        )}>
                         Caste<span className="text-red-500">*</span> :
                       </FormLabel>
                       <FormControl
                         className={cn(
-                          'border-2 px-[6px] text-gray-700 py-[10px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll'
-                        )}
-                      >
+                          "border-2 px-[6px] text-gray-700 py-[10px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
+                        )}>
                         <select
                           {...field}
                           className="w-full bg-transparent focus:outline-none border-2 bg-[#fff]"
                           disabled={!isEditable}
-                          value={field.value || ''} // Controlled approach
-                          onChange={field.onChange}
-                        >
+                          value={field.value || ""} // Controlled approach
+                          onChange={field.onChange}>
                           <option value="" disabled selected>
                             Select Caste
                           </option>
@@ -1219,20 +1169,17 @@ const EditStudentForm = ({
                   name="caste_certificate_number"
                   render={({ field }) => (
                     <FormItem
-                      className={cn('flex flex-col w-full text-[13px]')}
-                    >
+                      className={cn("flex flex-col w-full text-[13px]")}>
                       <FormLabel
                         className={cn(
-                          'text-gray-500 font-semibold w-fit mb-0.5'
-                        )}
-                      >
+                          "text-gray-500 font-semibold w-fit mb-0.5"
+                        )}>
                         caste Certificate Number :
                       </FormLabel>
                       <FormControl
                         className={cn(
-                          'border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll'
-                        )}
-                      >
+                          "border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
+                        )}>
                         <Input
                           placeholder="Caste Certificate Number"
                           disabled={!isEditable}
@@ -1251,14 +1198,13 @@ const EditStudentForm = ({
                       control={form.control}
                       name="is_specially_abled"
                       render={({ field }) => {
-                        const isChecked = field.value === 'true';
+                        const isChecked = field.value === "true";
 
                         return (
-                          <FormItem className={cn('flex items-center gap-2')}>
+                          <FormItem className={cn("flex items-center gap-2")}>
                             <label
                               htmlFor="is_specially_abled"
-                              className="text-gray-500 font-semibold text-[13px]"
-                            >
+                              className="text-gray-500 font-semibold text-[13px]">
                               Is Specially Abled?
                             </label>
                             <input
@@ -1270,7 +1216,7 @@ const EditStudentForm = ({
                               checked={isChecked}
                               onChange={(e) => {
                                 field.onChange(
-                                  e.target.checked ? 'true' : 'No'
+                                  e.target.checked ? "true" : "No"
                                 );
                               }}
                             />
@@ -1285,17 +1231,15 @@ const EditStudentForm = ({
                     name="pwd_certificate_number"
                     render={({ field }) => {
                       const isSpeciallyAbled =
-                        form.watch('is_specially_abled') === 'true';
+                        form.watch("is_specially_abled") === "true";
 
                       return (
                         <FormItem
-                          className={cn('flex flex-col w-full text-[13px]')}
-                        >
+                          className={cn("flex flex-col w-full text-[13px]")}>
                           <FormControl
                             className={cn(
-                              'border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll'
-                            )}
-                          >
+                              "border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
+                            )}>
                             <Input
                               placeholder="PWD Certificate Number"
                               disabled={!isSpeciallyAbled || !isEditable}
@@ -1315,20 +1259,17 @@ const EditStudentForm = ({
                   name="hobbies"
                   render={({ field }) => (
                     <FormItem
-                      className={cn('flex flex-col w-full text-[13px]')}
-                    >
+                      className={cn("flex flex-col w-full text-[13px]")}>
                       <FormLabel
                         className={cn(
-                          'text-gray-500 font-semibold w-fit mb-0.5'
-                        )}
-                      >
+                          "text-gray-500 font-semibold w-fit mb-0.5"
+                        )}>
                         Hobbies :
                       </FormLabel>
                       <FormControl
                         className={cn(
-                          'border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll'
-                        )}
-                      >
+                          "border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
+                        )}>
                         <Input
                           placeholder="Hobbies"
                           disabled={!isEditable}
@@ -1356,19 +1297,16 @@ const EditStudentForm = ({
                     name="father_name"
                     render={({ field }) => (
                       <FormItem
-                        className={cn('flex flex-col w-full text-[13px]')}
-                      >
+                        className={cn("flex flex-col w-full text-[13px]")}>
                         <FormLabel
-                          className={cn('text-gray-500 font-semibold mb-0.5')}
-                        >
+                          className={cn("text-gray-500 font-semibold mb-0.5")}>
                           Father&apos;s Name
                           <span className="text-red-500">*</span> :
                         </FormLabel>
                         <FormControl
                           className={cn(
-                            'border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll'
-                          )}
-                        >
+                            "border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
+                          )}>
                           <Input
                             placeholder="Father's name"
                             disabled={!isEditable}
@@ -1386,19 +1324,16 @@ const EditStudentForm = ({
                     name="father_occupation"
                     render={({ field }) => (
                       <FormItem
-                        className={cn('flex flex-col w-full text-[13px]')}
-                      >
+                        className={cn("flex flex-col w-full text-[13px]")}>
                         <FormLabel
-                          className={cn('text-gray-500 font-semibold mb-0.5')}
-                        >
+                          className={cn("text-gray-500 font-semibold mb-0.5")}>
                           Father&apos;s Occupation
                           <span className="text-red-500">*</span> :
                         </FormLabel>
                         <Select
                           disabled={!isEditable}
                           onValueChange={field.onChange}
-                          defaultValue={field.value}
-                        >
+                          defaultValue={field.value}>
                           <FormControl>
                             <SelectTrigger className="w-full">
                               <SelectValue placeholder="Select Occupation" />
@@ -1435,19 +1370,16 @@ const EditStudentForm = ({
                     name="father_contact"
                     render={({ field }) => (
                       <FormItem
-                        className={cn('flex flex-col w-full text-[13px]')}
-                      >
+                        className={cn("flex flex-col w-full text-[13px]")}>
                         <FormLabel
-                          className={cn('text-gray-500 font-semibold mb-0.5')}
-                        >
+                          className={cn("text-gray-500 font-semibold mb-0.5")}>
                           Father&apos;s Contact
                           <span className="text-red-500">*</span> :
                         </FormLabel>
                         <FormControl
                           className={cn(
-                            'border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll'
-                          )}
-                        >
+                            "border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
+                          )}>
                           <Input
                             placeholder="Father's contact number"
                             disabled={!isEditable}
@@ -1465,19 +1397,16 @@ const EditStudentForm = ({
                     name="father_annual_income"
                     render={({ field }) => (
                       <FormItem
-                        className={cn('flex flex-col w-full text-[13px]')}
-                      >
+                        className={cn("flex flex-col w-full text-[13px]")}>
                         <FormLabel
-                          className={cn('text-gray-500 font-semibold mb-0.5')}
-                        >
+                          className={cn("text-gray-500 font-semibold mb-0.5")}>
                           Father&apos;s Annual Income
                           <span className="text-red-500">*</span> :
                         </FormLabel>
                         <FormControl
                           className={cn(
-                            'border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll'
-                          )}
-                        >
+                            "border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
+                          )}>
                           <Input
                             placeholder="Father's Annual Income"
                             disabled={!isEditable}
@@ -1495,19 +1424,16 @@ const EditStudentForm = ({
                     name="father_qualification"
                     render={({ field }) => (
                       <FormItem
-                        className={cn('flex flex-col w-full text-[13px]')}
-                      >
+                        className={cn("flex flex-col w-full text-[13px]")}>
                         <FormLabel
-                          className={cn('text-gray-500 font-semibold mb-0.5')}
-                        >
+                          className={cn("text-gray-500 font-semibold mb-0.5")}>
                           Father&apos;s Qualification
                           <span className="text-red-500">*</span> :
                         </FormLabel>
                         <Select
                           disabled={!isEditable}
                           onValueChange={field.onChange}
-                          defaultValue={field.value}
-                        >
+                          defaultValue={field.value}>
                           <FormControl>
                             <SelectTrigger className="w-full">
                               <SelectValue placeholder="Select Occupation" />
@@ -1538,18 +1464,15 @@ const EditStudentForm = ({
                     name="father_email"
                     render={({ field }) => (
                       <FormItem
-                        className={cn('flex flex-col w-full text-[13px]')}
-                      >
+                        className={cn("flex flex-col w-full text-[13px]")}>
                         <FormLabel
-                          className={cn('text-gray-500 font-semibold mb-0.5')}
-                        >
+                          className={cn("text-gray-500 font-semibold mb-0.5")}>
                           Father&apos;s Email :
                         </FormLabel>
                         <FormControl
                           className={cn(
-                            'border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll'
-                          )}
-                        >
+                            "border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
+                          )}>
                           <Input
                             placeholder="Father's Email"
                             disabled={!isEditable}
@@ -1567,18 +1490,15 @@ const EditStudentForm = ({
                     name="father_whatsapp_no"
                     render={({ field }) => (
                       <FormItem
-                        className={cn('flex flex-col w-full text-[13px]')}
-                      >
+                        className={cn("flex flex-col w-full text-[13px]")}>
                         <FormLabel
-                          className={cn('text-gray-500 font-semibold mb-0.5')}
-                        >
+                          className={cn("text-gray-500 font-semibold mb-0.5")}>
                           Father&apos;s Whatsapp Number :
                         </FormLabel>
                         <FormControl
                           className={cn(
-                            'border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll'
-                          )}
-                        >
+                            "border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
+                          )}>
                           <Input
                             placeholder="Father's Whatsapp Number"
                             disabled={!isEditable}
@@ -1605,21 +1525,18 @@ const EditStudentForm = ({
                     name="mother_name"
                     render={({ field }) => (
                       <FormItem
-                        className={cn('flex flex-col w-full text-[13px]')}
-                      >
+                        className={cn("flex flex-col w-full text-[13px]")}>
                         <FormLabel
                           className={cn(
-                            'text-gray-500 font-semibold w-fit mb-0.5'
-                          )}
-                        >
+                            "text-gray-500 font-semibold w-fit mb-0.5"
+                          )}>
                           Mother&apos;s Name
                           <span className="text-red-500">*</span> :
                         </FormLabel>
                         <FormControl
                           className={cn(
-                            'border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll'
-                          )}
-                        >
+                            "border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
+                          )}>
                           <Input
                             placeholder="Mother's name"
                             disabled={!isEditable}
@@ -1637,21 +1554,18 @@ const EditStudentForm = ({
                     name="mother_occupation"
                     render={({ field }) => (
                       <FormItem
-                        className={cn('flex flex-col w-full text-[13px]')}
-                      >
+                        className={cn("flex flex-col w-full text-[13px]")}>
                         <FormLabel
                           className={cn(
-                            'text-gray-500 font-semibold w-fit mb-0.5'
-                          )}
-                        >
+                            "text-gray-500 font-semibold w-fit mb-0.5"
+                          )}>
                           Mother&apos;s Occupation
                           <span className="text-red-500">*</span> :
                         </FormLabel>
                         <Select
                           disabled={!isEditable}
                           onValueChange={field.onChange}
-                          defaultValue={field.value}
-                        >
+                          defaultValue={field.value}>
                           <FormControl>
                             <SelectTrigger>
                               <SelectValue placeholder="Select Occupation" />
@@ -1688,21 +1602,18 @@ const EditStudentForm = ({
                     name="mother_contact"
                     render={({ field }) => (
                       <FormItem
-                        className={cn('flex flex-col w-full text-[13px]')}
-                      >
+                        className={cn("flex flex-col w-full text-[13px]")}>
                         <FormLabel
                           className={cn(
-                            'text-gray-500 font-semibold w-fit mb-0.5'
-                          )}
-                        >
+                            "text-gray-500 font-semibold w-fit mb-0.5"
+                          )}>
                           Mother&apos;s Contact
                           <span className="text-red-500">*</span> :
                         </FormLabel>
                         <FormControl
                           className={cn(
-                            'border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll'
-                          )}
-                        >
+                            "border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
+                          )}>
                           <Input
                             placeholder="Mother's contact number"
                             disabled={!isEditable}
@@ -1720,21 +1631,18 @@ const EditStudentForm = ({
                     name="mother_annual_income"
                     render={({ field }) => (
                       <FormItem
-                        className={cn('flex flex-col w-full text-[13px]')}
-                      >
+                        className={cn("flex flex-col w-full text-[13px]")}>
                         <FormLabel
                           className={cn(
-                            'text-gray-500 font-semibold w-fit mb-0.5'
-                          )}
-                        >
+                            "text-gray-500 font-semibold w-fit mb-0.5"
+                          )}>
                           Mother&apos;s Annual Income
                           <span className="text-red-500">*</span> :
                         </FormLabel>
                         <FormControl
                           className={cn(
-                            'border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll'
-                          )}
-                        >
+                            "border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
+                          )}>
                           <Input
                             placeholder="Mother's Annual Income"
                             disabled={!isEditable}
@@ -1752,21 +1660,18 @@ const EditStudentForm = ({
                     name="mother_qualification"
                     render={({ field }) => (
                       <FormItem
-                        className={cn('flex flex-col w-full text-[13px]')}
-                      >
+                        className={cn("flex flex-col w-full text-[13px]")}>
                         <FormLabel
                           className={cn(
-                            'text-gray-500 font-semibold w-fit mb-0.5'
-                          )}
-                        >
+                            "text-gray-500 font-semibold w-fit mb-0.5"
+                          )}>
                           Mother&apos;s Qualification
                           <span className="text-red-500">*</span> :
                         </FormLabel>
                         <Select
                           disabled={!isEditable}
                           onValueChange={field.onChange}
-                          defaultValue={field.value}
-                        >
+                          defaultValue={field.value}>
                           <FormControl>
                             <SelectTrigger className="w-full">
                               <SelectValue placeholder="Select Occupation" />
@@ -1797,20 +1702,17 @@ const EditStudentForm = ({
                     name="mother_email"
                     render={({ field }) => (
                       <FormItem
-                        className={cn('flex flex-col w-full text-[13px]')}
-                      >
+                        className={cn("flex flex-col w-full text-[13px]")}>
                         <FormLabel
                           className={cn(
-                            'text-gray-500 font-semibold w-fit mb-0.5'
-                          )}
-                        >
+                            "text-gray-500 font-semibold w-fit mb-0.5"
+                          )}>
                           Mother&apos;s Email :
                         </FormLabel>
                         <FormControl
                           className={cn(
-                            'border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll'
-                          )}
-                        >
+                            "border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
+                          )}>
                           <Input
                             placeholder="Mother's Email"
                             disabled={!isEditable}
@@ -1828,20 +1730,17 @@ const EditStudentForm = ({
                     name="mother_whatsapp_no"
                     render={({ field }) => (
                       <FormItem
-                        className={cn('flex flex-col w-full text-[13px]')}
-                      >
+                        className={cn("flex flex-col w-full text-[13px]")}>
                         <FormLabel
                           className={cn(
-                            'text-gray-500 font-semibold w-fit mb-0.5'
-                          )}
-                        >
+                            "text-gray-500 font-semibold w-fit mb-0.5"
+                          )}>
                           Mother&apos;s Whatsapp Number :
                         </FormLabel>
                         <FormControl
                           className={cn(
-                            'border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll'
-                          )}
-                        >
+                            "border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
+                          )}>
                           <Input
                             placeholder="Mother's Whatsapp Number"
                             disabled={!isEditable}
@@ -1869,21 +1768,18 @@ const EditStudentForm = ({
                   name="guardian_relationship"
                   render={({ field }) => (
                     <FormItem
-                      className={cn('flex flex-col w-full text-[13px]')}
-                    >
+                      className={cn("flex flex-col w-full text-[13px]")}>
                       <FormLabel
                         className={cn(
-                          'text-gray-500 font-semibold w-fit mb-0.5'
-                        )}
-                      >
+                          "text-gray-500 font-semibold w-fit mb-0.5"
+                        )}>
                         Guardian Relationship
                         <span className="text-red-500">*</span> :
                       </FormLabel>
                       <FormControl
                         className={cn(
-                          'border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll'
-                        )}
-                      >
+                          "border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
+                        )}>
                         <Input
                           placeholder="Relationship to guardian"
                           disabled={!isEditable}
@@ -1901,21 +1797,18 @@ const EditStudentForm = ({
                   name="guardian_name"
                   render={({ field }) => (
                     <FormItem
-                      className={cn('flex flex-col w-full text-[13px]')}
-                    >
+                      className={cn("flex flex-col w-full text-[13px]")}>
                       <FormLabel
                         className={cn(
-                          'text-gray-500 font-semibold w-fit mb-0.5'
-                        )}
-                      >
+                          "text-gray-500 font-semibold w-fit mb-0.5"
+                        )}>
                         Guardian&apos;s Name
                         <span className="text-red-500">*</span> :
                       </FormLabel>
                       <FormControl
                         className={cn(
-                          'border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll'
-                        )}
-                      >
+                          "border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
+                        )}>
                         <Input
                           placeholder="Guardian's name"
                           disabled={!isEditable}
@@ -1933,21 +1826,18 @@ const EditStudentForm = ({
                   name="guardian_occupation"
                   render={({ field }) => (
                     <FormItem
-                      className={cn('flex flex-col w-full text-[13px]')}
-                    >
+                      className={cn("flex flex-col w-full text-[13px]")}>
                       <FormLabel
                         className={cn(
-                          'text-gray-500 font-semibold w-fit mb-0.5'
-                        )}
-                      >
+                          "text-gray-500 font-semibold w-fit mb-0.5"
+                        )}>
                         Guardian&apos;s Occupation
                         <span className="text-red-500">*</span> :
                       </FormLabel>
                       <Select
                         disabled={!isEditable}
                         onValueChange={field.onChange}
-                        defaultValue={field.value}
-                      >
+                        defaultValue={field.value}>
                         <FormControl>
                           <SelectTrigger>
                             <SelectValue placeholder="Select Occupation" />
@@ -1983,21 +1873,18 @@ const EditStudentForm = ({
                   name="guardian_contact_no"
                   render={({ field }) => (
                     <FormItem
-                      className={cn('flex flex-col w-full text-[13px]')}
-                    >
+                      className={cn("flex flex-col w-full text-[13px]")}>
                       <FormLabel
                         className={cn(
-                          'text-gray-500 font-semibold w-fit mb-0.5'
-                        )}
-                      >
+                          "text-gray-500 font-semibold w-fit mb-0.5"
+                        )}>
                         Guardian&apos;s Contact Number
                         <span className="text-red-500">*</span> :
                       </FormLabel>
                       <FormControl
                         className={cn(
-                          'border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll'
-                        )}
-                      >
+                          "border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
+                        )}>
                         <Input
                           placeholder="Guardian's contact number"
                           disabled={!isEditable}
@@ -2015,21 +1902,18 @@ const EditStudentForm = ({
                   name="guardian_whatsapp_no"
                   render={({ field }) => (
                     <FormItem
-                      className={cn('flex flex-col w-full text-[13px]')}
-                    >
+                      className={cn("flex flex-col w-full text-[13px]")}>
                       <FormLabel
                         className={cn(
-                          'text-gray-500 font-semibold w-fit mb-0.5'
-                        )}
-                      >
+                          "text-gray-500 font-semibold w-fit mb-0.5"
+                        )}>
                         Guardian&apos;s WhatsApp Number
                         <span className="text-red-500">*</span> :
                       </FormLabel>
                       <FormControl
                         className={cn(
-                          'border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll'
-                        )}
-                      >
+                          "border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
+                        )}>
                         <Input
                           placeholder="Guardian's WhatsApp number"
                           disabled={!isEditable}
@@ -2047,20 +1931,17 @@ const EditStudentForm = ({
                   name="guardian_email"
                   render={({ field }) => (
                     <FormItem
-                      className={cn('flex flex-col w-full text-[13px]')}
-                    >
+                      className={cn("flex flex-col w-full text-[13px]")}>
                       <FormLabel
                         className={cn(
-                          'text-gray-500 font-semibold w-fit mb-0.5'
-                        )}
-                      >
+                          "text-gray-500 font-semibold w-fit mb-0.5"
+                        )}>
                         Email<span className="text-red-500">*</span> :
                       </FormLabel>
                       <FormControl
                         className={cn(
-                          'border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll'
-                        )}
-                      >
+                          "border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
+                        )}>
                         <Input
                           type="email"
                           placeholder="Guardian's email"
@@ -2079,21 +1960,18 @@ const EditStudentForm = ({
                   name="guardian_qualification"
                   render={({ field }) => (
                     <FormItem
-                      className={cn('flex flex-col w-full text-[13px]')}
-                    >
+                      className={cn("flex flex-col w-full text-[13px]")}>
                       <FormLabel
                         className={cn(
-                          'text-gray-500 font-semibold w-fit mb-0.5'
-                        )}
-                      >
+                          "text-gray-500 font-semibold w-fit mb-0.5"
+                        )}>
                         Guardian&apos;s Qualification
                         <span className="text-red-500">*</span> :
                       </FormLabel>
                       <Select
                         disabled={!isEditable}
                         onValueChange={field.onChange}
-                        defaultValue={field.value}
-                      >
+                        defaultValue={field.value}>
                         <FormControl>
                           <SelectTrigger className="w-full">
                             <SelectValue placeholder="Select Occupation" />
@@ -2122,20 +2000,17 @@ const EditStudentForm = ({
                   name="guardian_annual_income"
                   render={({ field }) => (
                     <FormItem
-                      className={cn('flex flex-col w-full text-[13px]')}
-                    >
+                      className={cn("flex flex-col w-full text-[13px]")}>
                       <FormLabel
                         className={cn(
-                          'text-gray-500 font-semibold w-fit mb-0.5'
-                        )}
-                      >
+                          "text-gray-500 font-semibold w-fit mb-0.5"
+                        )}>
                         Annual Income<span className="text-red-500">*</span> :
                       </FormLabel>
                       <FormControl
                         className={cn(
-                          'border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll'
-                        )}
-                      >
+                          "border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
+                        )}>
                         <Input
                           placeholder="Annual income"
                           disabled={!isEditable}
@@ -2163,20 +2038,17 @@ const EditStudentForm = ({
                     name="village"
                     render={({ field }) => (
                       <FormItem
-                        className={cn('flex flex-col w-full text-[13px]')}
-                      >
+                        className={cn("flex flex-col w-full text-[13px]")}>
                         <FormLabel
                           className={cn(
-                            'text-gray-500 font-semibold w-fit mb-0.5'
-                          )}
-                        >
+                            "text-gray-500 font-semibold w-fit mb-0.5"
+                          )}>
                           Village<span className="text-red-500">*</span> :
                         </FormLabel>
                         <FormControl
                           className={cn(
-                            'border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll'
-                          )}
-                        >
+                            "border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
+                          )}>
                           <Input
                             placeholder="Village"
                             disabled={!isEditable}
@@ -2194,20 +2066,17 @@ const EditStudentForm = ({
                     name="post_office"
                     render={({ field }) => (
                       <FormItem
-                        className={cn('flex flex-col w-full text-[13px]')}
-                      >
+                        className={cn("flex flex-col w-full text-[13px]")}>
                         <FormLabel
                           className={cn(
-                            'text-gray-500 font-semibold w-fit mb-0.5'
-                          )}
-                        >
+                            "text-gray-500 font-semibold w-fit mb-0.5"
+                          )}>
                           Post Office<span className="text-red-500">*</span> :
                         </FormLabel>
                         <FormControl
                           className={cn(
-                            'border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll'
-                          )}
-                        >
+                            "border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
+                          )}>
                           <Input
                             placeholder="Post Office"
                             disabled={!isEditable}
@@ -2225,21 +2094,18 @@ const EditStudentForm = ({
                     name="police_station"
                     render={({ field }) => (
                       <FormItem
-                        className={cn('flex flex-col w-full text-[13px]')}
-                      >
+                        className={cn("flex flex-col w-full text-[13px]")}>
                         <FormLabel
                           className={cn(
-                            'text-gray-500 font-semibold w-fit mb-0.5'
-                          )}
-                        >
-                          Police Station<span className="text-red-500">*</span>{' '}
+                            "text-gray-500 font-semibold w-fit mb-0.5"
+                          )}>
+                          Police Station<span className="text-red-500">*</span>{" "}
                           :
                         </FormLabel>
                         <FormControl
                           className={cn(
-                            'border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll'
-                          )}
-                        >
+                            "border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
+                          )}>
                           <Input
                             placeholder="Police Station"
                             disabled={!isEditable}
@@ -2257,20 +2123,19 @@ const EditStudentForm = ({
                     name="district"
                     render={({ field }) => (
                       <FormItem
-                        className={cn('flex flex-col w-full text-[13px]')}
-                      >
+                        className={cn("flex flex-col w-full text-[13px]")}>
                         <FormLabel
                           className={cn(
-                            'text-gray-500 font-semibold w-fit mb-0.5'
-                          )}
-                        >
+                            "text-gray-500 font-semibold w-fit mb-0.5"
+                          )}>
                           District<span className="text-red-500">*</span> :
                         </FormLabel>
                         <Select
                           onValueChange={field.onChange}
                           defaultValue={field.value}
-                          disabled={!isEditable || !currentDistrictsList.length}
-                        >
+                          disabled={
+                            !isEditable || !currentDistrictsList.length
+                          }>
                           <FormControl>
                             <SelectTrigger className="w-full">
                               <SelectValue placeholder="Select District" />
@@ -2294,20 +2159,17 @@ const EditStudentForm = ({
                     name="state"
                     render={({ field }) => (
                       <FormItem
-                        className={cn('flex flex-col w-full text-[13px]')}
-                      >
+                        className={cn("flex flex-col w-full text-[13px]")}>
                         <FormLabel
                           className={cn(
-                            'text-gray-500 font-semibold w-fit mb-0.5'
-                          )}
-                        >
+                            "text-gray-500 font-semibold w-fit mb-0.5"
+                          )}>
                           State<span className="text-red-500">*</span> :
                         </FormLabel>
                         <Select
                           onValueChange={field.onChange}
                           defaultValue={field.value}
-                          disabled={!isEditable || !currentStatesList.length}
-                        >
+                          disabled={!isEditable || !currentStatesList.length}>
                           <FormControl>
                             <SelectTrigger className="w-full">
                               <SelectValue placeholder="Select State" />
@@ -2317,8 +2179,7 @@ const EditStudentForm = ({
                             {currentStatesList.map((state) => (
                               <SelectItem
                                 key={state.isoCode}
-                                value={state.isoCode}
-                              >
+                                value={state.isoCode}>
                                 {state.name}
                               </SelectItem>
                             ))}
@@ -2334,20 +2195,17 @@ const EditStudentForm = ({
                     name="country"
                     render={({ field }) => (
                       <FormItem
-                        className={cn('flex flex-col w-full text-[13px]')}
-                      >
+                        className={cn("flex flex-col w-full text-[13px]")}>
                         <FormLabel
                           className={cn(
-                            'text-gray-500 font-semibold w-fit mb-0.5'
-                          )}
-                        >
+                            "text-gray-500 font-semibold w-fit mb-0.5"
+                          )}>
                           Country
                         </FormLabel>
                         <Select
                           onValueChange={field.onChange}
                           defaultValue={field.value}
-                          disabled={!isEditable}
-                        >
+                          disabled={!isEditable}>
                           <FormControl>
                             <SelectTrigger className="w-full">
                               <SelectValue placeholder="Select Country" />
@@ -2357,8 +2215,7 @@ const EditStudentForm = ({
                             {Country.getAllCountries().map((country) => (
                               <SelectItem
                                 key={country.isoCode}
-                                value={country.isoCode}
-                              >
+                                value={country.isoCode}>
                                 {country.name}
                               </SelectItem>
                             ))}
@@ -2374,20 +2231,17 @@ const EditStudentForm = ({
                     name="postal_code"
                     render={({ field }) => (
                       <FormItem
-                        className={cn('flex flex-col w-full text-[13px]')}
-                      >
+                        className={cn("flex flex-col w-full text-[13px]")}>
                         <FormLabel
                           className={cn(
-                            'text-gray-500 font-semibold w-fit mb-0.5'
-                          )}
-                        >
+                            "text-gray-500 font-semibold w-fit mb-0.5"
+                          )}>
                           Postal Code<span className="text-red-500">*</span> :
                         </FormLabel>
                         <FormControl
                           className={cn(
-                            'border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll'
-                          )}
-                        >
+                            "border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
+                          )}>
                           <Input
                             placeholder="Postal Code"
                             disabled={!isEditable}
@@ -2414,20 +2268,17 @@ const EditStudentForm = ({
                     name="permanent_village"
                     render={({ field }) => (
                       <FormItem
-                        className={cn('flex flex-col w-full text-[13px]')}
-                      >
+                        className={cn("flex flex-col w-full text-[13px]")}>
                         <FormLabel
                           className={cn(
-                            'text-gray-500 font-semibold w-fit mb-0.5'
-                          )}
-                        >
+                            "text-gray-500 font-semibold w-fit mb-0.5"
+                          )}>
                           Village<span className="text-red-500">*</span> :
                         </FormLabel>
                         <FormControl
                           className={cn(
-                            'border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll'
-                          )}
-                        >
+                            "border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
+                          )}>
                           <Input
                             placeholder="Permanent Village"
                             disabled={!isEditable}
@@ -2445,20 +2296,17 @@ const EditStudentForm = ({
                     name="permanent_post_office"
                     render={({ field }) => (
                       <FormItem
-                        className={cn('flex flex-col w-full text-[13px]')}
-                      >
+                        className={cn("flex flex-col w-full text-[13px]")}>
                         <FormLabel
                           className={cn(
-                            'text-gray-500 font-semibold w-fit mb-0.5'
-                          )}
-                        >
+                            "text-gray-500 font-semibold w-fit mb-0.5"
+                          )}>
                           Post Office<span className="text-red-500">*</span> :
                         </FormLabel>
                         <FormControl
                           className={cn(
-                            'border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll'
-                          )}
-                        >
+                            "border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
+                          )}>
                           <Input
                             placeholder="Permanent Post Office"
                             disabled={!isEditable}
@@ -2476,21 +2324,18 @@ const EditStudentForm = ({
                     name="permanent_police_station"
                     render={({ field }) => (
                       <FormItem
-                        className={cn('flex flex-col w-full text-[13px]')}
-                      >
+                        className={cn("flex flex-col w-full text-[13px]")}>
                         <FormLabel
                           className={cn(
-                            'text-gray-500 font-semibold w-fit mb-0.5'
-                          )}
-                        >
-                          Police Station<span className="text-red-500">*</span>{' '}
+                            "text-gray-500 font-semibold w-fit mb-0.5"
+                          )}>
+                          Police Station<span className="text-red-500">*</span>{" "}
                           :
                         </FormLabel>
                         <FormControl
                           className={cn(
-                            'border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll'
-                          )}
-                        >
+                            "border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
+                          )}>
                           <Input
                             placeholder="Permanent Police Station"
                             disabled={!isEditable}
@@ -2508,13 +2353,11 @@ const EditStudentForm = ({
                     name="permanent_district"
                     render={({ field }) => (
                       <FormItem
-                        className={cn('flex flex-col w-full text-[13px]')}
-                      >
+                        className={cn("flex flex-col w-full text-[13px]")}>
                         <FormLabel
                           className={cn(
-                            'text-gray-500 font-semibold w-fit mb-0.5'
-                          )}
-                        >
+                            "text-gray-500 font-semibold w-fit mb-0.5"
+                          )}>
                           District<span className="text-red-500">*</span> :
                         </FormLabel>
                         <Select
@@ -2522,8 +2365,7 @@ const EditStudentForm = ({
                           defaultValue={field.value}
                           disabled={
                             !isEditable || !permanentDistrictsList.length
-                          }
-                        >
+                          }>
                           <FormControl>
                             <SelectTrigger className="w-full">
                               <SelectValue placeholder="Select District" />
@@ -2547,20 +2389,17 @@ const EditStudentForm = ({
                     name="permanent_state"
                     render={({ field }) => (
                       <FormItem
-                        className={cn('flex flex-col w-full text-[13px]')}
-                      >
+                        className={cn("flex flex-col w-full text-[13px]")}>
                         <FormLabel
                           className={cn(
-                            'text-gray-500 font-semibold w-fit mb-0.5'
-                          )}
-                        >
+                            "text-gray-500 font-semibold w-fit mb-0.5"
+                          )}>
                           State<span className="text-red-500">*</span> :
                         </FormLabel>
                         <Select
                           onValueChange={field.onChange}
                           defaultValue={field.value}
-                          disabled={!isEditable || !permanentStatesList.length}
-                        >
+                          disabled={!isEditable || !permanentStatesList.length}>
                           <FormControl>
                             <SelectTrigger className="w-full">
                               <SelectValue placeholder="Select State" />
@@ -2570,8 +2409,7 @@ const EditStudentForm = ({
                             {permanentStatesList.map((state) => (
                               <SelectItem
                                 key={state.isoCode}
-                                value={state.isoCode}
-                              >
+                                value={state.isoCode}>
                                 {state.name}
                               </SelectItem>
                             ))}
@@ -2587,20 +2425,17 @@ const EditStudentForm = ({
                     name="permanent_country"
                     render={({ field }) => (
                       <FormItem
-                        className={cn('flex flex-col w-full text-[13px]')}
-                      >
+                        className={cn("flex flex-col w-full text-[13px]")}>
                         <FormLabel
                           className={cn(
-                            'text-gray-500 font-semibold w-fit mb-0.5'
-                          )}
-                        >
+                            "text-gray-500 font-semibold w-fit mb-0.5"
+                          )}>
                           Country<span className="text-red-500">*</span> :
                         </FormLabel>
                         <Select
                           onValueChange={field.onChange}
                           defaultValue={field.value}
-                          disabled={!isEditable}
-                        >
+                          disabled={!isEditable}>
                           <FormControl>
                             <SelectTrigger className="w-full">
                               <SelectValue placeholder="Select Country" />
@@ -2610,8 +2445,7 @@ const EditStudentForm = ({
                             {Country.getAllCountries().map((country) => (
                               <SelectItem
                                 key={country.isoCode}
-                                value={country.isoCode}
-                              >
+                                value={country.isoCode}>
                                 {country.name}
                               </SelectItem>
                             ))}
@@ -2627,20 +2461,17 @@ const EditStudentForm = ({
                     name="permanent_postal_code"
                     render={({ field }) => (
                       <FormItem
-                        className={cn('flex flex-col w-full text-[13px]')}
-                      >
+                        className={cn("flex flex-col w-full text-[13px]")}>
                         <FormLabel
                           className={cn(
-                            'text-gray-500 font-semibold w-fit mb-0.5'
-                          )}
-                        >
+                            "text-gray-500 font-semibold w-fit mb-0.5"
+                          )}>
                           Postal Code<span className="text-red-500">*</span> :
                         </FormLabel>
                         <FormControl
                           className={cn(
-                            'border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll'
-                          )}
-                        >
+                            "border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
+                          )}>
                           <Input
                             placeholder="Permanent Postal Code"
                             disabled={!isEditable}
@@ -2668,20 +2499,17 @@ const EditStudentForm = ({
                   name="institute_name"
                   render={({ field }) => (
                     <FormItem
-                      className={cn('flex flex-col w-full text-[13px]')}
-                    >
+                      className={cn("flex flex-col w-full text-[13px]")}>
                       <FormLabel
                         className={cn(
-                          'text-gray-500 font-semibold w-fit mb-0.5'
-                        )}
-                      >
+                          "text-gray-500 font-semibold w-fit mb-0.5"
+                        )}>
                         Institute Name :
                       </FormLabel>
                       <FormControl
                         className={cn(
-                          'border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll'
-                        )}
-                      >
+                          "border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
+                        )}>
                         <Input
                           placeholder="Institute Name"
                           disabled={!isEditable}
@@ -2699,20 +2527,17 @@ const EditStudentForm = ({
                   name="board_affiliation"
                   render={({ field }) => (
                     <FormItem
-                      className={cn('flex flex-col w-full text-[13px]')}
-                    >
+                      className={cn("flex flex-col w-full text-[13px]")}>
                       <FormLabel
                         className={cn(
-                          'text-gray-500 font-semibold w-fit mb-0.5'
-                        )}
-                      >
+                          "text-gray-500 font-semibold w-fit mb-0.5"
+                        )}>
                         Board Affiliation :
                       </FormLabel>
                       <Select
                         onValueChange={field.onChange}
                         defaultValue={field.value}
-                        disabled={!isEditable}
-                      >
+                        disabled={!isEditable}>
                         <FormControl>
                           <SelectTrigger className="w-full">
                             <SelectValue placeholder="Select Board" />
@@ -2754,20 +2579,17 @@ const EditStudentForm = ({
                   name="previous_class"
                   render={({ field }) => (
                     <FormItem
-                      className={cn('flex flex-col w-full text-[13px]')}
-                    >
+                      className={cn("flex flex-col w-full text-[13px]")}>
                       <FormLabel
                         className={cn(
-                          'text-gray-500 font-semibold w-fit mb-0.5'
-                        )}
-                      >
+                          "text-gray-500 font-semibold w-fit mb-0.5"
+                        )}>
                         Previous Class :
                       </FormLabel>
                       <Select
                         onValueChange={field.onChange}
                         defaultValue={field.value}
-                        disabled={!isEditable}
-                      >
+                        disabled={!isEditable}>
                         <FormControl>
                           <SelectTrigger className="w-full">
                             <SelectValue placeholder="Select Board" />
@@ -2801,13 +2623,11 @@ const EditStudentForm = ({
                   name="tc_submitted"
                   render={({ field }) => (
                     <FormItem
-                      className={cn('flex flex-col w-full text-[13px]')}
-                    >
+                      className={cn("flex flex-col w-full text-[13px]")}>
                       <FormLabel
                         className={cn(
-                          'text-gray-500 font-semibold w-fit mb-0.5'
-                        )}
-                      >
+                          "text-gray-500 font-semibold w-fit mb-0.5"
+                        )}>
                         TC Submitted :
                       </FormLabel>
                       <div className="flex items-center justify-evenly h-full">
@@ -2846,20 +2666,17 @@ const EditStudentForm = ({
                   name="previous_section"
                   render={({ field }) => (
                     <FormItem
-                      className={cn('flex flex-col w-full text-[13px]')}
-                    >
+                      className={cn("flex flex-col w-full text-[13px]")}>
                       <FormLabel
                         className={cn(
-                          'text-gray-500 font-semibold w-fit mb-0.5'
-                        )}
-                      >
+                          "text-gray-500 font-semibold w-fit mb-0.5"
+                        )}>
                         Previous Section :
                       </FormLabel>
                       <FormControl
                         className={cn(
-                          'border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll'
-                        )}
-                      >
+                          "border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
+                        )}>
                         <Input
                           placeholder="Previous Section"
                           disabled={!isEditable}
@@ -2877,20 +2694,17 @@ const EditStudentForm = ({
                   name="previous_roll_no"
                   render={({ field }) => (
                     <FormItem
-                      className={cn('flex flex-col w-full text-[13px]')}
-                    >
+                      className={cn("flex flex-col w-full text-[13px]")}>
                       <FormLabel
                         className={cn(
-                          'text-gray-500 font-semibold w-fit mb-0.5'
-                        )}
-                      >
+                          "text-gray-500 font-semibold w-fit mb-0.5"
+                        )}>
                         Previous Roll No :
                       </FormLabel>
                       <FormControl
                         className={cn(
-                          'border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll'
-                        )}
-                      >
+                          "border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
+                        )}>
                         <Input
                           placeholder="Previous Roll No"
                           disabled={!isEditable}
@@ -2908,20 +2722,17 @@ const EditStudentForm = ({
                   name="previous_portal_id"
                   render={({ field }) => (
                     <FormItem
-                      className={cn('flex flex-col w-full text-[13px]')}
-                    >
+                      className={cn("flex flex-col w-full text-[13px]")}>
                       <FormLabel
                         className={cn(
-                          'text-gray-500 font-semibold w-fit mb-0.5'
-                        )}
-                      >
+                          "text-gray-500 font-semibold w-fit mb-0.5"
+                        )}>
                         Previous Portal ID :
                       </FormLabel>
                       <FormControl
                         className={cn(
-                          'border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll'
-                        )}
-                      >
+                          "border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
+                        )}>
                         <Input
                           placeholder="Previous Portal ID"
                           disabled={!isEditable}
@@ -2939,20 +2750,17 @@ const EditStudentForm = ({
                   name="previous_from_date"
                   render={({ field }) => (
                     <FormItem
-                      className={cn('flex flex-col w-full text-[13px]')}
-                    >
+                      className={cn("flex flex-col w-full text-[13px]")}>
                       <FormLabel
                         className={cn(
-                          'text-gray-500 font-semibold w-fit mb-0.5'
-                        )}
-                      >
+                          "text-gray-500 font-semibold w-fit mb-0.5"
+                        )}>
                         Previous From Date (MM/DD/YYYY) :
                       </FormLabel>
                       <FormControl
                         className={cn(
-                          'text-gray-700 bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll'
-                        )}
-                      >
+                          "text-gray-700 bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
+                        )}>
                         <div className="border-2 py-[1px]">
                           <Input
                             type="date"
@@ -2973,20 +2781,17 @@ const EditStudentForm = ({
                   name="previous_to_date"
                   render={({ field }) => (
                     <FormItem
-                      className={cn('flex flex-col w-full text-[13px]')}
-                    >
+                      className={cn("flex flex-col w-full text-[13px]")}>
                       <FormLabel
                         className={cn(
-                          'text-gray-500 font-semibold w-fit mb-0.5'
-                        )}
-                      >
+                          "text-gray-500 font-semibold w-fit mb-0.5"
+                        )}>
                         Previous To Date (MM/DD/YYYY) :
                       </FormLabel>
                       <FormControl
                         className={cn(
-                          'text-gray-700 bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll'
-                        )}
-                      >
+                          "text-gray-700 bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
+                        )}>
                         <div className="border-2 py-[1px]">
                           <Input
                             type="date"
@@ -3007,20 +2812,17 @@ const EditStudentForm = ({
                   name="reason_for_leaving"
                   render={({ field }) => (
                     <FormItem
-                      className={cn('flex flex-col w-full text-[13px]')}
-                    >
+                      className={cn("flex flex-col w-full text-[13px]")}>
                       <FormLabel
                         className={cn(
-                          'text-gray-500 font-semibold w-fit mb-0.5'
-                        )}
-                      >
+                          "text-gray-500 font-semibold w-fit mb-0.5"
+                        )}>
                         Reason For Leaving :
                       </FormLabel>
                       <FormControl
                         className={cn(
-                          'border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll'
-                        )}
-                      >
+                          "border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
+                        )}>
                         <Input
                           placeholder="Reason "
                           disabled={!isEditable}
@@ -3047,20 +2849,17 @@ const EditStudentForm = ({
                   name="blood_group"
                   render={({ field }) => (
                     <FormItem
-                      className={cn('flex flex-col w-full text-[13px]')}
-                    >
+                      className={cn("flex flex-col w-full text-[13px]")}>
                       <FormLabel
                         className={cn(
-                          'text-gray-500 font-semibold w-fit mb-0.5'
-                        )}
-                      >
+                          "text-gray-500 font-semibold w-fit mb-0.5"
+                        )}>
                         Blood Group :
                       </FormLabel>
                       <Select
                         disabled={!isEditable}
                         onValueChange={field.onChange}
-                        defaultValue={field.value}
-                      >
+                        defaultValue={field.value}>
                         <FormControl>
                           <SelectTrigger>
                             <SelectValue placeholder="Select Blood Group" />
@@ -3088,20 +2887,17 @@ const EditStudentForm = ({
                   name="allergies.details"
                   render={({ field }) => (
                     <FormItem
-                      className={cn('flex flex-col w-full text-[13px]')}
-                    >
+                      className={cn("flex flex-col w-full text-[13px]")}>
                       <FormLabel
                         className={cn(
-                          'text-gray-500 font-semibold w-fit mb-0.5'
-                        )}
-                      >
+                          "text-gray-500 font-semibold w-fit mb-0.5"
+                        )}>
                         Allergy Details :
                       </FormLabel>
                       <FormControl
                         className={cn(
-                          'border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll'
-                        )}
-                      >
+                          "border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
+                        )}>
                         <Input
                           placeholder="Allergy Details"
                           disabled={!isEditable}
@@ -3119,20 +2915,17 @@ const EditStudentForm = ({
                   name="special_medical_conditions.details"
                   render={({ field }) => (
                     <FormItem
-                      className={cn('flex flex-col w-full text-[13px]')}
-                    >
+                      className={cn("flex flex-col w-full text-[13px]")}>
                       <FormLabel
                         className={cn(
-                          'text-gray-500 font-semibold w-fit mb-0.5'
-                        )}
-                      >
+                          "text-gray-500 font-semibold w-fit mb-0.5"
+                        )}>
                         Special Medical Condition :
                       </FormLabel>
                       <FormControl
                         className={cn(
-                          'border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll'
-                        )}
-                      >
+                          "border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
+                        )}>
                         <Input
                           placeholder="Special Medical Condition Details"
                           disabled={!isEditable}
@@ -3150,20 +2943,17 @@ const EditStudentForm = ({
                   name="regular_medication.details"
                   render={({ field }) => (
                     <FormItem
-                      className={cn('flex flex-col w-full text-[13px]')}
-                    >
+                      className={cn("flex flex-col w-full text-[13px]")}>
                       <FormLabel
                         className={cn(
-                          'text-gray-500 font-semibold w-fit mb-0.5'
-                        )}
-                      >
+                          "text-gray-500 font-semibold w-fit mb-0.5"
+                        )}>
                         Regular Medication Details :
                       </FormLabel>
                       <FormControl
                         className={cn(
-                          'border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll'
-                        )}
-                      >
+                          "border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
+                        )}>
                         <Input
                           placeholder="Regular Medication Details"
                           disabled={!isEditable}
@@ -3181,20 +2971,17 @@ const EditStudentForm = ({
                   name="special_assistance.details"
                   render={({ field }) => (
                     <FormItem
-                      className={cn('flex flex-col w-full text-[13px]')}
-                    >
+                      className={cn("flex flex-col w-full text-[13px]")}>
                       <FormLabel
                         className={cn(
-                          'text-gray-500 font-semibold w-fit mb-0.5'
-                        )}
-                      >
+                          "text-gray-500 font-semibold w-fit mb-0.5"
+                        )}>
                         Special Assistance Details :
                       </FormLabel>
                       <FormControl
                         className={cn(
-                          'border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll'
-                        )}
-                      >
+                          "border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
+                        )}>
                         <Input
                           placeholder="Special Assistance Details"
                           disabled={!isEditable}
@@ -3212,20 +2999,17 @@ const EditStudentForm = ({
                   name="height"
                   render={({ field }) => (
                     <FormItem
-                      className={cn('flex flex-col w-full text-[13px]')}
-                    >
+                      className={cn("flex flex-col w-full text-[13px]")}>
                       <FormLabel
                         className={cn(
-                          'text-gray-500 font-semibold w-fit mb-0.5'
-                        )}
-                      >
+                          "text-gray-500 font-semibold w-fit mb-0.5"
+                        )}>
                         Height :
                       </FormLabel>
                       <FormControl
                         className={cn(
-                          'border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll'
-                        )}
-                      >
+                          "border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
+                        )}>
                         <Input
                           placeholder="Height"
                           disabled={!isEditable}
@@ -3243,20 +3027,17 @@ const EditStudentForm = ({
                   name="weight"
                   render={({ field }) => (
                     <FormItem
-                      className={cn('flex flex-col w-full text-[13px]')}
-                    >
+                      className={cn("flex flex-col w-full text-[13px]")}>
                       <FormLabel
                         className={cn(
-                          'text-gray-500 font-semibold w-fit mb-0.5'
-                        )}
-                      >
+                          "text-gray-500 font-semibold w-fit mb-0.5"
+                        )}>
                         Weight :
                       </FormLabel>
                       <FormControl
                         className={cn(
-                          'border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll'
-                        )}
-                      >
+                          "border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
+                        )}>
                         <Input
                           placeholder="Weight"
                           disabled={!isEditable}
@@ -3283,21 +3064,18 @@ const EditStudentForm = ({
                   name="account_holder_name"
                   render={({ field }) => (
                     <FormItem
-                      className={cn('flex flex-col w-full text-[13px]')}
-                    >
+                      className={cn("flex flex-col w-full text-[13px]")}>
                       <FormLabel
                         className={cn(
-                          'text-gray-500 font-semibold w-fit mb-0.5'
-                        )}
-                      >
+                          "text-gray-500 font-semibold w-fit mb-0.5"
+                        )}>
                         Account Holder Name
                         <span className="text-red-500">*</span> :
                       </FormLabel>
                       <FormControl
                         className={cn(
-                          'border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll'
-                        )}
-                      >
+                          "border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
+                        )}>
                         <Input
                           placeholder="Account Holder Name"
                           disabled={!isEditable}
@@ -3315,20 +3093,17 @@ const EditStudentForm = ({
                   name="bank_name"
                   render={({ field }) => (
                     <FormItem
-                      className={cn('flex flex-col w-full text-[13px]')}
-                    >
+                      className={cn("flex flex-col w-full text-[13px]")}>
                       <FormLabel
                         className={cn(
-                          'text-gray-500 font-semibold w-fit mb-0.5'
-                        )}
-                      >
+                          "text-gray-500 font-semibold w-fit mb-0.5"
+                        )}>
                         Bank Name<span className="text-red-500">*</span> :
                       </FormLabel>
                       <FormControl
                         className={cn(
-                          'border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll'
-                        )}
-                      >
+                          "border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
+                        )}>
                         <Input
                           placeholder="Bank Name"
                           disabled={!isEditable}
@@ -3346,20 +3121,17 @@ const EditStudentForm = ({
                   name="account_no"
                   render={({ field }) => (
                     <FormItem
-                      className={cn('flex flex-col w-full text-[13px]')}
-                    >
+                      className={cn("flex flex-col w-full text-[13px]")}>
                       <FormLabel
                         className={cn(
-                          'text-gray-500 font-semibold w-fit mb-0.5'
-                        )}
-                      >
+                          "text-gray-500 font-semibold w-fit mb-0.5"
+                        )}>
                         Account Number<span className="text-red-500">*</span> :
                       </FormLabel>
                       <FormControl
                         className={cn(
-                          'border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll'
-                        )}
-                      >
+                          "border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
+                        )}>
                         <Input
                           placeholder="Account Number"
                           disabled={!isEditable}
@@ -3377,20 +3149,17 @@ const EditStudentForm = ({
                   name="ifsc_code"
                   render={({ field }) => (
                     <FormItem
-                      className={cn('flex flex-col w-full text-[13px]')}
-                    >
+                      className={cn("flex flex-col w-full text-[13px]")}>
                       <FormLabel
                         className={cn(
-                          'text-gray-500 font-semibold w-fit mb-0.5'
-                        )}
-                      >
+                          "text-gray-500 font-semibold w-fit mb-0.5"
+                        )}>
                         IFSC Code<span className="text-red-500">*</span> :
                       </FormLabel>
                       <FormControl
                         className={cn(
-                          'border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll'
-                        )}
-                      >
+                          "border-2 px-[10px] text-gray-700 py-[19px] bg-[#fff] rounded-[4px] w-full focus:outline-none placeholder:text-black/25 font-semibold font-sans text-[14px] overflow-scroll"
+                        )}>
                         <Input
                           placeholder="IFSC Code"
                           disabled={!isEditable}
@@ -3423,11 +3192,9 @@ const EditStudentForm = ({
                   name="class_info"
                   render={({ field }) => (
                     <FormItem
-                      className={cn('flex flex-col w-full text-[13px]')}
-                    >
+                      className={cn("flex flex-col w-full text-[13px]")}>
                       <FormLabel
-                        className={cn('text-gray-500 font-semibold mb-0.5')}
-                      >
+                        className={cn("text-gray-500 font-semibold mb-0.5")}>
                         Class
                         <span className="text-red-500">*</span> :
                       </FormLabel>
@@ -3459,18 +3226,15 @@ const EditStudentForm = ({
                   name="academic_era"
                   render={({ field }) => (
                     <FormItem
-                      className={cn('flex flex-col w-full text-[13px]')}
-                    >
+                      className={cn("flex flex-col w-full text-[13px]")}>
                       <FormLabel
-                        className={cn('text-gray-500 font-semibold mb-0.5')}
-                      >
+                        className={cn("text-gray-500 font-semibold mb-0.5")}>
                         Academic Era
                         <span className="text-red-500">*</span> :
                       </FormLabel>
                       <Select
                         onValueChange={field.onChange}
-                        defaultValue={field.value}
-                      >
+                        defaultValue={field.value}>
                         <FormControl>
                           <SelectTrigger className="w-full">
                             <SelectValue placeholder="Select Academic Era" />
@@ -3494,11 +3258,9 @@ const EditStudentForm = ({
                   name="section_info"
                   render={({ field }) => (
                     <FormItem
-                      className={cn('flex flex-col w-full text-[13px]')}
-                    >
+                      className={cn("flex flex-col w-full text-[13px]")}>
                       <FormLabel
-                        className={cn('text-gray-500 font-semibold mb-0.5')}
-                      >
+                        className={cn("text-gray-500 font-semibold mb-0.5")}>
                         Section
                         <span className="text-red-500">*</span> :
                       </FormLabel>
@@ -3514,8 +3276,9 @@ const EditStudentForm = ({
                               <SelectItem
                                 key={item._id}
                                 value={item._id}
-                                disabled={item.currStudents >= item.maxStudents}
-                              >
+                                disabled={
+                                  item.currStudents >= item.maxStudents
+                                }>
                                 {item.name} / Students - {item.currStudents}/
                                 {item.maxStudents}
                               </SelectItem>
@@ -3531,11 +3294,9 @@ const EditStudentForm = ({
                   name="boardingStatus"
                   render={({ field }) => (
                     <FormItem
-                      className={cn('flex flex-col w-full text-[13px]')}
-                    >
+                      className={cn("flex flex-col w-full text-[13px]")}>
                       <FormLabel
-                        className={cn('text-gray-500 font-semibold mb-0.5')}
-                      >
+                        className={cn("text-gray-500 font-semibold mb-0.5")}>
                         Boarding Status
                         <span className="text-red-500">*</span> :
                       </FormLabel>
@@ -3558,44 +3319,12 @@ const EditStudentForm = ({
                   )}
                 />
                 {/* Fees Group Dropdown */}
-                {/* <FormField
-                  control={form.control}
-                  name="fees_info"
-                  render={({ field }) => (
-                    <FormItem
-                      className={cn('flex flex-col w-full text-[13px]')}
-                    >
-                      <FormLabel
-                        className={cn('text-gray-500 font-semibold mb-0.5')}
-                      >
-                        Fees Group
-                        <span className="text-red-500">*</span> :
-                      </FormLabel>
-                      <Select onValueChange={field.onChange}>
-                        <FormControl>
-                          <SelectTrigger className="w-full">
-                            <SelectValue placeholder="Select Fees Group" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          {allGroups.length > 0 &&
-                            allGroups.map((item: any) => (
-                              <SelectItem key={item._id} value={item._id}>
-                                {item.name}
-                              </SelectItem>
-                            ))}
-                        </SelectContent>
-                      </Select>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                /> */}
-
-                <div className="">
+                <div className="grid gap-2">
                   <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
                     <DialogTrigger asChild>
                       <Button variant="secondary" className="border">
-                        Assign Fees Group<span className="text-red-500">*</span>
+                        Assign Fees Group
+                        <span className="text-red-500">*</span>
                       </Button>
                     </DialogTrigger>
                     <DialogContent className="sm:max-w-[425px]">
@@ -3611,8 +3340,7 @@ const EditStudentForm = ({
                         name="fees_info"
                         render={({ field }) => (
                           <FormItem
-                            className={cn('flex flex-col w-full text-[13px]')}
-                          >
+                            className={cn("flex flex-col w-full text-[13px]")}>
                             <FormLabel></FormLabel>
 
                             <div className="grid items-center gap-x-4">
@@ -3634,8 +3362,7 @@ const EditStudentForm = ({
                                   {filteredGroups.map((group: any) => (
                                     <div
                                       key={group._id}
-                                      className="flex items-center p-2 cursor-default hover:bg-gray-200"
-                                    >
+                                      className="flex items-center p-2 cursor-default hover:bg-gray-200">
                                       <input
                                         type="checkbox"
                                         className="cursor-pointer"
@@ -3659,8 +3386,7 @@ const EditStudentForm = ({
                                 onClick={() => {
                                   field.onChange(selectedGroups);
                                   handleAddGroups();
-                                }}
-                              >
+                                }}>
                                 Add Group
                               </Button>
                             </DialogFooter>
@@ -3673,13 +3399,22 @@ const EditStudentForm = ({
                   </Dialog>
 
                   {/* Text area to show selected group names */}
-                  <div className="mt-4">
-                    <textarea
+                  <div className="col-span-2">
+                    {selectedGroupNames.length > 0 ? (
+                      <div className="text-[12px] text-gray-600 rounded-sm bg-yellow-400 max-w-fit py-0.5 px-1.5">
+                        Selected Fees Group: {selectedGroupNames}
+                      </div>
+                    ) : (
+                      <div className="text-[12px] text-white rounded-sm bg-red-400 max-w-fit py-0.5 px-1.5">
+                        No Fees Group Selected
+                      </div>
+                    )}
+                    {/* <textarea
                       readOnly
+                      disabled
                       value={selectedGroupNames}
-                      className="w-full h-[100px] border p-2 text-[13px] rounded cursor-not-allowed"
-                      placeholder="Selected Groups will appear here..."
-                    />
+                      className="w-full h-[38px] border p-2 text-[13px] rounded cursor-not-allowed bg-yellow-400 text-black"
+                    /> */}
                   </div>
                 </div>
               </div>
@@ -3693,22 +3428,20 @@ const EditStudentForm = ({
                   onClick={() => setIsEditable(!isEditable)}
                   className={`w-36 h-12 mr-4 rounded ${
                     isEditable
-                      ? 'bg-red-500 hover:bg-red-600'
-                      : 'bg-blue-500 hover:bg-blue-600'
-                  } text-white`}
-                >
-                  {isEditable ? 'Cancel' : 'Edit'}
+                      ? "bg-red-500 hover:bg-red-600"
+                      : "bg-blue-500 hover:bg-blue-600"
+                  } text-white`}>
+                  {isEditable ? "Cancel" : "Edit"}
                 </Button>
                 {isEditable && (
                   <Button
                     onClick={() => setIsEditable(!isEditable)}
-                    className="min-w-fit px-6 bg-[#228B22] hover:bg-[#186e18] w-36 h-12"
-                  >
+                    className="min-w-fit px-6 bg-[#228B22] hover:bg-[#186e18] w-36 h-12">
                     Apply Changes
                   </Button>
                 )}
                 {!isEditable && (
-                  <Button type="submit" className={cn('w-fit h-12')}>
+                  <Button type="submit" className={cn("w-fit h-12")}>
                     Submit & Admit Student
                   </Button>
                 )}

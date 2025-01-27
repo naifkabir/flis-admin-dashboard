@@ -1,36 +1,34 @@
-import React, { useEffect, useState } from 'react';
-import { Button } from '@/components/ui/button';
+import React, { useState } from "react";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
-import { Toaster, toast } from 'sonner';
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Toaster, toast } from "sonner";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from './ui/select';
-import { z } from 'zod';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
+} from "./ui/select";
+import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
-} from './ui/form';
-import { AddPaymentRecord } from '@/lib/actions/studentFees.action';
+} from "./ui/form";
+import { AddPaymentRecord } from "@/lib/actions/studentFees.action";
 
 interface AddPaymentHistoryProps {
   feesStructureId: string;
@@ -43,28 +41,28 @@ const paymentRecordSchema = z
     discountAmount: z
       .string()
       .refine((val) => !isNaN(Number(val)) && Number(val) >= 0, {
-        message: 'Discount must be zero or a positive number',
+        message: "Discount must be zero or a positive number",
       }),
     amountPaid: z
       .string()
       .refine((val) => !isNaN(Number(val)) && Number(val) > 0, {
-        message: 'Amount must be a positive number',
+        message: "Amount must be a positive number",
       }),
-    paymentMethod: z.enum(['CASH', 'CARD', 'ONLINE'], {
-      errorMap: () => ({ message: 'Please select a valid payment method' }),
+    paymentMethod: z.enum(["CASH", "CARD", "ONLINE"], {
+      errorMap: () => ({ message: "Please select a valid payment method" }),
     }),
     transactionId: z.string().optional(),
   })
   .refine(
     (data) => {
-      if (['CARD', 'ONLINE'].includes(data.paymentMethod)) {
+      if (["CARD", "ONLINE"].includes(data.paymentMethod)) {
         return data.transactionId?.trim();
       }
       return true;
     },
     {
-      message: 'Transaction ID is required for Card or Online payments',
-      path: ['transactionId'], // Attach the error to the transactionId field
+      message: "Transaction ID is required for Card or Online payments",
+      path: ["transactionId"], // Attach the error to the transactionId field
     }
   );
 
@@ -78,17 +76,14 @@ const AddPaymentHistoryDialog = ({
   const form = useForm<z.infer<typeof paymentRecordSchema>>({
     resolver: zodResolver(paymentRecordSchema),
     defaultValues: {
-      discountAmount: '0',
-      amountPaid: '',
-      paymentMethod: 'CASH',
-      transactionId: 'N/A',
+      discountAmount: "0",
+      amountPaid: "",
+      paymentMethod: "CASH",
+      transactionId: "N/A",
     },
   });
 
-  console.log(feesStructureId, feeId);
-
   async function onSubmit(values: z.infer<typeof paymentRecordSchema>) {
-    console.log(values);
     setLoading(true);
 
     const data = {
@@ -101,19 +96,16 @@ const AddPaymentHistoryDialog = ({
     try {
       const response = await AddPaymentRecord(feesStructureId, feeId, data);
 
-      console.log(response);
-
       if (response?.error) {
         toast.error(response.error);
         return;
       }
-      toast.success('Payment record added successfully!');
+      toast.success("Payment record added successfully!");
       setIsModalOpen(false);
       setTimeout(() => {
         window.location.reload();
       }, 2000);
     } catch (error: any) {
-      console.log(error);
       toast.error(`${error.message}`);
     } finally {
       setLoading(false);
@@ -171,8 +163,7 @@ const AddPaymentHistoryDialog = ({
                   <FormControl>
                     <Select
                       value={field.value}
-                      onValueChange={(value) => field.onChange(value)}
-                    >
+                      onValueChange={(value) => field.onChange(value)}>
                       <SelectTrigger>
                         <SelectValue placeholder="Select payment method" />
                       </SelectTrigger>
@@ -206,26 +197,23 @@ const AddPaymentHistoryDialog = ({
                   <svg
                     className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
                     xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                  >
+                    viewBox="0 0 24 24">
                     <circle
                       className="opacity-25"
                       cx="12"
                       cy="12"
                       r="10"
                       stroke="currentColor"
-                      strokeWidth="4"
-                    ></circle>
+                      strokeWidth="4"></circle>
                     <path
                       className="opacity-75"
                       fill="currentColor"
-                      d="M4 12c0-4.418 3.582-8 8-8 1.75 0 3.375.5 4.748 1.355l-1.304 1.304C13.697 6.032 12.0 6 12 6c-3.313 0-6 2.687-6 6s2.687 6 6 6c0 0 .697-.032 1.444-.659l1.304 1.304C15.375 21.5 13.75 22 12 22c-4.418 0-8-3.582-8-8z"
-                    ></path>
+                      d="M4 12c0-4.418 3.582-8 8-8 1.75 0 3.375.5 4.748 1.355l-1.304 1.304C13.697 6.032 12.0 6 12 6c-3.313 0-6 2.687-6 6s2.687 6 6 6c0 0 .697-.032 1.444-.659l1.304 1.304C15.375 21.5 13.75 22 12 22c-4.418 0-8-3.582-8-8z"></path>
                   </svg>
                   Updating...
                 </span>
               ) : (
-                'Submit'
+                "Submit"
               )}
             </Button>
           </form>

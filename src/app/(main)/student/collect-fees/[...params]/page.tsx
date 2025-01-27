@@ -15,6 +15,15 @@ function CollectFeesPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
 
+  const todayDate = new Date().toISOString().split("T")[0];
+  console.log("Today Date: ", todayDate);
+  const changeDueDateFormat = (date: string) => {
+    const dateString = new Date(date).toISOString().split("T")[0];
+    console.log("Date String: ", dateString);
+    console.log(todayDate === dateString);
+    return dateString;
+  };
+
   useEffect(() => {
     if (Array.isArray(dynamicParams) && dynamicParams.length >= 3) {
       const [studentId, sessionId, classId] = dynamicParams;
@@ -56,89 +65,135 @@ function CollectFeesPage() {
   }
 
   return (
-    <div className="grid gap-10">
+    <div className="grid gap-10 min-h-full pb-10">
       <div>
-        <div className="mb-5 flex justify-end">
-          <Button onClick={() => window.history.back()}>Back</Button>
+        <div className="mb-5 mt-3 flex justify-end">
+          <Button onClick={() => window.history.back()}>Go Back</Button>
         </div>
         <h2 className="text-lg font-semibold mb-5 text-center py-3 bg-red-600 text-white">
           Fees Details
         </h2>
         {data?.fees?.map((fee: any) => (
-          <div key={fee._id} className="flex flex-col border-2 mb-10">
-            <div className="overflow-x-auto">
-              <table className="min-w-full table-auto">
-                <thead>
-                  <tr className="bg-gray-100 text-[12px]">
-                    <th className="px-4 py-2 text-center">Fee Type</th>
-                    <th className="px-4 py-2 text-center">Occurrence</th>
-                    <th className="px-4 py-2 text-center">Amount</th>
-                    <th className="px-4 py-2 text-center">Discount Amount</th>
-                    <th className="px-4 py-2 text-center">Final Amount</th>
-                    <th className="px-4 py-2 text-center">Due Date</th>
-                    <th className="px-4 py-2 text-center">Paid Amount</th>
-                    <th className="px-4 py-2 text-center">Payment Status</th>
-                    <th className="px-4 py-2 text-center">Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr className="text-[13.5px]">
-                    <td className="px-4 py-2 text-center">{fee.name}</td>
-                    <td className="px-4 py-2 text-center">{fee.occurrence}</td>
-                    <td className="px-4 py-2 text-center">{fee.amount}</td>
-                    <td className="px-4 py-2 text-center">
-                      {fee.discountAmount}
-                    </td>
-                    <td className="px-4 py-2 text-center">{fee.finalAmount}</td>
-                    <td className="px-4 py-2 text-center">
-                      {new Date(fee.dueDate).toLocaleDateString()}
-                    </td>
-                    <td className="px-4 py-2 text-center">{fee.paidAmount}</td>
-                    <td className="px-4 py-2 text-center">
-                      {fee.paymentStatus}
-                    </td>
-                    <td className="px-4 py-2 text-center">
-                      {fee.finalAmount != fee.paidAmount ? (
-                        <AddPaymentHistoryDialog
-                          feesStructureId={data._id}
-                          feeId={fee._id}
-                        />
-                      ) : (
-                        <span className="text-green-600">Fully Paid</span>
-                      )}
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-            <div className="m-3 grid grid-cols-5 gap-5">
-              {fee?.paymentHistory?.map((pay: any, index: string) => (
-                <div
-                  key={index}
-                  className="border-2 p-5 text-[13.5px] flex flex-col gap-1.5 bg-white rounded-md">
-                  <div>
-                    <span className="text-gray-600">Paid Amount:</span>{" "}
-                    <span className="font-semibold">{pay.amountPaid}</span>
+          <div key={fee._id}>
+            <div className={`flex flex-col border-2 mb-10`}>
+              <div className="overflow-x-auto">
+                <table className="min-w-full table-auto">
+                  <thead>
+                    <tr
+                      className={`${
+                        changeDueDateFormat(fee.dueDate) >= todayDate &&
+                        fee.amount != fee.paidAmount
+                          ? "border-2 border-red-500"
+                          : "bg-gray-100"
+                      } text-[12px]  `}>
+                      <th className="px-4 py-2 text-center">Fee Type</th>
+                      <th className="px-4 py-2 text-center">Occurrence</th>
+                      <th className="px-4 py-2 text-center">Amount</th>
+                      <th className="px-4 py-2 text-center">Discount Amount</th>
+                      <th className="px-4 py-2 text-center">Final Amount</th>
+                      <th className="px-4 py-2 text-center">Due Date</th>
+                      <th className="px-4 py-2 text-center">Paid Amount</th>
+                      <th className="px-4 py-2 text-center">Payment Status</th>
+                      <th className="px-4 py-2 text-center">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody
+                    className={`${
+                      changeDueDateFormat(fee.dueDate) >= todayDate &&
+                      fee.amount != fee.paidAmount
+                        ? "border-2 border-red-500"
+                        : ""
+                    }`}>
+                    <tr className="text-[13.5px]">
+                      <td className="px-4 py-2 text-center">
+                        <span
+                          className={`${
+                            changeDueDateFormat(fee.dueDate) >= todayDate &&
+                            fee.amount != fee.paidAmount
+                              ? "bg-red-500 text-white px-2 py-0.5 rounded-md text-[11px]"
+                              : ""
+                          }`}>
+                          {fee.name}
+                        </span>
+                      </td>
+                      <td className="px-4 py-2 text-center">
+                        {fee.occurrence}
+                      </td>
+                      <td className="px-4 py-2 text-center">{fee.amount}</td>
+                      <td className="px-4 py-2 text-center">
+                        {fee.discountAmount}
+                      </td>
+                      <td className="px-4 py-2 text-center">
+                        {fee.finalAmount}
+                      </td>
+                      <td className="px-4 py-2 text-center">
+                        <span
+                          className={` ${
+                            changeDueDateFormat(fee.dueDate) >= todayDate &&
+                            fee.amount != fee.paidAmount
+                              ? "bg-red-500 text-white px-2 py-0.5 rounded-md text-[11px]"
+                              : ""
+                          }`}>
+                          {new Date(fee.dueDate).toLocaleDateString()}
+                        </span>
+                        {changeDueDateFormat(fee.dueDate) >= todayDate &&
+                          fee.amount != fee.paidAmount && (
+                            <span className="py-0.5 text-[11px] block font-semibold mt-1">
+                              This payment is due
+                            </span>
+                          )}
+                      </td>
+                      <td className="px-4 py-2 text-center">
+                        {fee.paidAmount}
+                      </td>
+                      <td className="px-4 py-2 text-center">
+                        {fee.paymentStatus}
+                      </td>
+                      <td className="px-4 py-2 text-center">
+                        {fee.finalAmount != fee.paidAmount ? (
+                          <AddPaymentHistoryDialog
+                            feesStructureId={data._id}
+                            feeId={fee._id}
+                          />
+                        ) : (
+                          <span className="bg-green-600 text-white px-2 py-0.5 text-[11px] rounded-md">
+                            Fully Paid
+                          </span>
+                        )}
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div className="m-3 grid grid-cols-5 gap-5">
+                {fee?.paymentHistory?.map((pay: any, index: string) => (
+                  <div
+                    key={index}
+                    className="border-2 p-5 text-[13.5px] flex flex-col gap-1.5 bg-white rounded-md">
+                    <div>
+                      <span className="text-gray-600">Paid Amount:</span>{" "}
+                      <span className="font-semibold">{pay.amountPaid}</span>
+                    </div>
+                    <div>
+                      <span className="text-gray-600">Payment Method:</span>{" "}
+                      <span className="font-semibold">{pay.paymentMethod}</span>
+                    </div>
+                    <div>
+                      <span className="text-gray-600">Transaction Id:</span>{" "}
+                      <span className="font-semibold">{pay.transactionId}</span>
+                    </div>
+                    <div>
+                      <span className="text-gray-600">Payment Date:</span>{" "}
+                      <span className="font-semibold">
+                        {new Date(pay.paymentDate).toLocaleString()}
+                      </span>
+                    </div>
+                    <Button variant="outline" className="my-2">
+                      Get Receipt
+                    </Button>
                   </div>
-                  <div>
-                    <span className="text-gray-600">Payment Method:</span>{" "}
-                    <span className="font-semibold">{pay.paymentMethod}</span>
-                  </div>
-                  <div>
-                    <span className="text-gray-600">Transaction Id:</span>{" "}
-                    <span className="font-semibold">{pay.transactionId}</span>
-                  </div>
-                  <div>
-                    <span className="text-gray-600">Payment Date:</span>{" "}
-                    <span className="font-semibold">
-                      {new Date(pay.paymentDate).toLocaleString()}
-                    </span>
-                  </div>
-                  <Button variant="outline" className="my-2">
-                    Get Receipt
-                  </Button>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
           </div>
         ))}

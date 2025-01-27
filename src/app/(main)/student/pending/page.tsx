@@ -72,7 +72,7 @@ export default function PendingStudentPage() {
   return (
     <div className="w-full h-full my-auto">
       <div className="sub-container px-4">
-        <div className="flex justify-between items-center my-10">
+        <div className="flex justify-between items-center mb-10">
           <div>
             <h1 className="font-bold text-lg mb-1.5">Pending Student List</h1>
             <DynamicBreadcrumb currentPage="Pending Applications" />

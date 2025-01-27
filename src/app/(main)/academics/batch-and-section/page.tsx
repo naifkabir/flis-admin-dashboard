@@ -1,4 +1,4 @@
-import { AddNewSectionDialog } from "@/components/batch-and-section/AddNewSectionDialog";
+import { AddNewSectionDialog } from "@/components/create-new-student/batch-and-section/AddNewSectionDialog";
 import { Button } from "@/components/ui/button";
 
 const BatchAndSection = () => {

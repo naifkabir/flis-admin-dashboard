@@ -111,6 +111,7 @@ export function EditAmountInMasterDialog({
           </Button>
         </DialogFooter>
       </DialogContent>
+      <Toaster richColors />
     </Dialog>
   );
 }

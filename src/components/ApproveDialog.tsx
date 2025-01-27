@@ -25,14 +25,6 @@ import {
 import { ApproveApplicationForCounselling } from "@/lib/actions/student.action";
 import { useState, useEffect } from "react";
 
-// Helper function to check if a date is in the past
-const isDateInThePast = (dateString: any) => {
-  const selectedDate = new Date(dateString);
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  return selectedDate < today;
-};
-
 const ApproveDialog = ({
   docId,
   applicationStatus,

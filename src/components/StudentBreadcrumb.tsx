@@ -1,7 +1,6 @@
 import React from "react"; // Import React
 import {
   Breadcrumb,
-  BreadcrumbEllipsis,
   BreadcrumbItem,
   BreadcrumbLink,
   BreadcrumbList,

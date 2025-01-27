@@ -39,7 +39,6 @@ export async function CreateNewFinanceHeader(data: any) {
     });
     return response.data.data;
   } catch (error: any) {
-    console.error("Error approving application:", error);
     return { error: error.response.data.message || error.message };
   }
 }
@@ -76,8 +75,6 @@ export async function GetHeaderById(financeId: string) {
   const cookieStore = cookies();
   const accessToken = cookieStore.get("accessToken")?.value;
 
-  console.log("Fetching headers for financeId:", financeId);
-
   if (!accessToken) {
     return { error: "No access token found." };
   }
@@ -90,15 +87,12 @@ export async function GetHeaderById(financeId: string) {
     });
 
     if (response.status !== 200) {
-      console.warn("Received non-200 response:", response);
       return { error: `Unexpected status code: ${response.status}` };
     }
 
     return response.data.data;
   } catch (error: any) {
-    console.error("Error fetching header:", error);
     if (error.response) {
-      console.error("Response data:", error.response.data);
       return { error: error.response.data.message || error.message };
     }
     return { error: error.response.data.message || error.message };
@@ -121,7 +115,6 @@ export async function UpdateFeeHeader(data: any) {
     });
     return response.data.data;
   } catch (error: any) {
-    console.error("Error approving application:", error);
     return { error: error.response.data.message || error.message };
   }
 }
@@ -152,8 +145,6 @@ export async function CreateNewFinanceGroup(data: any) {
   const cookieStore = cookies();
   const accessToken = cookieStore.get("accessToken")?.value;
 
-  console.log("Data: ", data);
-
   if (!accessToken) {
     return null;
   }
@@ -166,7 +157,6 @@ export async function CreateNewFinanceGroup(data: any) {
     });
     return response.data;
   } catch (error: any) {
-    console.error("Error creating group:", error);
     return { error: error.response.data.message || error.message };
   }
 }
@@ -203,8 +193,6 @@ export async function GetGroupById(id: string) {
   const cookieStore = cookies();
   const accessToken = cookieStore.get("accessToken")?.value;
 
-  console.log("Fetching headers for financeId:", id);
-
   if (!accessToken) {
     return { error: "No access token found." };
   }
@@ -217,7 +205,6 @@ export async function GetGroupById(id: string) {
     });
 
     if (response.status !== 200) {
-      console.warn("Received non-200 response:", response);
       return { error: `Unexpected status code: ${response.status}` };
     }
 
@@ -248,7 +235,6 @@ export async function UpdateFeeGroup(data: any) {
     });
     return response.data;
   } catch (error: any) {
-    console.error("Error approving application:", error);
     return { error: error.response.data.message || error.message };
   }
 }

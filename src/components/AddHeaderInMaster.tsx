@@ -10,7 +10,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { Toaster, toast } from "sonner";
 import {
   GetAllFinanceHeaders,
@@ -34,11 +34,15 @@ const AddHeaderInMasterComponent = ({
 
   useEffect(() => {
     const fetchHeaders = async () => {
-      const result = await GetAllFinanceHeaders();
-      if (result.error) {
-        toast.error("Failed to load headers");
-      } else {
-        setHeaders(result);
+      try {
+        const result = await GetAllFinanceHeaders();
+        if (result.error) {
+          toast.error("Failed to load headers", result.error);
+        } else {
+          setHeaders(result);
+        }
+      } catch (error: any) {
+        toast.error("Failed to fetch headers", error.message);
       }
     };
 

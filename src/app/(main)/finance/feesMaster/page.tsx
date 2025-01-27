@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { FinanceColumnFeeMasters } from '@/app/data-table-components/columns';
-import PageLoader from '@/components/ui-components/PageLoading';
+import { FinanceColumnFeeMasters } from "@/app/data-table-components/columns";
+import PageLoader from "@/components/ui-components/PageLoading";
 import {
   CreateNewFinanceMaster,
   DeleteHeaderInMaster,
@@ -9,11 +9,11 @@ import {
   GetAllFinanceGroups,
   GetAllFinanceHeaders,
   GetAllFinanceMaster,
-} from '@/lib/actions/finance.action';
-import React, { useEffect, useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Toaster, toast } from 'sonner';
-import { EditAmountInMasterDialog } from '@/components/EditAmountInMaster';
+} from "@/lib/actions/finance.action";
+import React, { useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Toaster, toast } from "sonner";
+import { EditAmountInMasterDialog } from "@/components/EditAmountInMaster";
 import {
   Dialog,
   DialogContent,
@@ -22,15 +22,16 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/dialog';
-import { Label } from '@/components/ui/label';
-import { MasterPageDataTable } from '@/app/data-table-components/finance-table-components/mastar-page-data-table';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import AddHeaderInMasterComponent from '@/components/AddHeaderInMaster';
-import { Input } from '@/components/ui/input';
-import { MdOutlineArrowOutward } from 'react-icons/md';
-import AlertDialogComponent from '@/components/Alart';
-import AlertDialogComponentHeaderInMaster from '@/components/DeleteHeaderInMasterAlart';
+} from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import { MasterPageDataTable } from "@/app/data-table-components/finance-table-components/mastar-page-data-table";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import AddHeaderInMasterComponent from "@/components/AddHeaderInMaster";
+import { Input } from "@/components/ui/input";
+import { MdOutlineArrowOutward } from "react-icons/md";
+import AlertDialogComponent from "@/components/Alart";
+import AlertDialogComponentHeaderInMaster from "@/components/DeleteHeaderInMasterAlart";
+import { DynamicBreadcrumb } from "@/components/StudentBreadcrumb";
 
 interface FinanceHeader {
   header: string;
@@ -74,7 +75,7 @@ const FinancePageMaster = () => {
   const [isModalOpen, setModalOpen] = useState(false);
   const [isModalOpenHeader, setModalOpenHeader] = useState(false);
   const [amountData, setAmountData] = useState<any>(null);
-  const [searchTerm, setSearchTerm] = useState<string>('');
+  const [searchTerm, setSearchTerm] = useState<string>("");
   const [isDeleteDialogOpen, setDeleteDialogOpen] = useState<boolean>(false);
   const [isDeleteMasterDialogOpen, setDeleteMasterDialogOpen] =
     useState<boolean>(false);
@@ -82,9 +83,9 @@ const FinancePageMaster = () => {
   const [deleteHeaderInMasterData, setDeleteHeaderInMasterData] = useState<
     string | null
   >(null);
-  const [deleteMasterId, setDeleteMasterId] = useState<string>('');
+  const [deleteMasterId, setDeleteMasterId] = useState<string>("");
   const [formData, setFormData] = useState<FormData>({
-    selectedGroup: '',
+    selectedGroup: "",
     selectedHeaders: [], // Make sure this is initialized as an empty array
   });
   const [groups, setGroups] = useState<FinanceGroup[]>([]); // State to hold groups
@@ -98,7 +99,6 @@ const FinancePageMaster = () => {
   useEffect(() => {
     const fetchData = async () => {
       const result = await GetAllFinanceMaster();
-      console.log(result);
 
       if (result.error) {
         setError(result.error);
@@ -139,8 +139,7 @@ const FinancePageMaster = () => {
   }, [master]);
 
   const handleEditAmount = (amountData: any) => {
-    // console.log("Edit header with id:", amountData);
-    setAmountData(amountData); // Set the amount data to be edited
+    setAmountData(amountData);
   };
 
   const confirmDeleteHeaderInMaster = async () => {
@@ -148,12 +147,12 @@ const FinancePageMaster = () => {
       const result = await DeleteHeaderInMaster(deleteHeaderInMasterData);
 
       if (result.statusCode === 200) {
-        toast.success('Header was successfully deleted');
+        toast.success("Header was successfully deleted");
         setTimeout(() => {
           window.location.reload();
         }, 2000);
       } else {
-        toast.error('Failed to delete the header');
+        toast.error("Failed to delete the header");
       }
     } catch (error: any) {
       toast.error(error.message);
@@ -171,16 +170,14 @@ const FinancePageMaster = () => {
     try {
       const result = await DeleteMaster(deleteMasterId);
 
-      console.log(result);
-
       if (result.success) {
         setDeleteDialogOpen(false);
-        toast.success('Master was successfully deleted');
+        toast.success("Master was successfully deleted");
         setTimeout(() => {
           window.location.reload();
         }, 1000);
       } else {
-        toast.error('Failed to delete the Master!');
+        toast.error("Failed to delete the Master!");
         setDeleteDialogOpen(false);
       }
     } catch (error: any) {
@@ -189,15 +186,10 @@ const FinancePageMaster = () => {
   };
 
   const handleDeleteMaster = async (master_id: string) => {
-    // console.log("Master Delete: ", master_id);
     setDeleteMasterId(master_id);
     setDeleteMasterDialogOpen(true);
   };
 
-  // ------------------------------------------------------------------------------
-  // # Create New Master
-
-  // Fetch all finance groups
   useEffect(() => {
     const fetchGroups = async () => {
       const groupsResult = await GetAllFinanceGroups();
@@ -211,7 +203,6 @@ const FinancePageMaster = () => {
     fetchGroups();
   }, []);
 
-  // Fetch all finance headers
   useEffect(() => {
     const fetchHeaders = async () => {
       const headersResult = await GetAllFinanceHeaders();
@@ -248,7 +239,7 @@ const FinancePageMaster = () => {
 
     const { selectedGroup, selectedHeaders } = formData;
     if (!selectedGroup || selectedHeaders.length === 0) {
-      toast.warning('Please select a group and at least one header.');
+      toast.warning("Please select a group and at least one header.");
       return;
     }
 
@@ -264,25 +255,25 @@ const FinancePageMaster = () => {
       });
 
       if (result.error) {
-        setError(result.error);
-        toast.error('Error creating new master: ' + result.error);
+        toast.error("Error creating new master: " + result.error);
         setTimeout(() => {
           window.location.reload();
         }, 2000);
       } else {
         setAllMaster((prev) => [...prev, result]); // Update state with the new master
         setModalOpen(false);
-        toast.success('Master created successfully');
+        toast.success("Master created successfully");
         window.location.reload();
       }
     } catch (error: any) {
-      setError(error.message);
-      toast.error('Error creating new master: ' + error.message);
+      toast.error("Error creating new master: " + error.message);
+    } finally {
+      setLoading(false);
     }
 
     // Reset form data
     setFormData({
-      selectedGroup: '',
+      selectedGroup: "",
       selectedHeaders: [],
     });
   };
@@ -315,12 +306,32 @@ const FinancePageMaster = () => {
   }
 
   return (
-    <div className="w-full min-h-screen my-auto">
+    <div className="w-full min-h-full my-auto">
       <div className="sub-container px-4">
         <div>
           <div className="grid grid-cols-2">
-            <h1 className="font-bold text-lg mb-8">Fee Masters</h1>
+            <div className="mb-10">
+              <h1 className="font-bold text-lg mb-1.5">Fees Master</h1>
+              <DynamicBreadcrumb currentPage="Fees Master" />
+            </div>
             <div className="flex gap-4 mb-4 justify-self-end">
+              <section className="mr-20">
+                <div className="flex gap-2 mb-4">
+                  <Button
+                    variant={selectedYear === null ? "default" : "outline"}
+                    onClick={() => filterByYear(null)}>
+                    All Years
+                  </Button>
+                  {years.map((year) => (
+                    <Button
+                      key={year}
+                      variant={selectedYear === year ? "default" : "outline"}
+                      onClick={() => filterByYear(year)}>
+                      {year}
+                    </Button>
+                  ))}
+                </div>
+              </section>
               <Button variant="outline" onClick={() => window.history.back()}>
                 Go Back
               </Button>
@@ -351,8 +362,7 @@ const FinancePageMaster = () => {
                             value={formData.selectedGroup}
                             onChange={handleGroupChange}
                             className="w-full py-2 bg-transparent border px-3 text-sm"
-                            required
-                          >
+                            required>
                             <option value="">Select a group</option>
                             {groups.map((group) => (
                               <option key={group._id} value={group._id}>
@@ -380,8 +390,7 @@ const FinancePageMaster = () => {
                             {filteredHeaders.map((header) => (
                               <div
                                 key={header._id}
-                                className="flex items-center p-2 cursor-default hover:bg-gray-200 "
-                              >
+                                className="flex items-center p-2 cursor-default hover:bg-gray-200 ">
                                 <input
                                   type="checkbox"
                                   className="cursor-pointer"
@@ -402,8 +411,7 @@ const FinancePageMaster = () => {
                       <DialogFooter>
                         <Button
                           type="submit"
-                          className="group py-7 w-48 flex justify-center items-center"
-                        >
+                          className="group py-7 w-48 flex justify-center items-center">
                           <span>Create Master</span>
                           <MdOutlineArrowOutward className="ml-2 duration-300 group-hover:rotate-45 group-hover:translate-x-3" />
                         </Button>
@@ -413,23 +421,6 @@ const FinancePageMaster = () => {
                 </Dialog>
               </div>
             </div>
-          </div>
-          <div className="flex gap-2 mb-4">
-            <Button
-              variant={selectedYear === null ? 'default' : 'outline'}
-              onClick={() => filterByYear(null)}
-            >
-              All Years
-            </Button>
-            {years.map((year) => (
-              <Button
-                key={year}
-                variant={selectedYear === year ? 'default' : 'outline'}
-                onClick={() => filterByYear(year)}
-              >
-                {year}
-              </Button>
-            ))}
           </div>
           <MasterPageDataTable
             columns={FinanceColumnFeeMasters(

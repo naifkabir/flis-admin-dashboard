@@ -4,18 +4,12 @@
 
 @import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap");
 
-/* html,
+html,
 body,
 * {
-  scrollbar-width: none;
+  scroll-behavior: smooth;
   -ms-overflow-style: none;
 }
-
-html::-webkit-scrollbar,
-body::-webkit-scrollbar,
-*::-webkit-scrollbar {
-  display: none;
-} */
 
 @layer base {
   :root {

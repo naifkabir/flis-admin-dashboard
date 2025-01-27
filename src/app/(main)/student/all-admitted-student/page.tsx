@@ -110,7 +110,10 @@ export default function CounselingStudentPage() {
     <div className="w-full h-screen my-auto">
       <div className="sub-container px-4">
         <div className="flex justify-between items-center mb-10">
-          <DynamicBreadcrumb currentPage="All Students" />
+          <div>
+            <h1 className="font-bold text-lg mb-1.5">All Admitted Students</h1>
+            <DynamicBreadcrumb currentPage="All Students" />
+          </div>
 
           <div className="flex items-center gap-4 text-[13.5px]">
             <div className="flex flex-col gap-2">

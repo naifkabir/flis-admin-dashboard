@@ -48,7 +48,6 @@ export const Logout = async (): Promise<LogoutResponse> => {
 
     return { success: false, statusCode: response.status };
   } catch (error: any) {
-    console.error("Logout failed:", error);
     return { success: false, statusCode: error.response?.status || 500 };
   }
 };

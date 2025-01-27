@@ -25,11 +25,9 @@ export default function CounselingStudentPage() {
       setError(false);
       try {
         const result = await GetAllApplication("UNDER-COUNSELLING");
-        // console.log("Fetched data:", result);
         const filteredData = studentTableFilter(result);
         setData(filteredData);
       } catch (err: any) {
-        // console.error("Error fetching data:", err);
         toast.error("Failed to fetch data", err);
         setError(true);
       } finally {
@@ -44,18 +42,15 @@ export default function CounselingStudentPage() {
     try {
       const response = await RejectApplication(studentId);
       if (response && !response.error) {
-        // Reload the data after rejection
         const result = await GetAllApplication("UNDER-COUNSELLING");
         toast.success("Application rejected successfully");
         const filteredData = studentTableFilter(result);
         setData(filteredData);
       } else {
-        // console.error("Error rejecting application:", response.error);
         toast.error("Failed to reject application");
       }
-    } catch (err) {
-      // console.error("Error rejecting application:", err);
-      toast.error("Failed to reject application");
+    } catch (err: any) {
+      toast.error("Failed to reject application", err);
     }
   };
 
@@ -80,7 +75,7 @@ export default function CounselingStudentPage() {
   return (
     <div className="w-full h-full my-auto">
       <div className="sub-container px-4">
-        <div className="flex justify-between items-center my-10">
+        <div className="flex justify-between items-center mb-10">
           <div>
             <h1 className="font-bold text-lg mb-1.5">
               Counselling Student List
