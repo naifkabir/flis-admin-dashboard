@@ -283,13 +283,10 @@ export const studentTableFilter = (data: any) => {
       counselling_date: item.counselling_date || "Not Available",
       counselling_time: item.counselling_time || "Not Available",
       g_relation: item.guardian_details.relation,
-      address: `${address.village || ""}${
-        address.post_office ? `, ${address.post_office}` : ""
-      }${address.police_station ? `, ${address.police_station}` : ""}${
-        address.district ? `, ${address.district}` : ""
-      }${address.state ? `, ${address.state}` : ""}${
-        address.postal_code ? `, ${address.postal_code}` : ""
-      }`,
+      address: `${address.village || ""}${address.post_office ? `, ${address.post_office}` : ""
+        }${address.police_station ? `, ${address.police_station}` : ""}${address.district ? `, ${address.district}` : ""
+        }${address.state ? `, ${address.state}` : ""}${address.postal_code ? `, ${address.postal_code}` : ""
+        }`,
       status: item.status,
     };
   });
@@ -322,10 +319,10 @@ export const admittedStudentDetails = (data: any) => {
     basic_details: {
       name:
         data.student_details.first_name +
-          " " +
-          data.student_details.middle_name +
-          " " +
-          data.student_details.last_name || "N/A",
+        " " +
+        data.student_details.middle_name +
+        " " +
+        data.student_details.last_name || "N/A",
       gender: data.student_details.gender || "N/A",
       date_of_birth:
         new Date(data.student_details.date_of_birth).toLocaleDateString() ||
@@ -446,6 +443,7 @@ export const admittedStudentDetails = (data: any) => {
     sessionId: data.session._id,
     admission_date: new Date(data.admission_date).toLocaleDateString(),
     documents: data.documents,
+    health_records: data.health_records,
   };
   return result;
 };

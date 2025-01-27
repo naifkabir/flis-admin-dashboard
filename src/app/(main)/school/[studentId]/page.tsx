@@ -195,6 +195,7 @@ export default function StudentInfoPage({
                 'Board Exam',
                 'Attendance',
                 'Document',
+                'Diet Chart',
               ].map((tab) => (
                 <button
                   key={tab}
@@ -222,6 +223,59 @@ export default function StudentInfoPage({
 
           {/* Tab Content */}
           <div className="">
+            {activeTab === 'diet-chart' && (
+              <div className="bg-white p-4 rounded shadow">
+                <div className="space-y-4">
+                  {data.health_records?.records?.map((doc: any, index: any) => (
+                    <div
+                      key={index}
+                      className="flex items-center justify-between border p-4 rounded"
+                    >
+                      <div>
+                        <p>
+                          <strong>Diet Chart :</strong> {index + 1}
+                        </p>
+                        <p>
+                          <strong>Uploaded On:</strong>{' '}
+                          {new Date(doc.createdAt).toLocaleString()}
+                        </p>
+                      </div>
+                      <div className="flex space-x-2">
+                        {doc.dietChartUrl ? (
+                          <div className="flex space-x-2">
+                            <a
+                              className="bg-red-600 text-white px-4 py-2 rounded"
+                              href={doc.dietChartUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              Download
+                            </a>
+                            <button
+                              className="bg-gray-400 text-white px-4 py-2 rounded"
+                              onClick={() => handleDeleteDocument(doc._id)}
+                            >
+                              Delete
+                            </button>
+                          </div>
+                        ) : (
+                          <h4>N/A</h4>
+                        )}
+                        {/* <button
+                          className="bg-blue-600 text-white px-4 py-2 rounded"
+                          onClick={() =>
+                            handleDownload(doc.fileUrl, doc.documentType)
+                          }
+                        >
+                          Download
+                        </button> */}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
             {activeTab === 'document' && (
               <div className="bg-white p-4 rounded shadow">
                 <div className="space-y-4">
