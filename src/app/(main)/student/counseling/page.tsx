@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { columns } from "@/app/data-table-components/columns";
+import { counselingTableColumns } from "@/app/data-table-components/columns";
 import { StudentListDataTable } from "@/app/data-table-components/data-table";
 import {
   GetAllApplication,
@@ -95,7 +95,7 @@ export default function CounselingStudentPage() {
           </div>
         </div>
         <StudentListDataTable
-          columns={columns(handleReject)}
+          columns={counselingTableColumns(handleReject)}
           data={data ? data : []}
         />
       </div>

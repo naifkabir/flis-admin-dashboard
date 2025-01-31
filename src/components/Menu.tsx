@@ -34,13 +34,17 @@ const Navbar = () => {
 
   // Logout function
   const handleLogout = async () => {
-    const response = await Logout();
+    try {
+      const response = await Logout();
 
-    if (response.statusCode === 200 && response.success) {
-      toast.success("Logged out successfully!");
-      window.location.href = "/";
-    } else {
-      toast.error("Logout failed. Please try again.");
+      if (response.statusCode === 200 && response.success) {
+        toast.success(response.message);
+        window.location.href = "/";
+      } else {
+        toast.error("Logout failed. Please try again.");
+      }
+    } catch (error: any) {
+      toast.error(error.message);
     }
   };
 
@@ -48,17 +52,16 @@ const Navbar = () => {
     <div className="w-full flex justify-between items-center py-4 px-6 border-b shadow-sm z-[999] h-16 bg-white text-black">
       <div className="block md:hidden">Menu</div>
       <div>
-        <Link
-          href="/dashboard"
-          className="btn btn-ghost hover:bg-gray-100 px-2 rounded-lg py-1 text-[16px] gap-2 font-bold hidden xl:flex items-center justify-center">
-          <Image
-            src="/assets/images/School-Logo.png"
-            width={500}
-            height={500}
-            alt="School Logo"
-            className="h-9 w-9 object-cover object-center"
-          />
-          Future Leaders International School
+        <Link href="/dashboard">
+          <div className="flex items-center">
+            <Image
+              src="/logo/flis-web-title.svg"
+              alt="Logo"
+              width={210}
+              height={200}
+              className="object-contain w-[200px] h-[40px]"
+            />
+          </div>
         </Link>
         <Link
           href="/dashboard"
@@ -109,9 +112,11 @@ const Navbar = () => {
           <DropdownMenu>
             <DropdownMenuTrigger>
               <div className="w-9 h-9">
-                <img
+                <Image
+                  width={500}
+                  height={500}
                   alt="User Avatar"
-                  src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
+                  src="/assets/profile/flis_profile.jpg"
                   className="rounded-full"
                 />
               </div>

@@ -6,13 +6,12 @@ import { Toaster, toast } from "sonner";
 import {
   GetStudentById,
   RejectApplication,
-  submitWithoutEditApplication,
 } from "@/lib/actions/student.action";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { ApproveApplicationCounsellingDone } from "@/lib/actions/counseling.action";
 import PageLoader from "@/components/ui-components/PageLoading";
+import { formatDate } from "@/components/FormatDate";
 
 export default function StudentInfoPage({
   params,
@@ -45,62 +44,58 @@ export default function StudentInfoPage({
 
   const student = data?.student_details;
 
-  const handleCounselingDone = async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      const response = await ApproveApplicationCounsellingDone({
-        id: studentId,
-        status: "APPROVED",
-      });
+  // const handleCounselingDone = async () => {
+  //   setLoading(true);
+  //   setError(null);
+  //   try {
+  //     const response = await ApproveApplicationCounsellingDone({
+  //       id: studentId,
+  //       status: "APPROVED",
+  //     });
 
-      if (response.statusCode === 200) {
-        toast.success("Application approved successfully!");
-        window.location.href = "/student/approve";
-      } else {
-        toast.error("Failed to approve application!");
-      }
-    } catch (err) {
-      toast.error("Failed to approve application! Counseling not done");
-    } finally {
-      setLoading(false);
-    }
-  };
+  //     if (response.statusCode === 200) {
+  //       toast.success("Application approved successfully!");
+  //       window.location.href = "/student/approve";
+  //     } else {
+  //       toast.error("Failed to approve application!");
+  //     }
+  //   } catch (err) {
+  //     toast.error("Failed to approve application! Counseling not done");
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
-  // console.log("Main data: ", data);
+  // const dataToBeSubmitted = {
+  //   student_details: data?.student_details,
+  //   parent_guardian_details: data?.parent_guardian_details,
+  //   communication_address: data?.communication_address,
+  //   other_details: data?.other_details,
+  //   bank_details: data?.bank_details,
+  // };
 
-  const dataToBeSubmitted = {
-    student_details: data?.student_details,
-    parent_guardian_details: data?.parent_guardian_details,
-    communication_address: data?.communication_address,
-    other_details: data?.other_details,
-    bank_details: data?.bank_details,
-  };
-
-  // console.log("Data to be submitted: ", dataToBeSubmitted);
-
-  const handleWithoutEditApplication = async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      const response = await submitWithoutEditApplication(
-        dataToBeSubmitted,
-        studentId // This is admission_id
-      );
-      console.log(response);
-      if (response) {
-        const studentId = response;
-        console.log("response: ", studentId);
-        window.location.href = `/student/upload-documents/${studentId}`; // This is student_id coming from response
-      } else {
-        toast.error("Failed to submit application!");
-      }
-    } catch (err) {
-      toast.error("Student not found!");
-    } finally {
-      setLoading(false);
-    }
-  };
+  // const handleWithoutEditApplication = async () => {
+  //   setLoading(true);
+  //   setError(null);
+  //   try {
+  //     const response = await submitWithoutEditApplication(
+  //       dataToBeSubmitted,
+  //       studentId // This is admission_id
+  //     );
+  //     console.log(response);
+  //     if (response) {
+  //       const studentId = response;
+  //       console.log("response: ", studentId);
+  //       window.location.href = `/student/upload-documents/${studentId}`; // This is student_id coming from response
+  //     } else {
+  //       toast.error("Failed to submit application!");
+  //     }
+  //   } catch (err) {
+  //     toast.error("Student not found!");
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
   const handleCounselingRejected = async () => {
     setLoading(true);
@@ -110,14 +105,11 @@ export default function StudentInfoPage({
       if (response.statusCode === 200) {
         toast.success("Application rejected successfully!");
         window.location.href = "/student/reject";
-        console.log("Counseling rejected successfully!");
       } else {
         toast.error("Failed to reject application!");
-        console.error("Error rejecting application:", response.error);
       }
     } catch (err: any) {
-      toast.error("Error rejecting application!");
-      console.error(err);
+      toast.error(err.message);
     } finally {
       setLoading(false);
     }
@@ -332,8 +324,7 @@ const basicSection = (data: any) => {
           <tr className="">
             <td className="pr-4 py-1 font-semibold">Date of Birth:</td>
             <td className="md:px-4 py-1 text-xs sm:text-[14px] font-[700]">
-              {new Date(student?.date_of_birth).toISOString().split("T")[0] ||
-                "n/a"}{" "}
+              {formatDate(data?.student_details?.date_of_birth) || "n/a"}{" "}
             </td>
           </tr>
           <tr className="">

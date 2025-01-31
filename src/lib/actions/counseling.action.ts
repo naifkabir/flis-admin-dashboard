@@ -28,7 +28,6 @@ export async function ApproveApplicationCounsellingDone(
 
     return response.data;
   } catch (error: any) {
-    console.error("Error approving application:", error);
     return { error: error.response.data.message || error.message };
   }
 }

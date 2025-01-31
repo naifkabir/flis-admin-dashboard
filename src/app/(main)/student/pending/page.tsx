@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { columns } from "@/app/data-table-components/columns";
+import { pendingAndRejectedTableColumns } from "@/app/data-table-components/columns";
 import { StudentListDataTable } from "@/app/data-table-components/data-table";
 import { GetAllApplication } from "@/lib/actions/student.action";
 import { studentTableFilter } from "@/constant";
@@ -10,6 +10,7 @@ import { RejectApplication } from "@/lib/actions/student.action";
 import { DynamicBreadcrumb } from "@/components/StudentBreadcrumb";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { toast } from "sonner";
 
 export default function PendingStudentPage() {
   const [data, setData] = useState([]);
@@ -25,9 +26,8 @@ export default function PendingStudentPage() {
         // console.log("Fetched data:", result);
         const filteredData = studentTableFilter(result);
         setData(filteredData);
-      } catch (err) {
-        // console.error("Error fetching data:", err);
-        setError(true);
+      } catch (err: any) {
+        setError(err);
       } finally {
         setLoading(false);
       }
@@ -47,7 +47,7 @@ export default function PendingStudentPage() {
       const filteredData = studentTableFilter(result);
       setData(filteredData);
     } else {
-      console.error("Error rejecting application:", response.error);
+      toast.error("Failed to reject application.");
     }
   };
 
@@ -91,7 +91,7 @@ export default function PendingStudentPage() {
         </div>
 
         <StudentListDataTable
-          columns={columns(handleReject)}
+          columns={pendingAndRejectedTableColumns(handleReject)}
           data={data ? data : []}
         />
       </div>

@@ -210,9 +210,7 @@ export async function GetGroupById(id: string) {
 
     return response.data.data;
   } catch (error: any) {
-    console.error("Error fetching group:", error);
     if (error.response) {
-      console.error("Response data:", error.response.data);
       return { error: error.response.data.message || error.message };
     }
     return { error: error.response.data.message || error.message };
@@ -277,7 +275,6 @@ export async function SetAmountInMaster(data: any) {
     });
     return response.data;
   } catch (error: any) {
-    console.error("Error updating amount:", error);
     return { error: error.response.data.message || error.message };
   }
 }
@@ -306,8 +303,6 @@ export async function DeleteHeaderInMaster(data: any) {
 export async function DeleteMaster(masterId: string) {
   const cookieStore = cookies();
   const accessToken = cookieStore.get("accessToken")?.value;
-
-  console.log("masterId: ", masterId);
 
   if (!accessToken) {
     return { error: "No access token found." };
@@ -346,7 +341,6 @@ export async function CreateNewFinanceMaster(data: any) {
     });
     return response.data;
   } catch (error: any) {
-    console.error("Error approving application:", error);
     return { error: error.response.data.message || error.message };
   }
 }
@@ -354,8 +348,6 @@ export async function CreateNewFinanceMaster(data: any) {
 export async function AddHeaderInMaster(data: any) {
   const cookieStore = cookies();
   const accessToken = cookieStore.get("accessToken")?.value;
-
-  console.log("Data: ", data);
 
   if (!accessToken) {
     return { error: "No access token found." };

@@ -11,6 +11,7 @@ interface ApiResponse<T> {
 interface LogoutResponse {
   success: boolean;
   statusCode?: number;
+  message?: string;
 }
 
 export const Logout = async (): Promise<LogoutResponse> => {
@@ -25,7 +26,7 @@ export const Logout = async (): Promise<LogoutResponse> => {
   }
 
   try {
-    const response = await apiClient.post<ApiResponse<{}>>(
+    const response = await apiClient.post<ApiResponse<any>>(
       "/user/log-out",
       {},
       {
@@ -43,11 +44,19 @@ export const Logout = async (): Promise<LogoutResponse> => {
         maxAge: -1, // Set max age to -1 to expire the cookie
       });
 
-      return { success: true, statusCode: response.status };
+      return {
+        success: true,
+        statusCode: response.status,
+        message: response.data.message,
+      };
     }
 
     return { success: false, statusCode: response.status };
   } catch (error: any) {
-    return { success: false, statusCode: error.response?.status || 500 };
+    return {
+      success: false,
+      statusCode: error.response?.status || 500,
+      message: error.message,
+    };
   }
 };

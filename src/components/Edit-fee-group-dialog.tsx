@@ -54,7 +54,8 @@ const EditFeeGroupDialog = ({
         setLoading(true);
         const groupFinanceData = await GetGroupById(groupId);
         if (groupFinanceData) {
-          const { _id, ...rest } = groupFinanceData;
+          // const { _id, ...rest } = groupFinanceData;
+          const { ...rest } = groupFinanceData;
           form.reset({
             name: rest.name || "",
             groupCode: rest.groupCode || "",
@@ -63,8 +64,8 @@ const EditFeeGroupDialog = ({
         } else {
           setError(true);
         }
-      } catch (err) {
-        setError(true);
+      } catch (err: any) {
+        setError(err.message);
       } finally {
         setLoading(false);
       }
@@ -135,7 +136,7 @@ const EditFeeGroupDialog = ({
         <DialogHeader>
           <DialogTitle>Edit Fee Group</DialogTitle>
           <DialogDescription>
-            Make changes to your group here. Click update when you're done.
+            Make changes to your group here. Click update when you&apos;re done.
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>

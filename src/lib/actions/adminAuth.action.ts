@@ -40,7 +40,7 @@ export async function LoginUser(
       data
     );
 
-    revalidatePath("/dashboard");
+    revalidatePath("/student/pending");
     cookies().set({
       name: "accessToken",
       value: response.data.data?.accessToken || "",
@@ -52,7 +52,7 @@ export async function LoginUser(
 
     return {
       redirect: {
-        destination: "/dashboard",
+        destination: "/student/pending",
         permanent: false,
       },
       message: response.data.message,
@@ -69,13 +69,12 @@ export async function LoginUser(
 // Sign Up New User
 export async function SignUpFormApi(data: SignUpData): Promise<any> {
   try {
-    const response = await apiClient.post<ApiResponse<{}>>(
+    const response = await apiClient.post<ApiResponse<any>>(
       "/user/sign-up",
       data
     );
     return response.data;
   } catch (error: any) {
-    console.error(error);
     return {
       error:
         error.response?.data?.message || error.message || "An error occurred.",
@@ -104,8 +103,7 @@ export const GetCurrentAdminApi = async (): Promise<any | null> => {
     );
     return response.data.data || null;
   } catch (error: any) {
-    console.error("Fetch user failed:", error);
-    return null;
+    return { error: error.response.data.message || error.message || null };
   }
 };
 
@@ -141,7 +139,6 @@ export const ChangePasswordApi = async (
       message: response.data.message || "Password changed successfully.",
     };
   } catch (error: any) {
-    console.error("Change password failed:", error);
     return {
       success: false,
       message:

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { columns } from "@/app/data-table-components/columns";
+import { pendingAndRejectedTableColumns } from "@/app/data-table-components/columns";
 import { StudentListDataTable } from "@/app/data-table-components/data-table";
 import { GetAllApplication } from "@/lib/actions/student.action";
 import { studentTableFilter } from "@/constant";
@@ -23,9 +23,8 @@ export default function RejectStudentPage() {
         const result = await GetAllApplication("ARCHIVED");
         const filteredData = studentTableFilter(result);
         setData(filteredData);
-      } catch (err) {
-        // console.error("Error fetching data:", err);
-        setError(true);
+      } catch (err: any) {
+        setError(err);
       } finally {
         setLoading(false);
       }
@@ -72,7 +71,10 @@ export default function RejectStudentPage() {
             </Link>
           </div>
         </div>
-        <StudentListDataTable columns={columns()} data={data ? data : []} />
+        <StudentListDataTable
+          columns={pendingAndRejectedTableColumns()}
+          data={data ? data : []}
+        />
       </div>
     </div>
   );

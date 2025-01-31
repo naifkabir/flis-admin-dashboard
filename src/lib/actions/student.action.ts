@@ -58,14 +58,11 @@ export async function GetStudentDetails(id: string) {
   }
 
   try {
-    const response = await apiClient.get(
-      `/student/get/${id}`,
-      {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      }
-    );
+    const response = await apiClient.get(`/student/get/${id}`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
     return response.data.data;
   } catch (error: any) {
     return { error: error.response.data.message || error.message };
@@ -134,7 +131,6 @@ export async function ApproveApplicationForCounselling(data: any) {
     });
     return response.data;
   } catch (error: any) {
-    console.error("Error approving application:", error);
     return { error: error.response.data.message || error.message };
   }
 }
@@ -142,8 +138,6 @@ export async function ApproveApplicationForCounselling(data: any) {
 export async function submitAfterEditApplication(data: any, id: string) {
   const cookieStore = cookies();
   const accessToken = cookieStore.get("accessToken")?.value;
-
-  console.log("Data: ", id);
 
   if (!accessToken) {
     return null;
@@ -157,7 +151,6 @@ export async function submitAfterEditApplication(data: any, id: string) {
     });
     return response.data;
   } catch (error: any) {
-    console.error("Error approving application:", error);
     return { error: error.response.data.message || error.message };
   }
 }
@@ -168,8 +161,6 @@ export async function submitWithoutEditApplication(
 ) {
   const cookieStore = cookies();
   const accessToken = cookieStore.get("accessToken")?.value;
-
-  console.log("Data: ", application_id);
 
   if (!accessToken) {
     return null;
@@ -187,7 +178,6 @@ export async function submitWithoutEditApplication(
     );
     return response.data.data;
   } catch (error: any) {
-    console.error("Error approving application:", error);
     return { error: error.response.data.message || error.message };
   }
 }
@@ -210,7 +200,6 @@ export async function deleteAdmissionFromDatabase(id: string) {
     });
     return response.data;
   } catch (error: any) {
-    console.error("Error approving application:", error);
     return { error: error.response.data.message || error.message };
   }
 }
@@ -233,7 +222,6 @@ export async function DeleteDocument(id: string) {
     });
     return response.data;
   } catch (error: any) {
-    console.error("Error deleting document:", error);
     return { error: error.response.data.message || error.message };
   }
 }

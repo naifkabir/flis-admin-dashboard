@@ -57,28 +57,63 @@ const EditFeeHeaderDialog = ({
     resolver: zodResolver(editFeeHeaderFormSchema),
   });
 
-  const fetchData = async () => {
-    try {
-      setLoading(true);
-      const financeData = await GetHeaderById(headerId);
-      if (financeData) {
-        const { _id, ...rest } = financeData;
-        form.reset({
-          name: rest.name || "",
-          feesCode: rest.feesCode || "",
-          occurrence: rest.occurrence || "",
-          dueDate: rest.dueDate || "",
-          description: rest.description || "",
-        });
-      } else {
-        setError(true);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        const financeData = await GetHeaderById(headerId);
+        if (financeData) {
+          const { ...rest } = financeData;
+          form.reset({
+            name: rest.name || "",
+            feesCode: rest.feesCode || "",
+            occurrence: rest.occurrence || "",
+            dueDate: rest.dueDate || "",
+            description: rest.description || "",
+          });
+        } else {
+          setError(true);
+        }
+      } catch (err: any) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
       }
-    } catch (err) {
-      setError(true);
-    } finally {
-      setLoading(false);
+    };
+
+    if (isDialogOpen && headerId) {
+      fetchData();
     }
-  };
+  }, [isDialogOpen, headerId, form]);
+
+  // const fetchData = useCallback(async () => {
+  //   try {
+  //     setLoading(true);
+  //     const financeData = await GetHeaderById(headerId);
+  //     if (financeData) {
+  //       const { ...rest } = financeData;
+  //       form.reset({
+  //         name: rest.name || "",
+  //         feesCode: rest.feesCode || "",
+  //         occurrence: rest.occurrence || "",
+  //         dueDate: rest.dueDate || "",
+  //         description: rest.description || "",
+  //       });
+  //     } else {
+  //       setError(true);
+  //     }
+  //   } catch (err: any) {
+  //     setError(err.message);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // }, [headerId, form]);
+
+  // useEffect(() => {
+  //   if (isDialogOpen && headerId) {
+  //     fetchData(); // Fetch data only when dialog opens
+  //   }
+  // }, [isDialogOpen, headerId, fetchData]);
 
   const onSubmit = async (values: z.infer<typeof editFeeHeaderFormSchema>) => {
     setSubmitting(true);
@@ -99,12 +134,6 @@ const EditFeeHeaderDialog = ({
       setSubmitting(false);
     }
   };
-
-  useEffect(() => {
-    if (isDialogOpen && headerId) {
-      fetchData(); // Fetch data only when dialog opens
-    }
-  }, [isDialogOpen, headerId]);
 
   if (loading) {
     return (
@@ -146,7 +175,8 @@ const EditFeeHeaderDialog = ({
         <DialogHeader>
           <DialogTitle>Edit Fee Header</DialogTitle>
           <DialogDescription>
-            Make changes to your header here. Click update when you're done.
+            Make changes to your header here. Click update when you&apos;re
+            done.
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>

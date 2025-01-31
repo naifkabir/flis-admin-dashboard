@@ -21,10 +21,8 @@ import {
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -74,8 +72,8 @@ export function AddNewSectionDialog({
         } else {
           toast.error("Failed to fetch class data");
         }
-      } catch (error) {
-        toast.error("Error fetching class data");
+      } catch (error: any) {
+        toast.error(error.message);
       }
     };
     fetchData();

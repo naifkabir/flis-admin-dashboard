@@ -1,13 +1,13 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-import { GetStudentById } from '@/lib/actions/student.action';
-import PageLoader from '@/components/ui-components/PageLoading';
-import { Link } from 'lucide-react';
-import EditStudentForm from '@/components/EditStudentForm';
-import { GetAllClasses } from '@/lib/actions/class.action';
-import { GetAllGroupsForDropDown } from '@/lib/actions/finance.action';
-import { GetActiveSession } from '@/lib/actions/session.action';
+import { useEffect, useState } from "react";
+import { GetStudentById } from "@/lib/actions/student.action";
+import PageLoader from "@/components/ui-components/PageLoading";
+import { Link } from "lucide-react";
+import EditStudentForm from "@/components/EditStudentForm";
+import { GetAllClasses } from "@/lib/actions/class.action";
+import { GetAllGroupsForDropDown } from "@/lib/actions/finance.action";
+import { GetActiveSession } from "@/lib/actions/session.action";
 
 // Main Function Start -------------------------------------------------
 
@@ -79,8 +79,6 @@ export default function StudentInfoPage({
       </div>
     );
   }
-
-  console.log('allClasses: ', allClasses);
 
   const data1 = {
     ...data?.bank_details,

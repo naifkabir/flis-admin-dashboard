@@ -34,7 +34,7 @@ export default function StudentInfoPage({
   >([]);
   const [isUploading, setIsUploading] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  // const [error, setError] = useState<string | null>(null);
   const [validationErrors, setValidationErrors] = useState<{
     [key: string]: string;
   }>({}); // Validation error state
@@ -60,7 +60,7 @@ export default function StudentInfoPage({
         setFile(selectedFile);
         setPdfPreviewUrl(URL.createObjectURL(selectedFile)); // Set preview URL
         setValidationErrors((prev) => {
-          const { file, ...rest } = prev;
+          const { ...rest } = prev;
           return rest;
         });
       }
@@ -151,11 +151,9 @@ export default function StudentInfoPage({
       } else {
         toast.warning("No documents found to upload!");
       }
-    } catch (error) {
+    } catch (error: any) {
       // console.error("Error uploading documents:", error);
-      toast.error(
-        "An error occurred while uploading documents. Please try again."
-      );
+      toast.error(error.message);
     } finally {
       setIsUploading(false);
     }
@@ -173,14 +171,6 @@ export default function StudentInfoPage({
     return (
       <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
         <PageLoader />
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
-        <h2 className="text-red-600 text-lg">{error}</h2>
       </div>
     );
   }

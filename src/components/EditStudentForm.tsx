@@ -303,8 +303,6 @@ const EditStudentForm = ({
     }
   };
 
-  console.log("allGroups", allGroups);
-
   const filteredGroups = Array.isArray(allGroups)
     ? allGroups.filter((group: any) =>
         group.name.toLowerCase().includes(searchTerm.toLowerCase())
@@ -476,7 +474,6 @@ const EditStudentForm = ({
 
   useEffect(() => {
     if (watchClass) {
-      console.log("watchClass: ", watchClass);
       const sectionOptions = allClasses.find(
         (item: any) => item._id === watchClass
       )?.sections;
@@ -656,8 +653,6 @@ const EditStudentForm = ({
     // Append data1 to formData
     appendFormData(formData, data1);
 
-    console.log("Form data: ", data1);
-    console.log("Id", data._id);
     try {
       const response = await submitAfterEditApplication(formData, data._id);
 
@@ -671,9 +666,8 @@ const EditStudentForm = ({
           window.location.href = `/student/counseling`;
         }, 3000);
       }
-    } catch (error) {
-      console.log(error);
-      toast.error("Something went wrong. Please try again.");
+    } catch (error: any) {
+      toast.error(error.message);
     }
   };
 
@@ -3332,7 +3326,7 @@ const EditStudentForm = ({
                         <DialogTitle>Select Fees Group</DialogTitle>
                         <DialogDescription>
                           Select the fees group for the student. Click add when
-                          you're done.
+                          you&apos;re done.
                         </DialogDescription>
                       </DialogHeader>
                       <FormField

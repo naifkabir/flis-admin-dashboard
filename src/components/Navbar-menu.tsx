@@ -19,7 +19,7 @@ import {
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
 import { useState, useEffect } from "react";
-import { Menu, MenuItem } from "./ui/navbar-menu";
+import { Menu } from "./ui/navbar-menu";
 import { menuItems } from "@/constant";
 import { cn } from "@/lib/utils";
 import { Logout } from "@/lib/actions/logout.action";
@@ -28,16 +28,10 @@ import HamburgerMenu from "./Ham-menu";
 import { toast } from "sonner";
 import DevAlertDialogComponent from "./development-alart/DevAlart";
 
-interface SubItem {
-  id: string; // or number, depending on your implementation
-  label: string;
-  href: string;
-}
-
 const Navbar = () => {
   const [user, setUser] = useState<{ name: string; role: string } | null>(null);
 
-  const [_, setActiveItem] = useState<string | null>(null);
+  const [activeItem, setActiveItem] = useState<string | null>(null);
 
   const handleItemClick = (itemName: string) => {
     setActiveItem(itemName); // Set the active item on click
@@ -73,13 +67,10 @@ const Navbar = () => {
     subItem: any
   ) => {
     e.preventDefault();
-    // console.log("Button Clicked: ", subItem);
     if (subItem.shouldShowAlert) {
-      // console.log("Alert needed for link: ", subItem.href);
-      setDialogOpen(true); // Open the dev alert dialog
+      setDialogOpen(true);
       return;
     } else {
-      // Navigate to the link if alert is false
       window.location.href = subItem.href;
     }
   };
@@ -90,29 +81,16 @@ const Navbar = () => {
         <HamburgerMenu />
       </div>
       <div className="">
-        <Link
-          href="/dashboard"
-          className="btn btn-ghost hover:bg-gray-100 px-2 rounded-lg py-1 text-[16px] gap-2 font-bold hidden xl:flex items-center justify-center">
-          <Image
-            src="/assets/images/School-Logo.png"
-            width={500}
-            height={500}
-            alt="School Logo"
-            className="h-9 w-9 object-cover object-center"
-          />
-          Future Leaders International School
-        </Link>
-        <Link
-          href="/dashboard"
-          className="btn btn-ghost text-lg w-28 flex items-center justify-center xl:hidden">
-          <Image
-            src="/assets/images/School-Logo.png"
-            width={500}
-            height={500}
-            alt="School Logo"
-            className="h-8 w-8 object-cover object-center text-[16px] gap-2 font-bold btn btn-ghost hover:bg-gray-100 px-2 rounded-lg py-1"
-          />
-          FLIS
+        <Link href="/dashboard">
+          <div className="flex items-center">
+            <Image
+              src="/assets/flis_logo/flis-web-title.svg"
+              alt="Logo"
+              width={210}
+              height={200}
+              className="object-contain w-[200px] h-[40px]"
+            />
+          </div>
         </Link>
       </div>
 
@@ -138,7 +116,10 @@ const Navbar = () => {
                           href={subItem.href}
                           onClick={(e: any) => handleLinkClick(e, subItem)}
                           className="py-1 hover:bg-gray-700 px-2 rounded-sm">
-                          <div className="flex flex-col items-start justify-center py-1 px-2 text-[13px]">
+                          <div
+                            className={`flex flex-col items-start justify-center py-1 px-2 text-[13px] ${
+                              activeItem === item.name ? "bg-gray-700" : ""
+                            }`}>
                             <span className="text-base">{subItem.label}</span>
                             <span className="text-gray-400">
                               {subItem.description}
@@ -173,10 +154,12 @@ const Navbar = () => {
           <DropdownMenu>
             <DropdownMenuTrigger>
               <div className="w-9 h-9">
-                <img
+                <Image
+                  width={500}
+                  height={500}
                   alt="User Avatar"
-                  src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
-                  className="rounded-full"
+                  src="/assets/profile/flis_profile.jpg"
+                  className="rounded-full aspect-square object-cover object-top"
                 />
               </div>
             </DropdownMenuTrigger>

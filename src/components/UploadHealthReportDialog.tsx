@@ -158,8 +158,8 @@ export function UploadHealthReportDialog({
         setImagePreview(null);
         form.reset();
       }
-    } catch (error) {
-      toast.error("Something went wrong. Please try again.");
+    } catch (error: any) {
+      toast.error(error.message);
     }
   };
 

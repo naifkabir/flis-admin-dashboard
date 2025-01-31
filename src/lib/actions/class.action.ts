@@ -24,7 +24,6 @@ export const GetAllClasses = async (): Promise<any | null> => {
     });
     return response.data.data || null;
   } catch (error: any) {
-    console.error("Fetch user failed:", error);
-    return null;
+    return { error: error.response.data.message || error.message || null };
   }
 };

@@ -394,7 +394,6 @@ export default function SignUp() {
 
     setLoading(true);
     const result = await SignUpFormApi(data);
-    console.log("result: ", result);
 
     setLoading(false);
 

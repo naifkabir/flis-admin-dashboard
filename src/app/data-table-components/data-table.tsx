@@ -13,7 +13,6 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-
 import {
   Table,
   TableBody,
@@ -22,13 +21,12 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-
 import { DataTablePagination } from "./data-table-pagination";
-import { DataTableViewOptions } from "./data-table-view-options";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
-
+import * as XLSX from "xlsx";
 import { IoSearchOutline } from "react-icons/io5";
+import { Button } from "@/components/ui/button";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -70,6 +68,14 @@ export function StudentListDataTable<TData, TValue>({
     onGlobalFilterChange: setGlobalFilter,
   });
 
+  const exportToExcel = () => {
+    const ws = XLSX.utils.json_to_sheet(data);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Students");
+
+    XLSX.writeFile(wb, "students.xlsx");
+  };
+
   return (
     <div className="space-y-4">
       <div className="flex justify-between mb-4">
@@ -81,14 +87,16 @@ export function StudentListDataTable<TData, TValue>({
               value={globalFilter}
               onChange={(event) => setGlobalFilter(event.target.value)}
               className={cn(
-                "group outline-none border-none text-[15px] bg-[#fff]"
+                "group outline-none border-none text-[15px] bg-[#fff] focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-transparent focus-visible:ring-offset-0"
               )}
             />
           </div>
         </div>
 
-        <div className="flex items-center gap-2">
-          <DataTableViewOptions table={table} />
+        <div className="flex gap-4 items-center">
+          <Button variant="outline" onClick={exportToExcel}>
+            Export as Excel
+          </Button>
         </div>
       </div>
 

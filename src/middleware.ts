@@ -1,19 +1,24 @@
 import { NextResponse } from "next/server";
 
 const protectedRoutes = [
-  "/student/approve",
+  "/school",
   "/student/counseling",
   "/student/pending",
   "/student/reject",
   "/admin/profilePage",
   "/dashboard",
   "/finance/feesGroup",
-  "/feesHeader",
-  "/feesMaster",
-  "/student/approve",
+  "/finance/feesHeader",
+  "/finance/feesMaster",
   "/student/counseling",
   "/student/pending",
   "/student/reject",
+  "student/approve-student",
+  "student/all-admitted-student",
+  "student/upload-documents",
+  "student/collect-fees",
+  "student/collect-fees/[...params]",
+  "academics/batch-and-section",
 ];
 
 export async function middleware(request: any) {

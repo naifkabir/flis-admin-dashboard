@@ -57,7 +57,7 @@ export default function Login() {
 
     if (result.message) {
       toast.success("Login Successfully, Welcome to FLIS", {
-        position: "top-center",
+        position: "bottom-center",
       });
       const redirectDestination = result.redirect?.destination || "/";
       router.push(redirectDestination);
@@ -91,7 +91,8 @@ export default function Login() {
               <input
                 type="text"
                 placeholder="Email"
-                value={email}
+                autoComplete="off"
+                value={email || ""}
                 onChange={(e) => setEmail(e.target.value)}
                 className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300"
               />
@@ -106,7 +107,8 @@ export default function Login() {
               <input
                 type={showPassword ? "text" : "password"}
                 placeholder="Password"
-                value={pass}
+                autoComplete="off"
+                value={pass || ""}
                 onChange={(e) => setPass(e.target.value)}
                 className="w-full pl-10 pr-10 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300"
               />
@@ -209,18 +211,11 @@ export default function Login() {
 
       {/* Footer Logo */}
       <div className="absolute bottom-4 right-4 flex flex-col items-end px-3">
-        <Link href="#">
-          <Image
-            src="/assets/loaders/logo apparium.png"
-            width={500}
-            height={500}
-            alt="Company Logo"
-            className="w-10 h-10 object-cover object-center rounded-full border p-1 bg-white"
-          />
+        <Link href="https://appariumnewapp.vercel.app/">
+          <span className="ml-2 text-gray-600 text-sm">
+            Created and Developed by <strong>Supranostik</strong>, 2024
+          </span>
         </Link>
-        <span className="ml-2 text-gray-600 text-sm">
-          Created and Developed by <strong>Apparium</strong>, 2024
-        </span>
       </div>
       <Toaster richColors />
     </div>

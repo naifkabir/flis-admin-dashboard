@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 
 const BatchAndSection = () => {
   return (
-    <main>
+    <main className="py-5">
       <div className="flex justify-end">
         <AddNewSectionDialog>
           <Button className="h-12">Add New Section</Button>

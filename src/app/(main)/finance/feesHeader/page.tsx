@@ -157,10 +157,6 @@ const FinancePage = () => {
     }
   };
 
-  const handleEdit = async (id: number) => {
-    // console.log(`Editing header with ID: ${id}`);
-  };
-
   const handleDeleteHeader = async (headerId: string) => {
     setHeaderIdToDelete(headerId);
     setDeleteDialogOpen(true);
@@ -353,7 +349,7 @@ const FinancePage = () => {
             </div>
           </div>
           <FinanceDataTable
-            columns={FinanceColumnFeeHeaders(handleEdit, handleDeleteHeader)}
+            columns={FinanceColumnFeeHeaders(handleDeleteHeader)}
             data={filteredData ? filteredData : []}
           />
         </div>

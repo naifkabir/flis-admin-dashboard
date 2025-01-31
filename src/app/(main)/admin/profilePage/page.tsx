@@ -62,15 +62,20 @@ const ProfilePage = () => {
   // Use React Hook Form with Zod
   const {
     register,
-    handleSubmit,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(passwordSchema),
   });
 
-  const toggleOldPasswordVisibility = () => {
-    setShowOldPassword((prev) => !prev);
-  };
+  /*************  ✨ Codeium Command ⭐  *************/
+  /**
+   * Toggle the visibility of the old password input field
+   * @returns {void}
+   */
+  /******  e73d7870-1b04-442f-a9fc-08529c035317  *******/ const toggleOldPasswordVisibility =
+    () => {
+      setShowOldPassword((prev) => !prev);
+    };
 
   const toggleNewPasswordVisibility = () => {
     setShowNewPassword((prev) => !prev);
@@ -98,9 +103,6 @@ const ProfilePage = () => {
       return;
     }
 
-    console.log("Old Password: ", oldPassword);
-    console.log("New Password: ", newPassword);
-
     setLoading(true);
     const response: ChangePasswordResponse = await ChangePasswordApi(
       oldPassword,
@@ -122,7 +124,7 @@ const ProfilePage = () => {
 
   return (
     <div className="bg-dark-300 flex flex-col md:flex-row gap-8 max-h-screen">
-      <div className="border-b-2 md:border-r-2 md:border-b-0 flex justify-center md:flex-col gap-6 md:w-64 w-full h-full">
+      <div className="border-b-2 md:border-r-2 md:border-b-0 flex justify-center md:flex-col gap-6 md:w-64 w-full h-full md:py-10">
         {/* Profile */}
         <div
           className={cn(
@@ -194,7 +196,7 @@ const ProfilePage = () => {
         <div className="w-full flex flex-col justify-between mx-auto p-6 my-auto">
           <div className="flex gap-6 items-center">
             <Image
-              src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
+              src="/assets/profile/flis_profile.jpg"
               alt="profile"
               width={100}
               height={100}
@@ -427,84 +429,31 @@ const ProfilePage = () => {
             </h1>
 
             <p className="">
-              If you need assistance with any academic-related matters, feel
-              free to reach out to the appropriate department or the college
-              administration. We&apos;re here to help you make the most of your
-              engineering education journey.
+              At Supranostik, we handle all software-related queries, providing
+              tailored solutions to meet your specific needs. Whether it&apos;s
+              troubleshooting, software customization (Web, Mobiile & Desktop
+              applications), or anything in between, we&apos;re here to help..
             </p>
 
             {/* Contact Info Section */}
             <div className="flex flex-col gap-4">
               <div>
                 <h2 className="text-lg font-medium ">Contact Information:</h2>
-                <p className="">Here’s how you can get in touch with us:</p>
-              </div>
-
-              <div>
-                <h3 className="text-md font-semibold text-orange-600">
-                  College Administration Office
-                </h3>
                 <p className="">
-                  <span className="font-medium">Address:</span> 123 Engineering
-                  hub, Tech City, ST 54321
-                </p>
-                <p className="">
-                  <span className="font-medium">Phone:</span> 1234567890
-                </p>
-                <p className="">
-                  <span className="font-medium">Email:</span>{" "}
-                  <a
-                    href="mailto:support@college.edu"
-                    className="text-blue-500 hover:underline">
-                    support@college.edu
-                  </a>
+                  Here&apos;s how you can get in touch with us.
                 </p>
               </div>
 
               <div>
                 <h3 className="text-md font-semibold text-orange-600">
-                  Departmental Offices
+                  Supranostik
                 </h3>
-                <p className="text-white">
-                  For department-specific queries (e.g., assignments, faculty,
-                  etc.), you can contact your respective department:
-                </p>
-                <ul className="list-disc pl-6 text-white">
-                  <li>
-                    <span className="font-medium">Mechanical Engineering:</span>{" "}
-                    mech@college.edu
-                  </li>
-                  <li>
-                    <span className="font-medium">
-                      Computer Science & Engineering:
-                    </span>{" "}
-                    cse@college.edu
-                  </li>
-                  <li>
-                    <span className="font-medium">Electrical Engineering:</span>{" "}
-                    ee@college.edu
-                  </li>
-                </ul>
-              </div>
-
-              <div>
-                <h3 className="text-md font-semibold text-orange-600">
-                  Student Support Services
-                </h3>
-                <p className="text-white">
-                  Need help with mental health, accommodation, or financial aid?
-                  Reach out to our student services for support.
-                </p>
-                <p className="text-white">
-                  <span className="font-medium">Phone:</span> (123) 456-7891
+                <p className="">
+                  <span className="font-medium">Email: </span>
+                  contact@supranostik.tech
                 </p>
                 <p className="">
-                  <span className="font-medium">Email:</span>{" "}
-                  <a
-                    href="mailto:support@college.edu"
-                    className="text-blue-500 hover:underline">
-                    studentservices@college.edu
-                  </a>
+                  <span className="font-medium">Phone: </span>+91 7797063266
                 </p>
               </div>
             </div>
@@ -512,9 +461,7 @@ const ProfilePage = () => {
             {/* Footer Message */}
             <div className="text-center text-sm">
               <p>
-                We are dedicated to supporting our students in every way
-                possible. If you have any questions, don&apos;t hesitate to
-                contact us. We&apos;re here to help you succeed!
+                © <strong>Supranostik</strong>, 2024
               </p>
             </div>
           </div>

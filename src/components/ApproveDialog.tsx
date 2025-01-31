@@ -83,8 +83,8 @@ const ApproveDialog = ({
           window.history.back(); // Navigate back to the previous page
         }, 5000);
       }
-    } catch (err) {
-      setError("An error occurred while approving the application.");
+    } catch (err: any) {
+      setError(err.message);
     } finally {
       setLoading(false);
     }

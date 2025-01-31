@@ -1,19 +1,19 @@
-'use client';
+"use client";
 
-import PageLoader from '@/components/ui-components/PageLoading';
-import { Button } from '@/components/ui/button';
-import { UploadHealthReportDialog } from '@/components/UploadHealthReportDialog';
-import { admittedStudentDetails } from '@/constant';
+import { formatDate } from "@/components/FormatDate";
+import PageLoader from "@/components/ui-components/PageLoading";
+import { Button } from "@/components/ui/button";
+import { UploadHealthReportDialog } from "@/components/UploadHealthReportDialog";
+import { admittedStudentDetails } from "@/constant";
 import {
   DeleteDocument,
   GetStudentDetails,
-} from '@/lib/actions/student.action';
-import axios from 'axios';
-import Image from 'next/image';
-import Link from 'next/link';
-import { useEffect, useState } from 'react';
-import Barcode from 'react-barcode';
-import { toast } from 'sonner';
+} from "@/lib/actions/student.action";
+import Image from "next/image";
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import Barcode from "react-barcode";
+import { toast } from "sonner";
 
 export default function StudentInfoPage({
   params,
@@ -38,7 +38,7 @@ export default function StudentInfoPage({
             setData(filteredData);
           }
         } catch (error: any) {
-          toast.error('Failed to fetch data', error);
+          toast.error("Failed to fetch data", error);
           setError(true);
         } finally {
           setLoading(false);
@@ -49,9 +49,7 @@ export default function StudentInfoPage({
     }
   }, [studentId]);
 
-  const [activeTab, setActiveTab] = useState('basic-details');
-
-  console.log('studentId: ', studentId);
+  const [activeTab, setActiveTab] = useState("basic-details");
 
   const handleTabChange = (tab: string) => {
     setActiveTab(tab);
@@ -61,31 +59,10 @@ export default function StudentInfoPage({
     const response = await DeleteDocument(documentId);
 
     if (response.statusCode === 200) {
-      toast.success('Document deleted successfully!');
+      toast.success("Document deleted successfully!");
       window.location.reload();
     } else {
-      toast.error('Failed to delete document!');
-    }
-  };
-
-  const handleDownload = async (fileUrl: string, fileName: string) => {
-    try {
-      const response = await axios.get(fileUrl, {
-        responseType: 'blob', // Important to handle the file as binary data
-      });
-      const url = window.URL.createObjectURL(new Blob([response.data]));
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = fileName; // Suggested filename for the download
-      document.body.appendChild(link);
-      link.click();
-
-      // Cleanup
-      document.body.removeChild(link);
-      window.URL.revokeObjectURL(url);
-    } catch (error) {
-      console.log(error);
-      toast.error('Failed to download document!');
+      toast.error("Failed to delete document!");
     }
   };
 
@@ -108,7 +85,7 @@ export default function StudentInfoPage({
   }
 
   return (
-    <div className="w-full h-full px-3">
+    <div className="w-full min-h-full px-3 pb-5">
       {/* <h1 className="text-2xl font-bold text-red-600">Student Profile</h1> */}
 
       {/* Profile Section */}
@@ -162,19 +139,15 @@ export default function StudentInfoPage({
           </table>
 
           <div className="grid gap-3 mt-10">
-            <Button>SEND USER ID & PASSWORD</Button>
+            <Button disabled>SEND USER ID & PASSWORD</Button>
             <Link href={`/student/upload-documents/${studentId}`}>
               <Button className="w-full">UPLOAD DOCUMENTS</Button>
             </Link>
             <Link
-              href={`/student/collect-fees/${studentId}/${data.sessionId}/${data.classId}`}
-            >
+              href={`/student/collect-fees/${studentId}/${data.sessionId}/${data.classId}`}>
               <Button className="w-full">COLLECT FEES</Button>
             </Link>
-            <Button>ALLOCATE SUBJECT</Button>
-            {/* <Link href={`/student/health-records/${studentId}`}>
-              <Button className="w-full">ADD HEALTH RECORD</Button>
-            </Link> */}
+            <Button disabled>ALLOCATE SUBJECT</Button>
             <UploadHealthReportDialog studentId={studentId}>
               <Button className="w-full">ADD HEALTH RECORD</Button>
             </UploadHealthReportDialog>
@@ -187,27 +160,26 @@ export default function StudentInfoPage({
           <div className="flex justify-between mb-10">
             <div className="flex space-x-4">
               {[
-                'Basic Details',
-                'Parents',
-                'Address',
-                'Admission',
-                'Exam',
-                'Board Exam',
-                'Attendance',
-                'Document',
-                'Diet Chart',
+                "Basic Details",
+                "Parents",
+                "Address",
+                "Admission",
+                "Exam",
+                "Board Exam",
+                "Attendance",
+                "Document",
+                "Diet Chart",
               ].map((tab) => (
                 <button
                   key={tab}
                   onClick={() =>
-                    handleTabChange(tab.toLowerCase().replace(/\s/g, '-'))
+                    handleTabChange(tab.toLowerCase().replace(/\s/g, "-"))
                   }
                   className={`py-2 px-4 rounded ${
-                    activeTab === tab.toLowerCase().replace(/\s/g, '-')
-                      ? 'bg-red-600 text-white'
-                      : 'bg-gray-200 text-black'
-                  }`}
-                >
+                    activeTab === tab.toLowerCase().replace(/\s/g, "-")
+                      ? "bg-red-600 text-white"
+                      : "bg-gray-200 text-black"
+                  }`}>
                   {tab}
                 </button>
               ))}
@@ -215,60 +187,51 @@ export default function StudentInfoPage({
 
             <Button
               onClick={() => window.history.back()}
-              className="justify-self-end"
-            >
+              className="justify-self-end">
               Go Back
             </Button>
           </div>
 
           {/* Tab Content */}
           <div className="">
-            {activeTab === 'diet-chart' && (
+            {activeTab === "diet-chart" && (
               <div className="bg-white p-4 rounded shadow">
                 <div className="space-y-4">
                   {data.health_records?.records?.map((doc: any, index: any) => (
                     <div
                       key={index}
-                      className="flex items-center justify-between border p-4 rounded"
-                    >
-                      <div>
+                      className="flex items-center justify-between border p-4 rounded text-sm">
+                      <div className="grid gap-2">
                         <p>
                           <strong>Diet Chart :</strong> {index + 1}
                         </p>
                         <p>
-                          <strong>Uploaded On:</strong>{' '}
-                          {new Date(doc.createdAt).toLocaleString()}
+                          <strong>Uploaded On:</strong>{" "}
+                          {formatDate(doc.createdAt)}
+                        </p>
+                        <p>
+                          <strong>Time:</strong>{" "}
+                          {new Date(doc.createdAt).toLocaleTimeString()}
                         </p>
                       </div>
                       <div className="flex space-x-2">
                         {doc.dietChartUrl ? (
                           <div className="flex space-x-2">
-                            <a
-                              className="bg-red-600 text-white px-4 py-2 rounded"
-                              href={doc.dietChartUrl}
+                            <Link
+                              href={doc?.dietChartUrl}
                               target="_blank"
-                              rel="noopener noreferrer"
-                            >
-                              Download
-                            </a>
-                            <button
-                              className="bg-gray-400 text-white px-4 py-2 rounded"
-                              onClick={() => handleDeleteDocument(doc._id)}
-                            >
+                              rel="noopener noreferrer">
+                              <Button>Download</Button>
+                            </Link>
+                            <Button
+                              variant="destructive"
+                              onClick={() => handleDeleteDocument(doc?._id)}>
                               Delete
-                            </button>
+                            </Button>
                           </div>
                         ) : (
                           <h4>N/A</h4>
                         )}
-                        {/* <button
-                          className="bg-blue-600 text-white px-4 py-2 rounded"
-                          onClick={() =>
-                            handleDownload(doc.fileUrl, doc.documentType)
-                          }
-                        >
-                          Download
-                        </button> */}
                       </div>
                     </div>
                   ))}
@@ -276,14 +239,13 @@ export default function StudentInfoPage({
               </div>
             )}
 
-            {activeTab === 'document' && (
+            {activeTab === "document" && (
               <div className="bg-white p-4 rounded shadow">
                 <div className="space-y-4">
                   {data.documents.map((doc: any) => (
                     <div
                       key={doc._id}
-                      className="flex items-center justify-between border p-4 rounded"
-                    >
+                      className="flex items-center justify-between border p-4 rounded">
                       <div>
                         <p>
                           <strong>Document ID:</strong> {doc._id}
@@ -300,8 +262,7 @@ export default function StudentInfoPage({
                           className="bg-red-600 text-white px-4 py-2 rounded"
                           href={doc.fileUrl}
                           target="_blank"
-                          rel="noopener noreferrer"
-                        >
+                          rel="noopener noreferrer">
                           Download
                         </a>
                         {/* <button
@@ -314,8 +275,7 @@ export default function StudentInfoPage({
                         </button> */}
                         <button
                           className="bg-gray-400 text-white px-4 py-2 rounded"
-                          onClick={() => handleDeleteDocument(doc._id)}
-                        >
+                          onClick={() => handleDeleteDocument(doc._id)}>
                           Delete
                         </button>
                       </div>
@@ -325,7 +285,7 @@ export default function StudentInfoPage({
               </div>
             )}
 
-            {activeTab === 'basic-details' && (
+            {activeTab === "basic-details" && (
               <div className="grid gap-10">
                 <div className="bg-white rounded shadow border border-red-600">
                   <h2 className="text-lg font-semibold mb-5 text-center py-3 bg-red-600 text-white">
@@ -338,7 +298,7 @@ export default function StudentInfoPage({
                           Admission Date
                         </td>
                         <td className="border px-4 py-2">
-                          {data.admission_date}
+                          {formatDate(data.admission_date)}
                         </td>
                       </tr>
                       <tr>
@@ -354,7 +314,7 @@ export default function StudentInfoPage({
                           Date of Birth
                         </td>
                         <td className="border px-4 py-2">
-                          {data.basic_details.date_of_birth}
+                          {formatDate(data.basic_details.date_of_birth)}
                         </td>
                       </tr>
                       <tr>
@@ -521,7 +481,7 @@ export default function StudentInfoPage({
               </div>
             )}
 
-            {activeTab === 'parents' && (
+            {activeTab === "parents" && (
               <div className="grid gap-10">
                 <div className="bg-white rounded shadow border border-red-600">
                   <h2 className="text-lg font-semibold mb-5 text-center py-3 bg-red-600 text-white">
@@ -715,7 +675,7 @@ export default function StudentInfoPage({
               </div>
             )}
 
-            {activeTab === 'address' && (
+            {activeTab === "address" && (
               <div className="grid gap-10">
                 <div className="bg-white rounded shadow border border-red-600">
                   <h2 className="text-lg font-semibold mb-5 text-center py-3 bg-red-600 text-white">
@@ -851,7 +811,7 @@ export default function StudentInfoPage({
               </div>
             )}
 
-            {activeTab === 'admission' && (
+            {activeTab === "admission" && (
               <div className="grid gap-10">
                 <div className="bg-white rounded shadow border border-red-600">
                   <h2 className="text-lg font-semibold mb-5 text-center py-3 bg-red-600 text-white">
@@ -879,22 +839,30 @@ export default function StudentInfoPage({
                       </tr>
                       <tr>
                         <td className="border px-4 py-2 font-semibold">
+                          Boarding Status
+                        </td>
+                        <td className="border px-4 py-2">
+                          {data.boardingStatus}
+                        </td>
+                      </tr>
+                      {/* <tr>
+                        <td className="border px-4 py-2 font-semibold">
                           Application Id
                         </td>
                         <td className="border px-4 py-2">FLIS123456789</td>
-                      </tr>
-                      <tr>
+                      </tr> */}
+                      {/* <tr>
                         <td className="border px-4 py-2 font-semibold">
                           Admission Number
                         </td>
                         <td className="border px-4 py-2">742149</td>
-                      </tr>
-                      <tr>
+                      </tr> */}
+                      {/* <tr>
                         <td className="border px-4 py-2 font-semibold">
                           Previous Class
                         </td>
                         <td className="border px-4 py-2">Promotion</td>
-                      </tr>
+                      </tr> */}
                     </tbody>
                   </table>
                 </div>
@@ -987,7 +955,7 @@ export default function StudentInfoPage({
               </div>
             )}
 
-            {activeTab === 'exam' && (
+            {activeTab === "exam" && (
               <div className="grid gap-10">
                 <div className="bg-white rounded shadow border border-red-600">
                   <h2 className="text-lg font-semibold mb-5 text-center py-3 bg-red-600 text-white">
@@ -1007,22 +975,22 @@ export default function StudentInfoPage({
                     </thead>
                     <tbody className="text-center">
                       <tr>
-                        <td className="border px-4 py-3">01/10/2024</td>
+                        {/* <td className="border px-4 py-3">01/10/2024</td>
                         <td className="border px-4 py-3">Mathematics</td>
                         <td className="border px-4 py-3">100</td>
                         <td className="border px-4 py-3">35</td>
                         <td className="border px-4 py-3">85</td>
                         <td className="border px-4 py-3">PASS</td>
-                        <td className="border px-4 py-3">A</td>
+                        <td className="border px-4 py-3">A</td> */}
                       </tr>
                       <tr>
-                        <td className="border px-4 py-3">02/10/2024</td>
+                        {/* <td className="border px-4 py-3">02/10/2024</td>
                         <td className="border px-4 py-3">Science</td>
                         <td className="border px-4 py-3">100</td>
                         <td className="border px-4 py-3">35</td>
                         <td className="border px-4 py-3">70</td>
                         <td className="border px-4 py-3">PASS</td>
-                        <td className="border px-4 py-3">B</td>
+                        <td className="border px-4 py-3">B</td> */}
                       </tr>
                     </tbody>
                   </table>
@@ -1031,7 +999,7 @@ export default function StudentInfoPage({
                   <div className="mt-8">
                     <table className="table-auto w-full text-sm border-collapse">
                       <tbody>
-                        <tr>
+                        {/* <tr>
                           <td className="border px-4 py-2 font-semibold">
                             Percentage
                           </td>
@@ -1066,7 +1034,7 @@ export default function StudentInfoPage({
                             Grand Total
                           </td>
                           <td className="border px-4 py-2">200</td>
-                        </tr>
+                        </tr> */}
                       </tbody>
                     </table>
                   </div>
@@ -1074,7 +1042,7 @@ export default function StudentInfoPage({
               </div>
             )}
 
-            {activeTab === 'board-exam' && (
+            {activeTab === "board-exam" && (
               <div className="grid gap-10">
                 <div className="bg-white rounded shadow border border-red-600">
                   <h2 className="text-lg font-semibold mb-5 text-center py-3 bg-red-600 text-white">
@@ -1094,7 +1062,7 @@ export default function StudentInfoPage({
                         <th className="border px-4 py-3">Total</th>
                       </tr>
                     </thead>
-                    <tbody className="text-center">
+                    {/* <tbody className="text-center">
                       <tr>
                         <td className="border px-4 py-3">01/10/2024</td>
                         <td className="border px-4 py-3">Mathematics</td>
@@ -1109,14 +1077,14 @@ export default function StudentInfoPage({
                         <td className="border px-4 py-3">35</td>
                         <td className="border px-4 py-3">70</td>
                       </tr>
-                    </tbody>
+                    </tbody> */}
                   </table>
 
                   {/* Overall Results Section */}
                   <div className="mt-8">
                     <table className="table-auto w-full text-sm border-collapse">
                       <tbody>
-                        <tr>
+                        {/* <tr>
                           <td className="border px-4 py-2 font-semibold">
                             Total Marks
                           </td>
@@ -1139,7 +1107,7 @@ export default function StudentInfoPage({
                             Rank
                           </td>
                           <td className="border px-4 py-2">01</td>
-                        </tr>
+                        </tr> */}
                       </tbody>
                     </table>
                   </div>
@@ -1147,7 +1115,7 @@ export default function StudentInfoPage({
               </div>
             )}
 
-            {activeTab === 'attendance' && (
+            {activeTab === "attendance" && (
               <div className="grid gap-10">This is attendance section</div>
             )}
           </div>

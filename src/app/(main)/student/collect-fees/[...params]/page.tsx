@@ -16,11 +16,8 @@ function CollectFeesPage() {
   const [error, setError] = useState(false);
 
   const todayDate = new Date().toISOString().split("T")[0];
-  console.log("Today Date: ", todayDate);
   const changeDueDateFormat = (date: string) => {
     const dateString = new Date(date).toISOString().split("T")[0];
-    console.log("Date String: ", dateString);
-    console.log(todayDate === dateString);
     return dateString;
   };
 

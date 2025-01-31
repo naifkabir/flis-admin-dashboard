@@ -2,7 +2,6 @@
 
 import { ArrowDownIcon, ArrowUpIcon } from "@radix-ui/react-icons";
 import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
 import { TbArrowsUpDown } from "react-icons/tb";
 import { Column } from "@tanstack/react-table";
 

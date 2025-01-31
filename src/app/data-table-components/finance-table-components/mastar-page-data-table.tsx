@@ -27,7 +27,6 @@ import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 
 import { IoSearchOutline } from "react-icons/io5";
-import { DataTableViewOptions } from "../data-table-view-options";
 import { MasterDataTablePagination } from "../master-table-pagination";
 
 interface DataTableProps<TData, TValue> {
@@ -81,14 +80,10 @@ export function MasterPageDataTable<TData, TValue>({
               value={globalFilter}
               onChange={(event) => setGlobalFilter(event.target.value)}
               className={cn(
-                "group outline-none border-none text-[15px] bg-[#fff]"
+                "group outline-none border-none text-[15px] bg-[#fff] focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-transparent focus-visible:ring-offset-0"
               )}
             />
           </div>
-        </div>
-
-        <div className="flex items-center gap-2">
-          <DataTableViewOptions table={table} />
         </div>
       </div>
 
