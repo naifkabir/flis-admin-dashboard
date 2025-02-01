@@ -225,3 +225,26 @@ export async function DeleteDocument(id: string) {
     return { error: error.response.data.message || error.message };
   }
 }
+
+export async function DeleteDietChart(studentId: string, index: number) {
+  const cookieStore = cookies();
+  const accessToken = cookieStore.get("accessToken")?.value;
+
+  console.log(studentId, index);
+
+  if (!accessToken) {
+    return null;
+  }
+
+  try {
+    const response = await apiClient.delete(`/health-record/delete-diet-chart?studentId=${studentId}&index=${index}`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    return response.data;
+  } catch (error: any) {
+    return { error: error.response.data.message || error.message };
+  }
+}
+

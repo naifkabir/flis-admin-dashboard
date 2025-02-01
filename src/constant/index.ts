@@ -444,6 +444,7 @@ export const admittedStudentDetails = (data: any) => {
     admission_date: new Date(data.admission_date).toLocaleDateString(),
     documents: data.documents,
     health_records: data.health_records,
+    boardingStatus: data.boarding_status,
   };
   return result;
 };
