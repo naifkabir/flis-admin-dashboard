@@ -220,16 +220,19 @@ export default function StudentInfoPage({
             {activeTab === 'diet-chart' && (
               <div className="bg-white p-4 rounded shadow">
                 <div className="space-y-4">
-                  {data.health_records?.records?.map(
-                    (doc: any, index: number) => (
+                  {data.health_records?.records
+                    ?.map(
+                      (doc: any, actualIndex: number) =>
+                        doc.dietChartUrl && { doc, actualIndex }
+                    ) // Preserve actual index
+                    .filter(Boolean) // Remove false values
+                    .map(({ doc, actualIndex }: any, displayIndex: number) => (
                       <div
-                        key={index}
+                        key={doc.id || actualIndex} // Ensure key uniqueness
                         className="flex items-center justify-between border p-4 rounded text-sm"
                       >
                         <div className="grid gap-2">
-                          <p>
-                            <strong>Diet Chart :</strong> {index + 1}
-                          </p>
+                          <strong>Diet Chart</strong> {displayIndex + 1}
                           <p>
                             <strong>Uploaded On:</strong>{' '}
                             {formatDate(doc.createdAt)}
@@ -240,29 +243,22 @@ export default function StudentInfoPage({
                           </p>
                         </div>
                         <div className="flex space-x-2">
-                          {doc.dietChartUrl ? (
-                            <div className="flex space-x-2">
-                              <Link
-                                href={doc?.dietChartUrl}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                              >
-                                <Button>Download</Button>
-                              </Link>
-                              <Button
-                                variant="destructive"
-                                onClick={() => handleDeleteDietChart(index)}
-                              >
-                                Delete
-                              </Button>
-                            </div>
-                          ) : (
-                            <h4>N/A</h4>
-                          )}
+                          <Link
+                            href={doc?.dietChartUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            <Button>Download</Button>
+                          </Link>
+                          <Button
+                            variant="destructive"
+                            onClick={() => handleDeleteDietChart(actualIndex)} // Pass actual index
+                          >
+                            Delete
+                          </Button>
                         </div>
                       </div>
-                    )
-                  )}
+                    ))}
                 </div>
               </div>
             )}
