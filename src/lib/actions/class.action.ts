@@ -27,3 +27,23 @@ export const GetAllClasses = async (): Promise<any | null> => {
     return { error: error.response.data.message || error.message || null };
   }
 };
+
+export async function AddNewClass(data: any) {
+  const cookieStore = cookies();
+  const accessToken = cookieStore.get("accessToken")?.value;
+
+  if (!accessToken) {
+    return null;
+  }
+
+  try {
+    const response = await apiClient.post("/class/create", data, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    return response.data;
+  } catch (error: any) {
+    return { error: error.response.data.message || error.message };
+  }
+}

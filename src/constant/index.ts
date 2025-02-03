@@ -104,10 +104,10 @@ export const menuItems = [
         description: "Manage batches and sections for classes.",
       },
       {
-        label: "Course/Classes",
-        href: "/academics/course-classes",
-        description: "Overview and manage available courses and classes.",
-        shouldShowAlert: true,
+        label: "Classes",
+        href: "/academics/classes",
+        description: "Overview and manage available classes.",
+        shouldShowAlert: false,
       },
       {
         label: "Subjects",
@@ -283,10 +283,13 @@ export const studentTableFilter = (data: any) => {
       counselling_date: item.counselling_date || "Not Available",
       counselling_time: item.counselling_time || "Not Available",
       g_relation: item.guardian_details.relation,
-      address: `${address.village || ""}${address.post_office ? `, ${address.post_office}` : ""
-        }${address.police_station ? `, ${address.police_station}` : ""}${address.district ? `, ${address.district}` : ""
-        }${address.state ? `, ${address.state}` : ""}${address.postal_code ? `, ${address.postal_code}` : ""
-        }`,
+      address: `${address.village || ""}${
+        address.post_office ? `, ${address.post_office}` : ""
+      }${address.police_station ? `, ${address.police_station}` : ""}${
+        address.district ? `, ${address.district}` : ""
+      }${address.state ? `, ${address.state}` : ""}${
+        address.postal_code ? `, ${address.postal_code}` : ""
+      }`,
       status: item.status,
     };
   });
@@ -319,10 +322,10 @@ export const admittedStudentDetails = (data: any) => {
     basic_details: {
       name:
         data.student_details.first_name +
-        " " +
-        data.student_details.middle_name +
-        " " +
-        data.student_details.last_name || "N/A",
+          " " +
+          data.student_details.middle_name +
+          " " +
+          data.student_details.last_name || "N/A",
       gender: data.student_details.gender || "N/A",
       date_of_birth:
         new Date(data.student_details.date_of_birth).toLocaleDateString() ||
