@@ -17,11 +17,10 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { MdErrorOutline } from "react-icons/md";
 import { Input } from "@/components/ui/input";
-import { GetGroupById, UpdateFeeGroup } from "@/lib/actions/finance.action";
+import { UpdateFeeGroup } from "@/lib/actions/finance.action";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { toast } from "sonner";
@@ -34,53 +33,28 @@ const editFeeGroupFormSchema = z.object({
 
 const EditFeeGroupDialog = ({
   children,
-  groupId,
+  groupData,
 }: {
   children: React.ReactNode;
-  groupId: string;
+  groupData: any;
 }) => {
-  const [loading, setLoading] = useState<boolean>(false);
   const [submitting, setSubmitting] = useState<boolean>(false);
-  const [error, setError] = useState<boolean>(false);
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
 
   const form = useForm<z.infer<typeof editFeeGroupFormSchema>>({
     resolver: zodResolver(editFeeGroupFormSchema),
+    defaultValues: {
+      name: groupData.name || "",
+      groupCode: groupData.groupCode || "",
+      description: groupData.description || "",
+    },
   });
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-        const groupFinanceData = await GetGroupById(groupId);
-        if (groupFinanceData) {
-          // const { _id, ...rest } = groupFinanceData;
-          const { ...rest } = groupFinanceData;
-          form.reset({
-            name: rest.name || "",
-            groupCode: rest.groupCode || "",
-            description: rest.description || "",
-          });
-        } else {
-          setError(true);
-        }
-      } catch (err: any) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    if (isDialogOpen && groupId) {
-      fetchData();
-    }
-  }, [isDialogOpen, groupId, form]);
 
   const onSubmit = async (values: z.infer<typeof editFeeGroupFormSchema>) => {
     setSubmitting(true);
 
     try {
-      const toBeSend = { ...values, id: groupId };
+      const toBeSend = { ...values, id: groupData._id };
       const response = await UpdateFeeGroup(toBeSend);
 
       if (response?.error) {
@@ -95,39 +69,6 @@ const EditFeeGroupDialog = ({
       setSubmitting(false);
     }
   };
-
-  if (loading) {
-    return (
-      <span className="flex justify-center items-center">
-        <svg
-          className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 24 24">
-          <circle
-            className="opacity-25"
-            cx="12"
-            cy="12"
-            r="10"
-            stroke="currentColor"
-            strokeWidth="4"></circle>
-          <path
-            className="opacity-75"
-            fill="currentColor"
-            d="M4 12c0-4.418 3.582-8 8-8 1.75 0 3.375.5 4.748 1.355l-1.304 1.304C13.697 6.032 12.0 6 12 6c-3.313 0-6 2.687-6 6s2.687 6 6 6c0 0 .697-.032 1.444-.659l1.304 1.304C15.375 21.5 13.75 22 12 22c-4.418 0-8-3.582-8-8z"></path>
-        </svg>
-      </span>
-    );
-  }
-
-  if (error) {
-    return (
-      <div
-        className="flex justify-center items-center"
-        title="Error, Not able to edit.">
-        <MdErrorOutline size={20} />
-      </div>
-    );
-  }
 
   return (
     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>

@@ -589,7 +589,7 @@ export const FinanceColumnFeeHeaders = (
 
       return (
         <div className="flex justify-center gap-4">
-          <EditFeeHeaderDialog headerId={data?._id}>
+          <EditFeeHeaderDialog headerData={data ? data : []}>
             <Button>Edit</Button>
           </EditFeeHeaderDialog>
           <Button
@@ -663,7 +663,7 @@ export const FinanceColumnFeeGroups = (
 
       return (
         <div className="flex justify-center gap-4">
-          <EditFeeGroupDialog groupId={data?._id}>
+          <EditFeeGroupDialog groupData={data ? data : []}>
             <Button>Edit</Button>
           </EditFeeGroupDialog>
           <Button
