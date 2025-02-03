@@ -214,6 +214,7 @@ export default function StudentInfoPage({
 
           {/* Tab Content */}
           <div className="">
+<<<<<<< HEAD
             {activeTab === "diet-chart" && (
               <div
                 className={`bg-white ${
@@ -263,6 +264,51 @@ export default function StudentInfoPage({
                     )}
                   </div>
                 )}
+=======
+            {activeTab === 'diet-chart' && (
+              <div className="bg-white p-4 rounded shadow">
+                <div className="space-y-4">
+                  {data.health_records?.records
+                    ?.map(
+                      (doc: any, actualIndex: number) =>
+                        doc.dietChartUrl && { doc, actualIndex }
+                    ) // Preserve actual index
+                    .filter(Boolean) // Remove false values
+                    .map(({ doc, actualIndex }: any, displayIndex: number) => (
+                      <div
+                        key={doc.id || actualIndex} // Ensure key uniqueness
+                        className="flex items-center justify-between border p-4 rounded text-sm"
+                      >
+                        <div className="grid gap-2">
+                          <strong>Diet Chart</strong> {displayIndex + 1}
+                          <p>
+                            <strong>Uploaded On:</strong>{' '}
+                            {formatDate(doc.createdAt)}
+                          </p>
+                          <p>
+                            <strong>Time:</strong>{' '}
+                            {new Date(doc.createdAt).toLocaleTimeString()}
+                          </p>
+                        </div>
+                        <div className="flex space-x-2">
+                          <Link
+                            href={doc?.dietChartUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            <Button>Download</Button>
+                          </Link>
+                          <Button
+                            variant="destructive"
+                            onClick={() => handleDeleteDietChart(actualIndex)} // Pass actual index
+                          >
+                            Delete
+                          </Button>
+                        </div>
+                      </div>
+                    ))}
+                </div>
+>>>>>>> 9a448395eb01927f2263057adff12577bf224aac
               </div>
             )}
 
