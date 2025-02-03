@@ -566,7 +566,7 @@ export const FinanceColumnFeeHeaders = (
         <DataTableColumnHeader column={column} title="Due Date" />
       </div>
     ),
-    cell: ({ row }) => <p>{row.getValue("dueDate")}</p>,
+    cell: ({ row }) => <p>{formatDate(row.getValue("dueDate"))}</p>,
     enableHiding: true,
     enableSorting: true,
   },
