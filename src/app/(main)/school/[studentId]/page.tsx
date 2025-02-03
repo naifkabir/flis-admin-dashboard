@@ -1,20 +1,20 @@
-"use client";
+'use client';
 
-import { formatDate } from "@/components/FormatDate";
-import PageLoader from "@/components/ui-components/PageLoading";
-import { Button } from "@/components/ui/button";
-import { UploadHealthReportDialog } from "@/components/UploadHealthReportDialog";
-import { admittedStudentDetails } from "@/constant";
+import { formatDate } from '@/components/FormatDate';
+import PageLoader from '@/components/ui-components/PageLoading';
+import { Button } from '@/components/ui/button';
+import { UploadHealthReportDialog } from '@/components/UploadHealthReportDialog';
+import { admittedStudentDetails } from '@/constant';
 import {
   DeleteDietChart,
   DeleteDocument,
   GetStudentDetails,
-} from "@/lib/actions/student.action";
-import Image from "next/image";
-import Link from "next/link";
-import { useEffect, useState } from "react";
-import Barcode from "react-barcode";
-import { toast } from "sonner";
+} from '@/lib/actions/student.action';
+import Image from 'next/image';
+import Link from 'next/link';
+import { useEffect, useState } from 'react';
+import Barcode from 'react-barcode';
+import { toast } from 'sonner';
 
 export default function StudentInfoPage({
   params,
@@ -39,7 +39,7 @@ export default function StudentInfoPage({
             setData(filteredData);
           }
         } catch (error: any) {
-          toast.error("Failed to fetch data", error);
+          toast.error('Failed to fetch data', error);
           setError(true);
         } finally {
           setLoading(false);
@@ -50,7 +50,7 @@ export default function StudentInfoPage({
     }
   }, [studentId]);
 
-  const [activeTab, setActiveTab] = useState("basic-details");
+  const [activeTab, setActiveTab] = useState('basic-details');
 
   const handleTabChange = (tab: string) => {
     setActiveTab(tab);
@@ -60,10 +60,10 @@ export default function StudentInfoPage({
     const response = await DeleteDocument(documentId);
 
     if (response.statusCode === 200) {
-      toast.success("Document deleted successfully!");
+      toast.success('Document deleted successfully!');
       window.location.reload();
     } else {
-      toast.error("Failed to delete document!");
+      toast.error('Failed to delete document!');
     }
   };
 
@@ -79,10 +79,10 @@ export default function StudentInfoPage({
     const response = await DeleteDietChart(studentId, index);
 
     if (response.statusCode === 200) {
-      toast.success("Diet chart deleted successfully!");
+      toast.success('Diet chart deleted successfully!');
       window.location.reload();
     } else {
-      toast.error("Failed to delete diet chart!");
+      toast.error('Failed to delete diet chart!');
     }
   };
 
@@ -164,7 +164,8 @@ export default function StudentInfoPage({
               <Button className="w-full">UPLOAD DOCUMENTS</Button>
             </Link>
             <Link
-              href={`/student/collect-fees/${studentId}/${data.sessionId}/${data.classId}`}>
+              href={`/student/collect-fees/${studentId}/${data.sessionId}/${data.classId}`}
+            >
               <Button className="w-full">COLLECT FEES</Button>
             </Link>
             <Button disabled>ALLOCATE SUBJECT</Button>
@@ -180,26 +181,27 @@ export default function StudentInfoPage({
           <div className="flex justify-between mb-10">
             <div className="flex space-x-4">
               {[
-                "Basic Details",
-                "Parents",
-                "Address",
-                "Admission",
-                "Exam",
-                "Board Exam",
-                "Attendance",
-                "Document",
-                "Diet Chart",
+                'Basic Details',
+                'Parents',
+                'Address',
+                'Admission',
+                'Exam',
+                'Board Exam',
+                'Attendance',
+                'Document',
+                'Diet Chart',
               ].map((tab) => (
                 <button
                   key={tab}
                   onClick={() =>
-                    handleTabChange(tab.toLowerCase().replace(/\s/g, "-"))
+                    handleTabChange(tab.toLowerCase().replace(/\s/g, '-'))
                   }
                   className={`py-2 px-4 rounded ${
-                    activeTab === tab.toLowerCase().replace(/\s/g, "-")
-                      ? "bg-red-600 text-white"
-                      : "bg-gray-200 text-black"
-                  }`}>
+                    activeTab === tab.toLowerCase().replace(/\s/g, '-')
+                      ? 'bg-red-600 text-white'
+                      : 'bg-gray-200 text-black'
+                  }`}
+                >
                   {tab}
                 </button>
               ))}
@@ -207,64 +209,14 @@ export default function StudentInfoPage({
 
             <Button
               onClick={() => window.history.back()}
-              className="justify-self-end text-xs">
+              className="justify-self-end text-xs"
+            >
               Go Back
             </Button>
           </div>
 
           {/* Tab Content */}
           <div className="">
-<<<<<<< HEAD
-            {activeTab === "diet-chart" && (
-              <div
-                className={`bg-white ${
-                  data.health_records?.records?.length === 0 ? "p-0" : "p-4"
-                } rounded shadow `}>
-                {data.health_records?.records?.length !== 0 && (
-                  <div className="space-y-4">
-                    {data.health_records?.records?.map(
-                      (doc: any, index: number) => (
-                        <div
-                          key={index}
-                          className="flex items-center justify-between border p-4 rounded text-sm">
-                          <div className="grid gap-2">
-                            <p>
-                              <strong>Diet Chart :</strong> {index + 1}
-                            </p>
-                            <p>
-                              <strong>Uploaded On:</strong>{" "}
-                              {formatDate(doc.createdAt)}
-                            </p>
-                            <p>
-                              <strong>Time:</strong>{" "}
-                              {new Date(doc.createdAt).toLocaleTimeString()}
-                            </p>
-                          </div>
-                          <div className="flex space-x-2">
-                            {doc.dietChartUrl ? (
-                              <div className="flex space-x-2">
-                                <Link
-                                  href={doc?.dietChartUrl}
-                                  target="_blank"
-                                  rel="noopener noreferrer">
-                                  <Button>Download</Button>
-                                </Link>
-                                <Button
-                                  variant="destructive"
-                                  onClick={() => handleDeleteDietChart(index)}>
-                                  Delete
-                                </Button>
-                              </div>
-                            ) : (
-                              <h4>N/A</h4>
-                            )}
-                          </div>
-                        </div>
-                      )
-                    )}
-                  </div>
-                )}
-=======
             {activeTab === 'diet-chart' && (
               <div className="bg-white p-4 rounded shadow">
                 <div className="space-y-4">
@@ -308,17 +260,17 @@ export default function StudentInfoPage({
                       </div>
                     ))}
                 </div>
->>>>>>> 9a448395eb01927f2263057adff12577bf224aac
               </div>
             )}
 
-            {activeTab === "document" && (
+            {activeTab === 'document' && (
               <div className="bg-white p-4 rounded shadow">
                 <div className="space-y-4">
                   {data.documents.map((doc: any) => (
                     <div
                       key={doc._id}
-                      className="flex items-center justify-between border p-4 rounded">
+                      className="flex items-center justify-between border p-4 rounded"
+                    >
                       <div>
                         <p>
                           <strong>Document ID:</strong> {doc._id}
@@ -335,7 +287,8 @@ export default function StudentInfoPage({
                           className="bg-red-600 text-white px-4 py-2 rounded"
                           href={doc.fileUrl}
                           target="_blank"
-                          rel="noopener noreferrer">
+                          rel="noopener noreferrer"
+                        >
                           Download
                         </a>
                         {/* <button
@@ -348,7 +301,8 @@ export default function StudentInfoPage({
                         </button> */}
                         <button
                           className="bg-gray-400 text-white px-4 py-2 rounded"
-                          onClick={() => handleDeleteDocument(doc._id)}>
+                          onClick={() => handleDeleteDocument(doc._id)}
+                        >
                           Delete
                         </button>
                       </div>
@@ -358,7 +312,7 @@ export default function StudentInfoPage({
               </div>
             )}
 
-            {activeTab === "basic-details" && (
+            {activeTab === 'basic-details' && (
               <div className="grid gap-10">
                 <div className="bg-white rounded shadow border border-red-600">
                   <h2 className="text-lg font-semibold mb-5 text-center py-3 bg-red-600 text-white">
@@ -554,7 +508,7 @@ export default function StudentInfoPage({
               </div>
             )}
 
-            {activeTab === "parents" && (
+            {activeTab === 'parents' && (
               <div className="grid gap-10">
                 <div className="bg-white rounded shadow border border-red-600">
                   <h2 className="text-lg font-semibold mb-5 text-center py-3 bg-red-600 text-white">
@@ -748,7 +702,7 @@ export default function StudentInfoPage({
               </div>
             )}
 
-            {activeTab === "address" && (
+            {activeTab === 'address' && (
               <div className="grid gap-10">
                 <div className="bg-white rounded shadow border border-red-600">
                   <h2 className="text-lg font-semibold mb-5 text-center py-3 bg-red-600 text-white">
@@ -884,7 +838,7 @@ export default function StudentInfoPage({
               </div>
             )}
 
-            {activeTab === "admission" && (
+            {activeTab === 'admission' && (
               <div className="grid gap-10">
                 <div className="bg-white rounded shadow border border-red-600">
                   <h2 className="text-lg font-semibold mb-5 text-center py-3 bg-red-600 text-white">
@@ -1028,7 +982,7 @@ export default function StudentInfoPage({
               </div>
             )}
 
-            {activeTab === "exam" && (
+            {activeTab === 'exam' && (
               <div className="grid gap-10">
                 <div className="bg-white rounded shadow border border-red-600">
                   <h2 className="text-lg font-semibold mb-5 text-center py-3 bg-red-600 text-white">
@@ -1115,7 +1069,7 @@ export default function StudentInfoPage({
               </div>
             )}
 
-            {activeTab === "board-exam" && (
+            {activeTab === 'board-exam' && (
               <div className="grid gap-10">
                 <div className="bg-white rounded shadow border border-red-600">
                   <h2 className="text-lg font-semibold mb-5 text-center py-3 bg-red-600 text-white">
@@ -1188,7 +1142,7 @@ export default function StudentInfoPage({
               </div>
             )}
 
-            {activeTab === "attendance" && (
+            {activeTab === 'attendance' && (
               <div className="grid gap-10">This is attendance section</div>
             )}
           </div>
