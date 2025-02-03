@@ -48,10 +48,10 @@ export default function Login() {
       return;
     }
 
-    const data = { email: email, password: pass }; // Data To Be Send To Backend
+    const data = { email: email, password: pass };
 
     setLoading(true);
-    const result: LoginResponse = await LoginUser(data); // Call Login Api
+    const result: LoginResponse = await LoginUser(data);
 
     setLoading(false);
 

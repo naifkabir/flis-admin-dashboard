@@ -15,6 +15,7 @@ import { z } from "zod";
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormMessage,
@@ -26,6 +27,7 @@ import { Button } from "@/components/ui/button";
 import { UploadDietChart } from "@/lib/actions/uploadStudentDocs.action";
 import { useState } from "react";
 import { DialogClose } from "@radix-ui/react-dialog";
+import { FaImages } from "react-icons/fa";
 import Image from "next/image";
 
 const healthRecordFormSchema = z.object({
@@ -102,10 +104,14 @@ export function UploadHealthReportDialog({
 
   const [pdfPreview, setPdfPreview] = useState<string | null>(null);
   const [fileName, setFileName] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
 
   const handleSubmit = async (values: FormValues) => {
     const formData = new FormData();
+    setIsLoading(true);
+    setIsDialogOpen(true);
 
     const dataToSend = {
       medical_details: {
@@ -156,10 +162,15 @@ export function UploadHealthReportDialog({
         toast.success(`Diet chart uploaded successfully!`);
         setPdfPreview(null);
         setImagePreview(null);
+        setFileName("");
         form.reset();
+        window.location.reload();
       }
     } catch (error: any) {
       toast.error(error.message);
+    } finally {
+      setIsLoading(false);
+      setIsDialogOpen(false);
     }
   };
 
@@ -191,7 +202,7 @@ export function UploadHealthReportDialog({
   };
 
   return (
-    <Dialog>
+    <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent className="sm:max-w-[700px]">
         <DialogHeader>
@@ -220,6 +231,9 @@ export function UploadHealthReportDialog({
                         className="w-full"
                       />
                     </FormControl>
+                    <FormDescription className="text-[10px] font-semibold text-gray-600 -translate-y-1">
+                      Optional
+                    </FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -240,6 +254,9 @@ export function UploadHealthReportDialog({
                         className="w-full"
                       />
                     </FormControl>
+                    <FormDescription className="text-[10px] font-semibold text-gray-600 -translate-y-1">
+                      Optional
+                    </FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -260,6 +277,9 @@ export function UploadHealthReportDialog({
                         className="w-full"
                       />
                     </FormControl>
+                    <FormDescription className="text-[10px] font-semibold text-gray-600 -translate-y-1">
+                      Optional
+                    </FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -280,6 +300,9 @@ export function UploadHealthReportDialog({
                         className="w-full"
                       />
                     </FormControl>
+                    <FormDescription className="text-[10px] font-semibold text-gray-600 -translate-y-1">
+                      Optional
+                    </FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -300,6 +323,9 @@ export function UploadHealthReportDialog({
                         className="w-full"
                       />
                     </FormControl>
+                    <FormDescription className="text-[10px] font-semibold text-gray-600 -translate-y-1">
+                      Optional
+                    </FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -320,6 +346,9 @@ export function UploadHealthReportDialog({
                         className="w-full"
                       />
                     </FormControl>
+                    <FormDescription className="text-[10px] font-semibold text-gray-600 -translate-y-1">
+                      Optional
+                    </FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -343,12 +372,15 @@ export function UploadHealthReportDialog({
                             className="opacity-0 w-full h-full cursor-pointer"
                             multiple={false}
                           />
+                          <span className="absolute top-1/2 -translate-y-1/2 bg-black h-full px-2 grid place-items-center rounded-l-sm">
+                            <FaImages className="text-xl text-white" />
+                          </span>
                           {!fileName ? (
-                            <p className="absolute top-1/2 -translate-y-1/2 text-[13px] text-gray-400 left-[9px]">
+                            <p className="absolute top-1/2 -translate-y-1/2 text-[13px] text-gray-400 left-12 -z-10">
                               No file selected
                             </p>
                           ) : (
-                            <p className="absolute top-1/2 -translate-y-1/2 text-[13px] text-black left-[9px]">
+                            <p className="absolute top-1/2 -translate-y-1/2 text-[13px] text-black left-12">
                               {fileName}
                             </p>
                           )}
@@ -365,7 +397,7 @@ export function UploadHealthReportDialog({
                   height={500}
                   src={imagePreview}
                   alt="Diet Chart Preview"
-                  className="w-full h-32 object-cover rounded-md"
+                  className="w-full h-32 object-cover rounded-md border-2"
                 />
               )}
               {pdfPreview && (
@@ -396,7 +428,31 @@ export function UploadHealthReportDialog({
                   Remove Image
                 </Button>
               </div>
-              <Button type="submit">Submit</Button>
+              <Button type="submit">
+                {isLoading ? (
+                  <span className="flex justify-center items-center">
+                    <svg
+                      className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24">
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"></circle>
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12c0-4.418 3.582-8 8-8 1.75 0 3.375.5 4.748 1.355l-1.304 1.304C13.697 6.032 12.0 6 12 6c-3.313 0-6 2.687-6 6s2.687 6 6 6c0 0 .697-.032 1.444-.659l1.304 1.304C15.375 21.5 13.75 22 12 22c-4.418 0-8-3.582-8-8z"></path>
+                    </svg>
+                    Uploading
+                  </span>
+                ) : (
+                  <span>Upload</span>
+                )}
+              </Button>
             </DialogFooter>
           </form>
         </Form>

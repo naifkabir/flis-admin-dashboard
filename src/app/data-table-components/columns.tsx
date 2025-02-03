@@ -59,7 +59,7 @@ export const pendingAndRejectedTableColumns = (
             height={500}
             className="rounded-full transition-all duration-300 object-cover object-center w-10 h-10 hover:scale-150"
           />
-          <div className="flex flex-col items-start">
+          <div className="flex flex-col items-start text-xs">
             <span className="font-semibold">{row.getValue("name")}</span>
             <span>{row.original.gender || "N/A"}</span>
           </div>
@@ -77,7 +77,9 @@ export const pendingAndRejectedTableColumns = (
       </div>
     ),
     cell: ({ row }) => (
-      <p>{new Date(row.getValue("dob")).toLocaleDateString("gd-IN")}</p>
+      <p className="text-xs">
+        {new Date(row.getValue("dob")).toLocaleDateString("gd-IN")}
+      </p>
     ),
   },
   {
@@ -87,7 +89,7 @@ export const pendingAndRejectedTableColumns = (
         <DataTableColumnHeader column={column} title="Class" />
       </div>
     ),
-    cell: ({ row }) => <p>{row.getValue("class")}</p>,
+    cell: ({ row }) => <p className="text-xs">{row.getValue("class")}</p>,
     filterFn: (row, id, value) => value.includes(row.getValue(id)),
     enableHiding: true,
     enableSorting: true,
@@ -99,7 +101,7 @@ export const pendingAndRejectedTableColumns = (
         <DataTableColumnHeader column={column} title="Guardian" />
       </div>
     ),
-    cell: ({ row }) => <p>{row.getValue("g_name")}</p>,
+    cell: ({ row }) => <p className="text-xs">{row.getValue("g_name")}</p>,
     filterFn: (row, id, value) => value.includes(row.getValue(id)),
     enableHiding: true,
     enableSorting: true,
@@ -111,7 +113,7 @@ export const pendingAndRejectedTableColumns = (
         <DataTableColumnHeader column={column} title="Phone" />
       </div>
     ),
-    cell: ({ row }) => <p>{row.getValue("g_contact")}</p>,
+    cell: ({ row }) => <p className="text-xs">{row.getValue("g_contact")}</p>,
     filterFn: (row, id, value) => value.includes(row.getValue(id)),
     enableHiding: true,
     enableSorting: true,
@@ -123,7 +125,7 @@ export const pendingAndRejectedTableColumns = (
         <DataTableColumnHeader column={column} title="Address" />
       </div>
     ),
-    cell: ({ row }) => <p>{row.getValue("address")}</p>,
+    cell: ({ row }) => <p className="text-xs">{row.getValue("address")}</p>,
     enableHiding: true,
     enableSorting: true,
   },
@@ -198,9 +200,11 @@ export const counselingTableColumns = (
             height={500}
             className="rounded-full transition-all duration-300 object-cover object-center w-10 h-10 hover:scale-150"
           />
-          <div className="flex flex-col items-start">
-            <span className="font-semibold">{row.getValue("name")}</span>
-            <span>{row.original.gender || "N/A"}</span>
+          <div className="flex flex-col items-start w-[170px]">
+            <span className="font-semibold text-xs">
+              {row.getValue("name")}
+            </span>
+            <span className="text-xs">{row.original.gender || "N/A"}</span>
           </div>
         </div>
       );
@@ -212,11 +216,13 @@ export const counselingTableColumns = (
     accessorKey: "dob",
     header: ({ column }) => (
       <div className="flex justify-center">
-        <DataTableColumnHeader column={column} title="Date of Birth" />
+        <DataTableColumnHeader column={column} title="DOB" />
       </div>
     ),
     cell: ({ row }) => (
-      <p>{new Date(row.getValue("dob")).toLocaleDateString("gd-IN")}</p>
+      <p className="text-xs">
+        {new Date(row.getValue("dob")).toLocaleDateString("gd-IN")}
+      </p>
     ),
   },
   {
@@ -226,7 +232,7 @@ export const counselingTableColumns = (
         <DataTableColumnHeader column={column} title="Class" />
       </div>
     ),
-    cell: ({ row }) => <p>{row.getValue("class")}</p>,
+    cell: ({ row }) => <p className="text-xs">{row.getValue("class")}</p>,
     filterFn: (row, id, value) => value.includes(row.getValue(id)),
     enableHiding: true,
     enableSorting: true,
@@ -238,7 +244,7 @@ export const counselingTableColumns = (
         <DataTableColumnHeader column={column} title="Guardian" />
       </div>
     ),
-    cell: ({ row }) => <p>{row.getValue("g_name")}</p>,
+    cell: ({ row }) => <p className="text-xs">{row.getValue("g_name")}</p>,
     filterFn: (row, id, value) => value.includes(row.getValue(id)),
     enableHiding: true,
     enableSorting: true,
@@ -250,7 +256,7 @@ export const counselingTableColumns = (
         <DataTableColumnHeader column={column} title="Phone" />
       </div>
     ),
-    cell: ({ row }) => <p>{row.getValue("g_contact")}</p>,
+    cell: ({ row }) => <p className="text-xs">{row.getValue("g_contact")}</p>,
     filterFn: (row, id, value) => value.includes(row.getValue(id)),
     enableHiding: true,
     enableSorting: true,
@@ -262,7 +268,7 @@ export const counselingTableColumns = (
         <DataTableColumnHeader column={column} title="Address" />
       </div>
     ),
-    cell: ({ row }) => <p>{row.getValue("address")}</p>,
+    cell: ({ row }) => <p className="text-xs">{row.getValue("address")}</p>,
     enableHiding: true,
     enableSorting: true,
   },
@@ -276,7 +282,9 @@ export const counselingTableColumns = (
     cell: ({ row }) => {
       return (
         <div className="flex flex-col">
-          <span>{formatDate(row.getValue("counselling_date"))}</span>
+          <span className="text-xs">
+            {formatDate(row.getValue("counselling_date"))}
+          </span>
         </div>
       );
     },
@@ -302,7 +310,7 @@ export const counselingTableColumns = (
       };
 
       return (
-        <div className="flex flex-col">
+        <div className="flex flex-col text-xs">
           {formatTo12Hour(row.getValue("counselling_time"))}
         </div>
       );
@@ -332,16 +340,21 @@ export const counselingTableColumns = (
       };
 
       return (
-        <div className="flex justify-center gap-4">
+        <div className="flex justify-center gap-2">
           <Link href={`/student/${data.id}`}>
-            <Button>View</Button>
+            <Button className="text-xs">View</Button>
           </Link>
-          <Button variant="destructive" onClick={handleDelete}>
+          <Button
+            variant="destructive"
+            onClick={handleDelete}
+            className="text-xs">
             Delete
           </Button>
           {(status === "PENDING" || status === "UNDER-COUNSELLING") &&
             handleReject && (
-              <Button onClick={() => handleReject(data.id)}>Reject</Button>
+              <Button className="text-xs" onClick={() => handleReject(data.id)}>
+                Reject
+              </Button>
             )}
         </div>
       );

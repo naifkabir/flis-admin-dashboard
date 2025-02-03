@@ -107,7 +107,7 @@ export default function CounselingStudentPage() {
   }
 
   return (
-    <div className="w-full h-screen my-auto">
+    <div className="w-full h-full my-auto">
       <div className="sub-container px-4">
         <div className="flex justify-between items-center mb-10">
           <div>

@@ -177,7 +177,7 @@ export default function StudentInfoPage({
 
   return (
     <main>
-      <div className="mb-10 flex justify-end">
+      <div className="flex justify-end py-5">
         <Button onClick={() => window.history.back()}>Go Back</Button>
       </div>
       <section className="grid lg:grid-cols-3 gap-8">
@@ -310,7 +310,7 @@ export default function StudentInfoPage({
                     <option value="" disabled>
                       Select Document
                     </option>
-                    <option value="Pan Card">Student Agreement</option>
+                    <option value="Student Agreement">Student Agreement</option>
                     <option value="Aadhaar Card">Aadhaar Card</option>
                     <option value="Passport">Passport</option>
                     <option value="Voter ID Card">Voter ID Card</option>
