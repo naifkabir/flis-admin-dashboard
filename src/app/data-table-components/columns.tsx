@@ -344,18 +344,18 @@ export const counselingTableColumns = (
           <Link href={`/student/${data.id}`}>
             <Button className="text-xs">View</Button>
           </Link>
-          <Button
-            variant="destructive"
-            onClick={handleDelete}
-            className="text-xs">
-            Delete
-          </Button>
           {(status === "PENDING" || status === "UNDER-COUNSELLING") &&
             handleReject && (
               <Button className="text-xs" onClick={() => handleReject(data.id)}>
                 Reject
               </Button>
             )}
+          <Button
+            variant="destructive"
+            onClick={handleDelete}
+            className="text-xs">
+            Delete
+          </Button>
         </div>
       );
     },

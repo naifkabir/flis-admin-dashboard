@@ -91,6 +91,7 @@ export default function Login() {
               <input
                 type="text"
                 placeholder="Email"
+                disabled={loading}
                 autoComplete="off"
                 value={email || ""}
                 onChange={(e) => setEmail(e.target.value)}
@@ -108,6 +109,7 @@ export default function Login() {
                 type={showPassword ? "text" : "password"}
                 placeholder="Password"
                 autoComplete="off"
+                disabled={loading}
                 value={pass || ""}
                 onChange={(e) => setPass(e.target.value)}
                 className="w-full pl-10 pr-10 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300"

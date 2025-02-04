@@ -22,7 +22,7 @@ export default function StudentInfoPage({
   const [data, setData] = useState<any>({});
   const [allClasses, setAllClasses] = useState<any>({});
   const [allGroups, setAllGroups] = useState<any>([]);
-  const [session, setSession] = useState<any>({});
+  const [session, setSession] = useState<any>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -30,15 +30,20 @@ export default function StudentInfoPage({
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const studentData = await GetStudentById(studentId);
-        const allClasses = await GetAllClasses();
-        const allGroups = await GetAllGroupsForDropDown();
-        const session = await GetActiveSession();
+        const [studentData, allClasses, allGroups, session] = await Promise.all(
+          [
+            GetStudentById(studentId),
+            GetAllClasses(),
+            GetAllGroupsForDropDown(),
+            GetActiveSession(),
+          ]
+        );
+
         if (studentData && allClasses && allGroups) {
           setAllClasses(allClasses);
           setData(studentData);
           setAllGroups(allGroups);
-          setSession([session]);
+          setSession(session);
         }
       } catch (err: any) {
         setError(err);
