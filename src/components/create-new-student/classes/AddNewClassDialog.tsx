@@ -58,7 +58,7 @@ const AddNewClassDialog = ({ children }: { children: React.ReactNode }) => {
     setLoading(true);
     try {
       const result = await AddNewClass(values);
-      console.log(result);
+      // console.log(result);
 
       if (result.statusCode === 201) {
         form.reset();
