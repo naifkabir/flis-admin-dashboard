@@ -14,6 +14,7 @@ import {
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormMessage,
@@ -25,6 +26,7 @@ import { toast } from "sonner";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { AddNewClass } from "@/lib/actions/class.action";
+import { Textarea } from "@/components/ui/textarea";
 
 const addNewClassSchema = z.object({
   name: z.string().min(1, {
@@ -77,21 +79,23 @@ const AddNewClassDialog = ({ children }: { children: React.ReactNode }) => {
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Add New Section</DialogTitle>
-          <DialogDescription>
-            Add a new section to your class.
-          </DialogDescription>
+          <DialogTitle>Add New Class</DialogTitle>
+          <DialogDescription></DialogDescription>
         </DialogHeader>
         <div className="py-5">
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
               <FormField
                 control={form.control}
                 name="name"
                 render={({ field }) => (
                   <FormItem>
                     <FormControl>
-                      <Input placeholder="Class Name" {...field} />
+                      <Input
+                        placeholder="Enter Class Name"
+                        className="h-11"
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -103,9 +107,16 @@ const AddNewClassDialog = ({ children }: { children: React.ReactNode }) => {
                 render={({ field }) => (
                   <FormItem>
                     <FormControl>
-                      <div>
-                        <Input placeholder="5" {...field} type="number" />
-                        <span>Years</span>
+                      <div className="relative">
+                        <Input
+                          placeholder="Enter Maximum Age in years"
+                          {...field}
+                          type="number"
+                          className="h-11"
+                        />
+                        <span className="absolute top-1/2 right-0 -translate-y-1/2 text-xs bg-yellow-300 h-full px-3 grid place-items-center rounded-r-md">
+                          years
+                        </span>
                       </div>
                     </FormControl>
                     <FormMessage />
@@ -118,9 +129,16 @@ const AddNewClassDialog = ({ children }: { children: React.ReactNode }) => {
                 render={({ field }) => (
                   <FormItem>
                     <FormControl>
-                      <div>
-                        <Input placeholder="3" {...field} type="number" />
-                        <span>Years</span>
+                      <div className="relative">
+                        <Input
+                          placeholder="Enter Minimum Age in years"
+                          className="h-11"
+                          type="number"
+                          {...field}
+                        />
+                        <span className="absolute top-1/2 right-0 -translate-y-1/2 text-xs bg-yellow-300 h-full px-3 grid place-items-center rounded-r-md">
+                          years
+                        </span>
                       </div>
                     </FormControl>
                     <FormMessage />
@@ -133,9 +151,11 @@ const AddNewClassDialog = ({ children }: { children: React.ReactNode }) => {
                 render={({ field }) => (
                   <FormItem>
                     <FormControl>
-                      <Input placeholder="Description" {...field} />
+                      <Textarea placeholder="Enter Description" {...field} />
                     </FormControl>
-                    <FormMessage />
+                    <FormDescription className="text-xs -translate-y-1">
+                      This field is optional.
+                    </FormDescription>
                   </FormItem>
                 )}
               />

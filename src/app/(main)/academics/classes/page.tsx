@@ -6,7 +6,7 @@ const Classes = () => {
     <main className="py-5">
       <div className="flex justify-end">
         <AddNewClassDialog>
-          <Button className="h-12">Add Class</Button>
+          <Button className="h-12">Add New Class</Button>
         </AddNewClassDialog>
       </div>
     </main>
