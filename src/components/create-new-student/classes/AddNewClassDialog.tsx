@@ -28,19 +28,34 @@ import { useState } from "react";
 import { AddNewClass } from "@/lib/actions/class.action";
 import { Textarea } from "@/components/ui/textarea";
 
-const addNewClassSchema = z.object({
-  name: z.string().min(1, {
-    message: "Please enter a class name.",
-  }),
-  maxAge: z.string().min(1, {
-    message: "Please enter a maximum age.",
-  }),
-  minAge: z.string().min(1, {
-    message: "Please enter a minimum age.",
-  }),
-  description: z.string().optional(),
-});
+const addNewClassSchema = z
+  .object({
+    name: z.string().min(1, {
+      message: "Please enter a class name.",
+    }),
+    maxAge: z.string().min(1, {
+      message: "Please enter a maximum age.",
+    }),
+    minAge: z.string().min(1, {
+      message: "Please enter a minimum age.",
+    }),
+    description: z.string().optional(),
+  })
+  .refine(
+    (data) => {
+      const maxAge = parseInt(data.maxAge);
+      const minAge = parseInt(data.minAge);
 
+      if (!isNaN(maxAge) && !isNaN(minAge)) {
+        return maxAge > minAge;
+      }
+      return true;
+    },
+    {
+      message: "Maximum age must be greater than minimum age.",
+      path: ["maxAge"],
+    }
+  );
 const AddNewClassDialog = ({ children }: { children: React.ReactNode }) => {
   const form = useForm<z.infer<typeof addNewClassSchema>>({
     resolver: zodResolver(addNewClassSchema),
