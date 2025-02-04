@@ -67,7 +67,7 @@ export function AddNewSectionDialog({
 
   useEffect(() => {
     const fetchData = async () => {
-      setFetchClassDataLoading;
+      setFetchClassDataLoading(true);
       try {
         const classResult = await GetAllClasses();
 
