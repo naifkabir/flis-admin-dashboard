@@ -170,7 +170,8 @@ const AddPaymentHistoryDialog = ({
                       <SelectContent>
                         <SelectItem value="CASH">Cash</SelectItem>
                         <SelectItem value="CARD">Card</SelectItem>
-                        <SelectItem value="ONLINE">Online</SelectItem>
+                        <SelectItem value="UPI">UPI</SelectItem>
+                        <SelectItem value="NET BANKING">Net Banking</SelectItem>
                       </SelectContent>
                     </Select>
                   </FormControl>

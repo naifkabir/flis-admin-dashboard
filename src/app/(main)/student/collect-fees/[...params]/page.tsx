@@ -7,6 +7,9 @@ import { GetStudentFee } from "@/lib/actions/studentFees.action";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import { FaEdit } from "react-icons/fa";
+import { FaRegTrashCan } from "react-icons/fa6";
+import { IoReceiptOutline } from "react-icons/io5";
 
 function CollectFeesPage() {
   const params = useParams();
@@ -58,8 +61,14 @@ function CollectFeesPage() {
   }
 
   if (error || !data) {
-    return <div>Invalid URL or failed to fetch data</div>;
+    return (
+      <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+        Invalid URL or failed to fetch data
+      </div>
+    );
   }
+
+  console.log(data);
 
   return (
     <div className="grid gap-10 min-h-full pb-10">
@@ -72,16 +81,24 @@ function CollectFeesPage() {
         </h2>
         {data?.fees?.map((fee: any) => (
           <div key={fee._id}>
-            <div className={`flex flex-col border-2 mb-10`}>
+            <div
+              className={`flex flex-col mb-10 ${
+                changeDueDateFormat(fee.dueDate) >= todayDate &&
+                fee.amount !== fee.paidAmount + fee.discountAmount
+                  ? "border-2 border-red-500"
+                  : fee.amount === fee.paidAmount + fee.discountAmount
+                  ? "border-2 border-green-500"
+                  : "border-2"
+              }`}>
               <div className="overflow-x-auto">
                 <table className="min-w-full table-auto">
                   <thead>
                     <tr
                       className={`${
                         changeDueDateFormat(fee.dueDate) >= todayDate &&
-                        fee.amount != fee.paidAmount
-                          ? "border-2 border-red-500"
-                          : "bg-gray-100"
+                        fee.amount != fee.paidAmount + fee.discountAmount
+                          ? ""
+                          : "bg-gray-200"
                       } text-[12px]  `}>
                       <th className="px-4 py-2 text-center">Fee Type</th>
                       <th className="px-4 py-2 text-center">Occurrence</th>
@@ -94,20 +111,17 @@ function CollectFeesPage() {
                       <th className="px-4 py-2 text-center">Action</th>
                     </tr>
                   </thead>
-                  <tbody
-                    className={`${
-                      changeDueDateFormat(fee.dueDate) >= todayDate &&
-                      fee.amount != fee.paidAmount
-                        ? "border-2 border-red-500"
-                        : ""
-                    }`}>
+                  <tbody>
                     <tr className="text-[13.5px]">
                       <td className="px-4 py-2 text-center">
                         <span
                           className={`${
                             changeDueDateFormat(fee.dueDate) >= todayDate &&
-                            fee.amount != fee.paidAmount
+                            fee.amount != fee.paidAmount + fee.discountAmount
                               ? "bg-red-500 text-white px-2 py-0.5 rounded-md text-[11px]"
+                              : fee.amount ===
+                                fee.paidAmount + fee.discountAmount
+                              ? "bg-green-500 text-white px-2 py-0.5 rounded-md text-[11px]"
                               : ""
                           }`}>
                           {fee.name}
@@ -127,14 +141,17 @@ function CollectFeesPage() {
                         <span
                           className={` ${
                             changeDueDateFormat(fee.dueDate) >= todayDate &&
-                            fee.amount != fee.paidAmount
+                            fee.amount != fee.paidAmount + fee.discountAmount
                               ? "bg-red-500 text-white px-2 py-0.5 rounded-md text-[11px]"
+                              : fee.amount ===
+                                fee.paidAmount + fee.discountAmount
+                              ? "bg-green-500 text-white px-2 py-0.5 rounded-md text-[11px]"
                               : ""
                           }`}>
                           {new Date(fee.dueDate).toLocaleDateString()}
                         </span>
                         {changeDueDateFormat(fee.dueDate) >= todayDate &&
-                          fee.amount != fee.paidAmount && (
+                          fee.amount != fee.paidAmount + fee.discountAmount && (
                             <span className="py-0.5 text-[11px] block font-semibold mt-1">
                               This payment is due
                             </span>
@@ -162,7 +179,7 @@ function CollectFeesPage() {
                   </tbody>
                 </table>
               </div>
-              <div className="m-3 grid grid-cols-5 gap-5">
+              <div className="m-3 grid md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5">
                 {fee?.paymentHistory?.map((pay: any, index: string) => (
                   <div
                     key={index}
@@ -185,9 +202,19 @@ function CollectFeesPage() {
                         {new Date(pay.paymentDate).toLocaleString()}
                       </span>
                     </div>
-                    <Button variant="outline" className="my-2">
-                      Get Receipt
-                    </Button>
+                    <div className="my-2 flex items-center justify-between">
+                      <Button variant="destructive">
+                        <FaRegTrashCan />
+                      </Button>
+                      <span className="space-x-2">
+                        <Button variant="default">
+                          <FaEdit />
+                        </Button>
+                        <Button variant="outline">
+                          <IoReceiptOutline />
+                        </Button>
+                      </span>
+                    </div>
                   </div>
                 ))}
               </div>
